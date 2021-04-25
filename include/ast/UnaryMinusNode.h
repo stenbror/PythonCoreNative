@@ -13,12 +13,12 @@ namespace PythonCoreNative::RunTime::Parser::AST
         public:
             UnaryMinusNode(  
                             unsigned int start, unsigned int end, 
-                            std::shared_ptr<NumberToken> op1,
+                            std::shared_ptr<Token> op1,
                             std::shared_ptr<ExpressionNode> right
                         );
 
         protected:
-            std::shared_ptr<NumberToken> mOp1;
+            std::shared_ptr<Token> mOp1;
             std::shared_ptr<ExpressionNode> mRight;
     };
 }
