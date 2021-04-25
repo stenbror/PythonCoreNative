@@ -1,1 +1,4 @@
 bin/PythonCoreNative.so
+bin/build.sh
+bin/libPythonCoreNative.so.0
+bin/libPythonCoreNative.so
