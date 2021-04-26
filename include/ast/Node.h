@@ -1,4 +1,6 @@
 
+#pragma once
+
 namespace PythonCoreNative::RunTime::Parser::AST
 {
     class Node
