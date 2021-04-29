@@ -5,7 +5,7 @@ Open project in Visual Studo Code and open terminal and 'cd bin'
 
 To build:
 
-mkdir -p build
-cd build
-cmake ..
-make 
+mkdir -p build  
+cd build  
+cmake ..  
+make  
