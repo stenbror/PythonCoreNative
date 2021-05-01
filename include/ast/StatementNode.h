@@ -11,6 +11,6 @@ namespace PythonCoreNative::RunTime::Parser::AST
         public:
             bool isExpressionNode() { return false; };
             bool isStatementNode() { return true; };
-
+            bool isTypeNode() { return false; };
     };
 }
