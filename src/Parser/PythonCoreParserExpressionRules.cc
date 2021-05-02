@@ -1,6 +1,8 @@
 
 #include <PythonCoreParser.h>
 
+#include <typeinfo>
+
 using namespace PythonCoreNative::RunTime::Parser;
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAtom()
@@ -39,7 +41,72 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAtom()
                 }
                 return std::make_shared<AST::AtomStringNode>(startPos, mLexer->Position(), lst);
             }
-
+        case TokenKind::PyLeftParen:
+            {
+                mLexer->Advance();
+                if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightParen)
+                {
+                    auto symbol2 = mLexer->CurSymbol();
+                    mLexer->Advance();
+                    return std::make_shared<AST::AtomTupleNode>(startPos, mLexer->Position(), curSymbol, nullptr, symbol2);
+                }
+                if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield)
+                {
+                    auto node = ParseYieldExpr();
+                    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen) throw ;
+                    auto symbol2 = mLexer->CurSymbol();
+                    mLexer->Advance();
+                    return std::make_shared<AST::AtomTupleNode>(startPos, mLexer->Position(), curSymbol, node, symbol2);
+                }
+                else
+                {
+                    auto node = ParseTestListComp();
+                    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen) throw ;
+                    auto symbol2 = mLexer->CurSymbol();
+                    mLexer->Advance();
+                    return std::make_shared<AST::AtomTupleNode>(startPos, mLexer->Position(), curSymbol, node, symbol2);
+                }
+            }
+        case TokenKind::PyLeftBracket:
+            {
+                mLexer->Advance();
+                if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightBracket)
+                {
+                    auto symbol2 = mLexer->CurSymbol();
+                    mLexer->Advance();
+                    return std::make_shared<AST::AtomListNode>(startPos, mLexer->Position(), curSymbol, nullptr, symbol2);
+                }
+                else
+                {
+                    auto node = ParseTestListComp();
+                    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightBracket) throw ;
+                    auto symbol2 = mLexer->CurSymbol();
+                    mLexer->Advance();
+                    return std::make_shared<AST::AtomListNode>(startPos, mLexer->Position(), curSymbol, node, symbol2);
+                }
+            }
+        case TokenKind::PyLeftCurly:
+            {
+                mLexer->Advance();
+                if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightCurly)
+                {
+                    auto symbol2 = mLexer->CurSymbol();
+                    mLexer->Advance();
+                    return std::make_shared<AST::AtomDictionaryNode>(startPos, mLexer->Position(), curSymbol, nullptr, symbol2);
+                }
+                else
+                {
+                    auto node = ParseDictorSetMaker();
+                    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightCurly) throw ;
+                    auto symbol2 = mLexer->CurSymbol();
+                    mLexer->Advance();
+                    if (typeid(node) == typeid(AST::AtomSetNode))
+                    {
+                        return std::make_shared<AST::AtomSetNode>(startPos, mLexer->Position(), curSymbol, node, symbol2);
+                    }
+                    return std::make_shared<AST::AtomDictionaryNode>(startPos, mLexer->Position(), curSymbol, node, symbol2);
+                }
+            }
         default:
             throw ;
     }
@@ -204,7 +271,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseCompIf()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseYieldExpr()
 {
-    return nullptr;
+    return std::make_shared<AST::ExpressionNode>(0, 0);
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()

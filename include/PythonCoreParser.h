@@ -13,6 +13,10 @@
 #include <ast/AtomNameNode.h>
 #include <ast/AtomNumberNode.h>
 #include <ast/AtomStringNode.h>
+#include <ast/AtomTupleNode.h>
+#include <ast/AtomListNode.h>
+#include <ast/AtomDictionaryNode.h>
+#include <ast/AtomSetNode.h>
 
 
 #include <memory>
