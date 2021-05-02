@@ -30,6 +30,8 @@
 #include <ast/FloorDivNode.h>
 #include <ast/PlusNode.h>
 #include <ast/MinusNode.h>
+#include <ast/ShiftLeftNode.h>
+#include <ast/ShiftRightNode.h>
 
 
 #include <memory>
