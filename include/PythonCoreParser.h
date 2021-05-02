@@ -23,6 +23,11 @@
 #include <ast/UnaryPlusNode.h>
 #include <ast/UnaryMinusNode.h>
 #include <ast/UnaryBitInvertNode.h>
+#include <ast/MulNode.h>
+#include <ast/DivNode.h>
+#include <ast/ModuloNode.h>
+#include <ast/MatriceNode.h>
+#include <ast/FloorDivNode.h>
 
 
 #include <memory>

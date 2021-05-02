@@ -203,7 +203,40 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseFactor()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTerm()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto left = ParseFactor();
+
+    while ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyDiv ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyModulo ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMatrice ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyFloorDiv)
+            {
+                auto symbol = mLexer->CurSymbol();
+                mLexer->Advance();
+                auto right = ParseFactor();
+                switch (symbol->GetSymbolKind())
+                {
+                    case TokenKind::PyMul:
+                        left = std::make_shared<AST::MulNode>(startPos, mLexer->Position(), left, symbol, right);
+                        break;
+                    case TokenKind::PyDiv:
+                        left = std::make_shared<AST::DivNode>(startPos, mLexer->Position(), left, symbol, right);
+                        break;
+                    case TokenKind::PyModulo:
+                        left = std::make_shared<AST::ModuloNode>(startPos, mLexer->Position(), left, symbol, right);
+                        break;
+                    case TokenKind::PyMatrice:
+                        left = std::make_shared<AST::MatriceNode>(startPos, mLexer->Position(), left, symbol, right);
+                        break;
+                    case TokenKind::PyFloorDiv:
+                        left = std::make_shared<AST::FloorDivNode>(startPos, mLexer->Position(), left, symbol, right);
+                        break;
+                    default:    break;
+                }
+            }
+
+    return left;
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseArith()
