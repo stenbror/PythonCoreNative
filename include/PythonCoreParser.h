@@ -53,6 +53,12 @@ namespace PythonCoreNative::RunTime::Parser
             std::shared_ptr<AST::ExpressionNode> ParseVFPAssign();
 
         protected:
+            std::shared_ptr<AST::StatementNode> ParseCompound();
+            std::shared_ptr<AST::StatementNode> ParseIf();
+            std::shared_ptr<AST::StatementNode> ParseElif();
+            std::shared_ptr<AST::StatementNode> ParseElse();
+
+        protected:
             std::shared_ptr<PythonCoreTokenizer> mLexer;
     };
 }
