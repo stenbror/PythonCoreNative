@@ -18,6 +18,7 @@
 #include <ast/AtomListNode.h>
 #include <ast/AtomDictionaryNode.h>
 #include <ast/AtomSetNode.h>
+#include <ast/AtomExprNode.h>
 
 
 #include <memory>

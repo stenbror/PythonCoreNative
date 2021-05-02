@@ -118,7 +118,41 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAtom()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAtomExpr()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAwait)
+    {
+        auto symbol = mLexer->CurSymbol();
+        mLexer->Advance();
+        auto node = ParseAtom();
+        auto lst = std::make_shared<std::vector<std::shared_ptr<AST::ExpressionNode>>>();
+        while ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLeftParen ||
+                mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLeftBracket ||
+                mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyDot)
+                {
+                    lst->push_back(ParseTrailer());
+                }
+        return std::make_shared<AST::AtomExprNode>(startPos, mLexer->Position(), symbol, node, lst->size() == 0 ? nullptr : lst);
+    }
+    else
+    {
+        auto node = ParseAtom();
+        if (    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLeftParen ||
+                mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLeftBracket ||
+                mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyDot)
+                {
+                    auto lst = std::make_shared<std::vector<std::shared_ptr<AST::ExpressionNode>>>();
+                    lst->push_back(ParseTrailer());
+                    while ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLeftParen ||
+                            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLeftBracket ||
+                            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyDot)
+                            {
+                                lst->push_back(ParseTrailer());
+                            }
+                    return std::make_shared<AST::AtomExprNode>(startPos, mLexer->Position(), nullptr, node, lst);
+                }
+        return node;
+    }
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParsePower()
