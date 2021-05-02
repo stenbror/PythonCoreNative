@@ -241,7 +241,26 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTerm()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseArith()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto left = ParseTerm();
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyPlus || mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMinus)
+    {
+        auto symbol = mLexer->CurSymbol();
+        mLexer->Advance();
+        auto right = ParseTerm();
+
+        if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyPlus)
+        {
+            left = std::make_shared<AST::PlusNode>(startPos, mLexer->Position(), left, symbol, right);
+        }
+        else
+        {
+            left = std::make_shared<AST::MinusNode>(startPos, mLexer->Position(), left, symbol, right);
+        }
+    }
+
+    return left;
 }
 
 

@@ -1,3 +1,4 @@
+#pragma once
 
 #include <ast/ExpressionNode.h>
 #include <Token.h>
@@ -8,7 +9,7 @@
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class MinusNode : protected ExpressionNode
+    class MinusNode : public ExpressionNode
     {
         public:
             MinusNode(  

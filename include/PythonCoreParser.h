@@ -28,6 +28,8 @@
 #include <ast/ModuloNode.h>
 #include <ast/MatriceNode.h>
 #include <ast/FloorDivNode.h>
+#include <ast/PlusNode.h>
+#include <ast/MinusNode.h>
 
 
 #include <memory>
