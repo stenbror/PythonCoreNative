@@ -57,6 +57,25 @@ namespace PythonCoreNative::RunTime::Parser
             std::shared_ptr<AST::StatementNode> ParseIf();
             std::shared_ptr<AST::StatementNode> ParseElif();
             std::shared_ptr<AST::StatementNode> ParseElse();
+            std::shared_ptr<AST::StatementNode> ParseWhile();
+            std::shared_ptr<AST::StatementNode> ParseFor();
+            std::shared_ptr<AST::StatementNode> ParseWith();
+            std::shared_ptr<AST::StatementNode> ParseWithItem();
+            std::shared_ptr<AST::StatementNode> ParseTry();
+            std::shared_ptr<AST::StatementNode> ParseExcept();
+            std::shared_ptr<AST::StatementNode> ParseExceptClause();
+            std::shared_ptr<AST::StatementNode> ParseDecorated();
+            std::shared_ptr<AST::StatementNode> ParseDecorators();
+            std::shared_ptr<AST::StatementNode> ParseDecorator();
+            std::shared_ptr<AST::StatementNode> ParseAsyncFuncDef();
+            std::shared_ptr<AST::StatementNode> ParseFuncDef();
+            std::shared_ptr<AST::StatementNode> ParseParameter();
+            std::shared_ptr<AST::StatementNode> ParseFuncBodySuite();
+            std::shared_ptr<AST::StatementNode> ParseTypedArgsList();
+            std::shared_ptr<AST::StatementNode> ParseTypedAssign();
+            std::shared_ptr<AST::StatementNode> ParseTFPDef();
+            std::shared_ptr<AST::StatementNode> ParseClass();
+            std::shared_ptr<AST::StatementNode> ParseSuite();
 
         protected:
             std::shared_ptr<PythonCoreTokenizer> mLexer;
