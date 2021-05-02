@@ -1,11 +1,13 @@
 
+#pragma once
+
 #include <ast/Node.h>
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
     class ExpressionNode : protected Node
     {
-        protected:
+        public:
             ExpressionNode(unsigned int start, unsigned int end);
 
         public:

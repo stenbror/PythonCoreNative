@@ -5,7 +5,45 @@ using namespace PythonCoreNative::RunTime::Parser;
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAtom()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto curSymbol = mLexer->CurSymbol();
+
+    switch (curSymbol->GetSymbolKind())
+    {
+        case TokenKind::PyFalse:
+            mLexer->Advance();
+            return std::make_shared<AST::AtomFalseNode>(startPos, mLexer->Position(), curSymbol);
+        case TokenKind::PyTrue:
+            mLexer->Advance();
+            return std::make_shared<AST::AtomTrueNode>(startPos, mLexer->Position(), curSymbol);
+        case TokenKind::PyNone:
+            mLexer->Advance();
+            return std::make_shared<AST::AtomNoneNode>(startPos, mLexer->Position(), curSymbol);
+        case TokenKind::PyElipsis:
+            mLexer->Advance();
+            return std::make_shared<AST::AtomElipsisNode>(startPos, mLexer->Position(), curSymbol);
+        case TokenKind::Name:
+            mLexer->Advance();
+            return std::make_shared<AST::AtomNameNode>(startPos, mLexer->Position(), std::static_pointer_cast<NameToken>(curSymbol));
+        case TokenKind::Number:
+            mLexer->Advance();
+            return std::make_shared<AST::AtomNumberNode>(startPos, mLexer->Position(), std::static_pointer_cast<NumberToken>(curSymbol));
+        case TokenKind::String:
+            {
+                auto lst = std::make_shared<std::vector<std::shared_ptr<StringToken>>>();
+                while (curSymbol->GetSymbolKind() == TokenKind::String)
+                {
+                    lst->push_back(std::static_pointer_cast<StringToken>(curSymbol));
+                    mLexer->Advance();
+                    curSymbol = mLexer->CurSymbol();
+                }
+                return std::make_shared<AST::AtomStringNode>(startPos, mLexer->Position(), lst);
+            }
+
+        default:
+            throw ;
+    }
+    
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAtomExpr()

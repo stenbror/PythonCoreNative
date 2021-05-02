@@ -1,3 +1,4 @@
+#pragma once
 
 #include <ast/ExpressionNode.h>
 #include <Token.h>
@@ -7,7 +8,7 @@
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class AtomElipsisNode : protected ExpressionNode
+    class AtomElipsisNode : public ExpressionNode
     {
         public:
             AtomElipsisNode(unsigned int start, unsigned int end, std::shared_ptr<Token> op1);

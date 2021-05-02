@@ -6,6 +6,14 @@
 #include <ast/StatementNode.h>
 #include <ast/TypeNode.h>
 
+#include <ast/AtomFalseNode.h>
+#include <ast/AtomTrueNode.h>
+#include <ast/AtomNoneNode.h>
+#include <ast/AtomElipsisNode.h>
+#include <ast/AtomNameNode.h>
+#include <ast/AtomNumberNode.h>
+#include <ast/AtomStringNode.h>
+
 
 #include <memory>
 

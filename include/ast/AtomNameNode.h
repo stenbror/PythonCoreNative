@@ -1,3 +1,4 @@
+#pragma once
 
 #include <ast/ExpressionNode.h>
 #include <Token.h>
@@ -7,7 +8,7 @@
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class AtomNameNode : protected ExpressionNode
+    class AtomNameNode : public ExpressionNode
     {
         public:
             AtomNameNode(unsigned int start, unsigned int end, std::shared_ptr<NameToken> op1);
