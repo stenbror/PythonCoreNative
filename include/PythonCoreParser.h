@@ -33,6 +33,7 @@
 #include <ast/ShiftLeftNode.h>
 #include <ast/ShiftRightNode.h>
 #include <ast/BitAndNode.h>
+#include <ast/BitXorNode.h>
 
 
 #include <memory>
