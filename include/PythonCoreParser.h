@@ -44,6 +44,13 @@ namespace PythonCoreNative::RunTime::Parser
             std::shared_ptr<AST::ExpressionNode> ParseDictorSetMaker();
             std::shared_ptr<AST::ExpressionNode> ParseArgList();
             std::shared_ptr<AST::ExpressionNode> ParseArgument();
+            std::shared_ptr<AST::ExpressionNode> ParseCompIter();
+            std::shared_ptr<AST::ExpressionNode> ParseSyncCompFor();
+            std::shared_ptr<AST::ExpressionNode> ParseCompFor();
+            std::shared_ptr<AST::ExpressionNode> ParseCompIf();
+            std::shared_ptr<AST::ExpressionNode> ParseYieldExpr();
+            std::shared_ptr<AST::ExpressionNode> ParseVarArgsList();
+            std::shared_ptr<AST::ExpressionNode> ParseVFPAssign();
 
         protected:
             std::shared_ptr<PythonCoreTokenizer> mLexer;

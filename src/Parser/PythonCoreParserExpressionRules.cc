@@ -142,3 +142,38 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseArgument()
 {
     return nullptr;
 }
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseCompIter()
+{
+    return nullptr;
+}
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseSyncCompFor()
+{
+    return nullptr;
+}
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseCompFor()
+{
+    return nullptr;
+}
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseCompIf()
+{
+    return nullptr;
+}
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseYieldExpr()
+{
+    return nullptr;
+}
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
+{
+    return nullptr;
+}
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVFPAssign()
+{
+    return nullptr;
+}
