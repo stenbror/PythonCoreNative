@@ -76,6 +76,31 @@ namespace PythonCoreNative::RunTime::Parser
             std::shared_ptr<AST::StatementNode> ParseTFPDef();
             std::shared_ptr<AST::StatementNode> ParseClass();
             std::shared_ptr<AST::StatementNode> ParseSuite();
+            std::shared_ptr<AST::StatementNode> ParseAsync();
+            std::shared_ptr<AST::StatementNode> ParseStmt();
+            std::shared_ptr<AST::StatementNode> ParseSimpleStmt();
+            std::shared_ptr<AST::StatementNode> ParseSmallStmt();
+            std::shared_ptr<AST::StatementNode> ParseExpr();
+            std::shared_ptr<AST::StatementNode> ParseAnnAssign();
+            std::shared_ptr<AST::StatementNode> ParseTestListStarExpr();
+            std::shared_ptr<AST::StatementNode> ParseDel();
+            std::shared_ptr<AST::StatementNode> ParsePass();
+            std::shared_ptr<AST::StatementNode> ParseBreak();
+            std::shared_ptr<AST::StatementNode> ParseContinue();
+            std::shared_ptr<AST::StatementNode> ParseReturn();
+            std::shared_ptr<AST::StatementNode> ParseYieldStmt();
+            std::shared_ptr<AST::StatementNode> ParseRaise();
+            std::shared_ptr<AST::StatementNode> ParseImport();
+            std::shared_ptr<AST::StatementNode> ParseImportName();
+            std::shared_ptr<AST::StatementNode> ParseImportFrom();
+            std::shared_ptr<AST::StatementNode> ParseImportAsName();
+            std::shared_ptr<AST::StatementNode> ParseDottedAsName();
+            std::shared_ptr<AST::StatementNode> ParseImportAsNames();
+            std::shared_ptr<AST::StatementNode> ParseDottedAsNames();
+            std::shared_ptr<AST::StatementNode> ParseDottedName();
+            std::shared_ptr<AST::StatementNode> ParseGlobal();
+            std::shared_ptr<AST::StatementNode> ParseNonlocal();
+            std::shared_ptr<AST::StatementNode> ParseAssert();
 
         protected:
             std::shared_ptr<PythonCoreTokenizer> mLexer;
