@@ -157,7 +157,18 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAtomExpr()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParsePower()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto left = ParseAtomExpr();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyPower)
+    {
+        auto symbol = mLexer->CurSymbol();
+        mLexer->Advance();
+        auto right = ParseFactor();
+        return std::make_shared<AST::PowerNode>(startPos, mLexer->Position(), left, symbol, right);
+    }
+
+    return left;
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseFactor()
