@@ -97,3 +97,48 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseNamedExpr()
 {
     return nullptr;
 }
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestListComp()
+{
+    return nullptr;
+}
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTrailer()
+{
+    return nullptr;
+}
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseSubscriptList()
+{
+    return nullptr;
+}
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseSubscript()
+{
+    return nullptr;
+}
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseExprList()
+{
+    return nullptr;
+}
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestList()
+{
+    return nullptr;
+}
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseDictorSetMaker()
+{
+    return nullptr;
+}
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseArgList()
+{
+    return nullptr;
+}
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseArgument()
+{
+    return nullptr;
+}

@@ -35,6 +35,15 @@ namespace PythonCoreNative::RunTime::Parser
             std::shared_ptr<AST::ExpressionNode> ParseTestNoCond();
             std::shared_ptr<AST::ExpressionNode> ParseTest();
             std::shared_ptr<AST::ExpressionNode> ParseNamedExpr();
+            std::shared_ptr<AST::ExpressionNode> ParseTestListComp();
+            std::shared_ptr<AST::ExpressionNode> ParseTrailer();
+            std::shared_ptr<AST::ExpressionNode> ParseSubscriptList();
+            std::shared_ptr<AST::ExpressionNode> ParseSubscript();
+            std::shared_ptr<AST::ExpressionNode> ParseExprList();
+            std::shared_ptr<AST::ExpressionNode> ParseTestList();
+            std::shared_ptr<AST::ExpressionNode> ParseDictorSetMaker();
+            std::shared_ptr<AST::ExpressionNode> ParseArgList();
+            std::shared_ptr<AST::ExpressionNode> ParseArgument();
 
         protected:
             std::shared_ptr<PythonCoreTokenizer> mLexer;
