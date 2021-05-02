@@ -4,6 +4,7 @@
 
 #include <ast/ExpressionNode.h>
 #include <ast/StatementNode.h>
+#include <ast/TypeNode.h>
 
 
 #include <memory>
@@ -14,6 +15,12 @@ namespace PythonCoreNative::RunTime::Parser
     {
         public:
             PythonCoreParser(std::shared_ptr<PythonCoreTokenizer> lexer);
+
+            std::shared_ptr<AST::TypeNode> ParseFuncTypeInput();
+            std::shared_ptr<AST::StatementNode> ParseSingleInput();
+            std::shared_ptr<AST::StatementNode> ParseFileInput();
+            std::shared_ptr<AST::StatementNode> ParseEvalInput();
+
 
         protected:
             std::shared_ptr<AST::ExpressionNode> ParseAtom();
@@ -101,6 +108,10 @@ namespace PythonCoreNative::RunTime::Parser
             std::shared_ptr<AST::StatementNode> ParseGlobal();
             std::shared_ptr<AST::StatementNode> ParseNonlocal();
             std::shared_ptr<AST::StatementNode> ParseAssert();
+
+        protected:
+            std::shared_ptr<AST::TypeNode> ParseFuncType();
+            std::shared_ptr<AST::TypeNode> ParseTypeList();
 
         protected:
             std::shared_ptr<PythonCoreTokenizer> mLexer;
