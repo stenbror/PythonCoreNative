@@ -13,7 +13,8 @@ SET (CMAKE_NM      "/usr/bin/llvm-nm")
 SET (CMAKE_OBJDUMP "/usr/bin/llvm-objdump")
 SET (CMAKE_RANLIB  "/usr/bin/llvm-ranlib")
 
-file(GLOB SOURCES src/Parser/AST/*.cc)
+file(GLOB SOURCES src/Parser/AST/*.cc
+                  src/Parser/*.cc)
 
 project (PythonCoreNative)
 
