@@ -53,7 +53,8 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAtom()
                 if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield)
                 {
                     auto node = ParseYieldExpr();
-                    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen) throw ;
+                    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen) 
+                        throw std::make_shared<SyntaxError>(startPos, curSymbol, std::make_shared<std::basic_string<char32_t>>(U"Missing ')' in tuple!"));
                     auto symbol2 = mLexer->CurSymbol();
                     mLexer->Advance();
                     return std::make_shared<AST::AtomTupleNode>(startPos, mLexer->Position(), curSymbol, node, symbol2);
@@ -61,7 +62,8 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAtom()
                 else
                 {
                     auto node = ParseTestListComp();
-                    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen) throw ;
+                    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen) 
+                        throw std::make_shared<SyntaxError>(startPos, curSymbol, std::make_shared<std::basic_string<char32_t>>(U"Missing ')' in tuple!"));
                     auto symbol2 = mLexer->CurSymbol();
                     mLexer->Advance();
                     return std::make_shared<AST::AtomTupleNode>(startPos, mLexer->Position(), curSymbol, node, symbol2);
@@ -79,7 +81,8 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAtom()
                 else
                 {
                     auto node = ParseTestListComp();
-                    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightBracket) throw ;
+                    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightBracket) 
+                        throw std::make_shared<SyntaxError>(startPos, curSymbol, std::make_shared<std::basic_string<char32_t>>(U"Missing ']' in list!"));
                     auto symbol2 = mLexer->CurSymbol();
                     mLexer->Advance();
                     return std::make_shared<AST::AtomListNode>(startPos, mLexer->Position(), curSymbol, node, symbol2);
@@ -97,7 +100,8 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAtom()
                 else
                 {
                     auto node = ParseDictorSetMaker();
-                    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightCurly) throw ;
+                    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightCurly) 
+                        throw std::make_shared<SyntaxError>(startPos, curSymbol, std::make_shared<std::basic_string<char32_t>>(U"Missing '}' in dictionary!"));
                     auto symbol2 = mLexer->CurSymbol();
                     mLexer->Advance();
                     if (typeid(node) == typeid(AST::AtomSetNode))
@@ -108,9 +112,8 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAtom()
                 }
             }
         default:
-            throw ;
+            throw std::make_shared<SyntaxError>(startPos, curSymbol, std::make_shared<std::basic_string<char32_t>>(U"Illegal literal found!"));
     }
-    
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAtomExpr()

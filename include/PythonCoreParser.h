@@ -1,6 +1,7 @@
 #pragma once
 
 #include <PythonCoreTokenizer.h>
+#include <SyntaxError.h>
 
 #include <ast/ExpressionNode.h>
 #include <ast/StatementNode.h>
