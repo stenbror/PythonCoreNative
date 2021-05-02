@@ -324,7 +324,19 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseXorExpr()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseOrExpr()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto left = ParseXorExpr();
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyBitOr)
+    {
+        auto symbol = mLexer->CurSymbol();
+        mLexer->Advance();
+        auto right = ParseXorExpr();
+
+        left = std::make_shared<AST::BitOrNode>(startPos, mLexer->Position(), left, symbol, right);
+    }
+
+    return left;
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseStarExpr()
