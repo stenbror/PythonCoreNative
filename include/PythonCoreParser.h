@@ -20,6 +20,9 @@
 #include <ast/AtomSetNode.h>
 #include <ast/AtomExprNode.h>
 #include <ast/PowerNode.h>
+#include <ast/UnaryPlusNode.h>
+#include <ast/UnaryMinusNode.h>
+#include <ast/UnaryBitInvertNode.h>
 
 
 #include <memory>

@@ -173,7 +173,32 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParsePower()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseFactor()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+
+    switch (symbol->GetSymbolKind())
+    {
+        case TokenKind::PyPlus:
+            {
+                mLexer->Advance();
+                auto rightPlus = ParseFactor();
+                return std::make_shared<AST::UnaryPlusNode>(startPos, mLexer->Position(), symbol, rightPlus);
+            }
+        case TokenKind::PyMinus:
+            {
+                mLexer->Advance();
+                auto rightMinus = ParseFactor();
+                return std::make_shared<AST::UnaryMinusNode>(startPos, mLexer->Position(), symbol, rightMinus);
+            }
+        case TokenKind::PyBitInvert:
+            {
+                mLexer->Advance();
+                auto rightInvert = ParseFactor();
+                return std::make_shared<AST::UnaryBitInvertNode>(startPos, mLexer->Position(), symbol, rightInvert);
+            }
+        default:
+            return ParsePower();
+    }
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTerm()
