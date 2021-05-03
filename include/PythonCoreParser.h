@@ -51,6 +51,7 @@
 #include <ast/OrTestNode.h>
 #include <ast/LambdaNode.h>
 #include <ast/TestNode.h>
+#include <ast/NamedExprNode.h>
 
 
 #include <memory>

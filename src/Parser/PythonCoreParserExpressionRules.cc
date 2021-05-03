@@ -532,7 +532,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTest()
         auto right = ParseOrTest();
 
         if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyElse)
-            throw ;
+            throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing 'else' in 'test expression!"));
 
         auto symbol2 = mLexer->CurSymbol();
         mLexer->Advance();
