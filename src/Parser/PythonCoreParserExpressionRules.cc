@@ -449,12 +449,34 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseComparison()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseNotTest()
 {
-    return nullptr;
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyNot)
+    {
+        auto startPos = mLexer->Position();
+        auto symbol = mLexer->CurSymbol();
+        mLexer->Advance();
+        auto right = ParseNotTest();
+
+        return std::make_shared<AST::NotTestNode>(startPos, mLexer->Position(), symbol, right);
+    }
+
+    return ParseComparison();
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAndTest()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto left = ParseNotTest();
+
+    while ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAnd)
+    {
+        auto symbol = mLexer->CurSymbol();
+        mLexer->Advance();
+        auto right = ParseNotTest();
+
+        left = std::make_shared<AST::AndTestNode>(startPos, mLexer->Position(), left, symbol, right);
+    }
+
+    return left;
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseOrTest()

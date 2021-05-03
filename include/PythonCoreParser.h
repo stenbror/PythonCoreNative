@@ -46,6 +46,9 @@
 #include <ast/CompareIsNotNode.h>
 #include <ast/CompareNotInNode.h>
 #include <ast/CompareInNode.h>
+#include <ast/NotTestNode.h>
+#include <ast/AndTestNode.h>
+#include <ast/OrTestNode.h>
 
 
 #include <memory>
