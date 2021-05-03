@@ -36,6 +36,16 @@
 #include <ast/BitXorNode.h>
 #include <ast/BitOrNode.h>
 #include <ast/StarExprNode.h>
+#include <ast/CompareLessNode.h>
+#include <ast/CompareLessEqualNode.h>
+#include <ast/CompareEqualNode.h>
+#include <ast/CompareGreaterNode.h>
+#include <ast/CompareGreaterEqualNode.h>
+#include <ast/CompareNotEqualNode.h>
+#include <ast/CompareIsNode.h>
+#include <ast/CompareIsNotNode.h>
+#include <ast/CompareNotInNode.h>
+#include <ast/CompareInNode.h>
 
 
 #include <memory>

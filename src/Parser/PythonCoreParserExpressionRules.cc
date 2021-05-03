@@ -353,7 +353,98 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseStarExpr()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseComparison()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto left = ParseOrExpr();
+
+    while ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLess ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLessEqual ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyEqual ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyGreater ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyGreaterEqual ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyNotEqual ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyIn ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyNot ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyIs )
+    {
+        auto symbol = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        switch (symbol->GetSymbolKind())
+        {
+            case TokenKind::PyLess:
+                {
+                    auto right = ParseOrExpr();
+                    left = std::make_shared<AST::CompareLessNode>(startPos, mLexer->Position(), left, symbol, right);
+                }
+                break;
+            case TokenKind::PyLessEqual:
+                {
+                    auto right = ParseOrExpr();
+                    left = std::make_shared<AST::CompareLessEqualNode>(startPos, mLexer->Position(), left, symbol, right);
+                }
+                break;
+            case TokenKind::PyEqual:
+                {
+                    auto right = ParseOrExpr();
+                    left = std::make_shared<AST::CompareEqualNode>(startPos, mLexer->Position(), left, symbol, right);
+                }
+                break;
+            case TokenKind::PyGreater:
+                {
+                    auto right = ParseOrExpr();
+                    left = std::make_shared<AST::CompareGreaterNode>(startPos, mLexer->Position(), left, symbol, right);
+                }
+                break;
+            case TokenKind::PyGreaterEqual:
+                {
+                    auto right = ParseOrExpr();
+                    left = std::make_shared<AST::CompareGreaterEqualNode>(startPos, mLexer->Position(), left, symbol, right);
+                }
+                break;
+            case TokenKind::PyIn:
+                {
+                    auto right = ParseOrExpr();
+                    left = std::make_shared<AST::CompareInNode>(startPos, mLexer->Position(), left, symbol, right);
+                }
+                break;
+            case TokenKind::PyNotEqual:
+                {
+                    auto right = ParseOrExpr();
+                    left = std::make_shared<AST::CompareNotEqualNode>(startPos, mLexer->Position(), left, symbol, right);
+                }
+                break;
+            case TokenKind::PyIs:
+                {
+                    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyNot)
+                    {
+                        auto symbol2 = mLexer->CurSymbol();
+                        mLexer->Advance();
+                        auto right = ParseOrExpr();
+                        left = std::make_shared<AST::CompareIsNotNode>(startPos, mLexer->Position(), left, symbol, symbol2, right);
+                    }
+                    else
+                    {
+                        auto right = ParseOrExpr();
+                        left = std::make_shared<AST::CompareIsNode>(startPos, mLexer->Position(), left, symbol, right);
+                    }
+                }
+                break;
+            case TokenKind::PyNot:
+                {
+                    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyIn)
+                        throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing 'in' after 'not' in 'not in' operator!"));
+                    
+                    auto symbol2 = mLexer->CurSymbol();
+                    mLexer->Advance();
+                    auto right = ParseOrExpr();
+                    left = std::make_shared<AST::CompareNotInNode>(startPos, mLexer->Position(), left, symbol, symbol2, right);
+                }
+                break;
+            default:    break;
+        }
+    }
+
+    return left;
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseNotTest()

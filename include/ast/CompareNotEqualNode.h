@@ -1,3 +1,4 @@
+#pragma once
 
 #include <ast/ExpressionNode.h>
 #include <Token.h>
@@ -6,7 +7,7 @@
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class CompareNotEqualNode : protected ExpressionNode
+    class CompareNotEqualNode : public ExpressionNode
     {
         public:
             CompareNotEqualNode(  
