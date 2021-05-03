@@ -52,6 +52,7 @@
 #include <ast/LambdaNode.h>
 #include <ast/TestNode.h>
 #include <ast/NamedExprNode.h>
+#include <ast/TestListCompNode.h>
 
 
 #include <memory>

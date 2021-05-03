@@ -563,7 +563,36 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseNamedExpr()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestListComp()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::ExpressionNode>>>();
+    auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    nodes->push_back(mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ? ParseStarExpr() : ParseNamedExpr());
+    
+    if (    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAsync ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyFor )
+            {
+                nodes->push_back( ParseCompIter() );
+            }
+    else
+    {
+        while ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+        {
+            separators->push_back( mLexer->CurSymbol() );
+            mLexer->Advance();
+            if (    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightParen ||
+                    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightBracket )
+                    {
+                        nodes->push_back(mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ? ParseStarExpr() : ParseNamedExpr());
+                    }
+            else if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma  )
+                throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting item in testlist!"));
+        }
+    }
+
+    if ( nodes->size() == 1 && separators->size() == 0 ) return nodes->back();
+    
+    return std::make_shared<AST::TestListCompNode>(startPos, mLexer->Position(), nodes, separators);
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTrailer()
