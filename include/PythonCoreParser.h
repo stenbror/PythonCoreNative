@@ -53,6 +53,9 @@
 #include <ast/TestNode.h>
 #include <ast/NamedExprNode.h>
 #include <ast/TestListCompNode.h>
+#include <ast/CallNode.h>
+#include <ast/IndexNode.h>
+#include <ast/DotNameNode.h>
 
 
 #include <memory>

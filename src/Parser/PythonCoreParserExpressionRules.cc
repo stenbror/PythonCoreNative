@@ -597,7 +597,48 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestListComp()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTrailer()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    switch (symbol->GetSymbolKind())
+    {
+        case TokenKind::PyLeftParen:
+            {
+                auto right = mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen ? ParseVarArgsList() : nullptr;
+
+                if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen)
+                    throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting ')' in call!"));
+
+                auto symbol2 = mLexer->CurSymbol();
+                mLexer->Advance();
+
+                return std::make_shared<AST::CallNode>(startPos, mLexer->Position(), symbol, right, symbol2);
+            }
+        case TokenKind::PyLeftBracket:
+            {
+                auto right = mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightBracket ? ParseSubscriptList() : nullptr;
+
+                if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightBracket)
+                    throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting ']' in subscript!"));
+
+                auto symbol2 = mLexer->CurSymbol();
+                mLexer->Advance();
+
+                return std::make_shared<AST::IndexNode>(startPos, mLexer->Position(), symbol, right, symbol2);
+            }
+        default:    // Dot Name
+            {
+                if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightBracket)
+                    throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting Name literal after '.'!"));
+            
+                auto symbol2 = mLexer->CurSymbol();
+                mLexer->Advance();
+
+                return std::make_shared<AST::DotNameNode>(startPos, mLexer->Position(), symbol, std::static_pointer_cast<NameToken>( symbol2 ) );
+            }
+            break;
+    }
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseSubscriptList()
