@@ -515,7 +515,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseLambda(bool isCond)
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestNoCond()
 {
-    return nullptr;
+    return mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLambda ? ParseLambda(false) : ParseOrTest();
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTest()
