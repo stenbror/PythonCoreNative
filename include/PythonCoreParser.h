@@ -35,6 +35,7 @@
 #include <ast/BitAndNode.h>
 #include <ast/BitXorNode.h>
 #include <ast/BitOrNode.h>
+#include <ast/StarExprNode.h>
 
 
 #include <memory>

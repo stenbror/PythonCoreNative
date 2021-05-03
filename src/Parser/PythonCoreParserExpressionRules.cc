@@ -341,7 +341,14 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseOrExpr()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseStarExpr()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyMul)
+        throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing '*' in star expression!"));
+
+    auto symbol = mLexer->CurSymbol();
+    auto right = ParseOrExpr();
+    return std::make_shared<AST::StarExprNode>(startPos, mLexer->Position(), symbol, right);
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseComparison()
