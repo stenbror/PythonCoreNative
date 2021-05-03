@@ -8,3 +8,8 @@ Token::Token(unsigned int startPosition, unsigned int endPosition, TokenKind kin
     mTokenEndPosition = endPosition;
     mKind = kind;
 }
+
+TokenKind Token::GetSymbolKind()
+{
+    return mKind;
+}    
