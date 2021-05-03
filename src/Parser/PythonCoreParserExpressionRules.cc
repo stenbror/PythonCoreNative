@@ -481,7 +481,19 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAndTest()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseOrTest()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto left = ParseAndTest();
+
+    while ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyOr)
+    {
+        auto symbol = mLexer->CurSymbol();
+        mLexer->Advance();
+        auto right = ParseAndTest();
+
+        left = std::make_shared<AST::OrTestNode>(startPos, mLexer->Position(), left, symbol, right);
+    }
+
+    return left;
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseLambda(bool isCond)
