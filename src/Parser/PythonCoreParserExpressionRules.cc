@@ -546,7 +546,19 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTest()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseNamedExpr()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto left = ParseTest();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColonAssign)
+    {
+        auto symbol = mLexer->CurSymbol();
+        mLexer->Advance();
+        auto right = ParseTest();
+
+        return std::make_shared<AST::NamedExprNode>(startPos, mLexer->Position(), left, symbol, right);
+    }
+
+    return left;;
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestListComp()
