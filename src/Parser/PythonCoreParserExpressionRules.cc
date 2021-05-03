@@ -520,7 +520,28 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestNoCond()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTest()
 {
-    return nullptr;
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLambda) return ParseLambda(true);
+
+    auto startPos = mLexer->Position();
+    auto left = ParseOrTest();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyIf)
+    {
+        auto symbol = mLexer->CurSymbol();
+        mLexer->Advance();
+        auto right = ParseOrTest();
+
+        if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyElse)
+            throw ;
+
+        auto symbol2 = mLexer->CurSymbol();
+        mLexer->Advance();
+        auto next = ParseTest();
+
+        return std::make_shared<AST::TestNode>(startPos, mLexer->Position(), left, symbol, right, symbol2, next);
+    }
+
+    return left;
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseNamedExpr()
