@@ -49,6 +49,7 @@
 #include <ast/NotTestNode.h>
 #include <ast/AndTestNode.h>
 #include <ast/OrTestNode.h>
+#include <ast/LambdaNode.h>
 
 
 #include <memory>

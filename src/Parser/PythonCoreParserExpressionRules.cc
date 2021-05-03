@@ -498,7 +498,19 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseOrTest()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseLambda(bool isCond)
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+    auto left = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColon ? nullptr : ParseVarArgsList();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
+        throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing ':' in 'lambda' expression!"));
+
+    auto symbol2 = mLexer->CurSymbol();
+    mLexer->Advance();
+    auto right = isCond ? ParseTest() : ParseTestNoCond();
+
+    return std::make_shared<AST::LambdaNode>(startPos, mLexer->Position(), symbol, left, symbol2, right);
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestNoCond()
