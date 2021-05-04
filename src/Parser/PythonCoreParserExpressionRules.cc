@@ -782,7 +782,42 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseDictorSetMaker()
 
     else
     {
+        while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+        {
+            separators->push_back(mLexer->CurSymbol());
+            mLexer->Advance();
 
+            if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightCurly) break;
+
+            if (isDictionary)
+            {
+                if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyPower)
+                {
+                    auto powerOp = mLexer->CurSymbol();
+                    mLexer->Advance();
+                    auto powerNode = ParseOrExpr();
+                    nodes->push_back(std::make_shared<AST::DictionaryKWEntryNode>(startPos, mLexer->Position(), powerOp, powerNode));
+                }
+                else
+                {
+                    auto key = ParseTest();
+
+                    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
+                        throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting ':' in dictionary entry!"));
+
+                    auto symbol = mLexer->CurSymbol();
+                    mLexer->Advance();
+                    auto value = ParseTest();
+
+                    nodes->push_back( std::make_shared<AST::DictionaryEntryNode>(startPos, mLexer->Position(), key, symbol, value));
+                }
+            }
+            else
+            {
+                nodes->push_back(mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ? ParseStarExpr() : ParseTest());
+            }
+
+        }
     }
 
     if (isDictionary)
