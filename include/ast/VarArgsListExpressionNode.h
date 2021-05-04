@@ -1,5 +1,5 @@
+#pragma once
 
-#include <ast/StatementNode.h>
 #include <ast/ExpressionNode.h>
 #include <Token.h>
 
@@ -8,18 +8,18 @@
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class VarArgsListStatementNode : protected StatementNode
+    class VarArgsListExpressionNode : public ExpressionNode
     {
         public:
-            VarArgsListStatementNode(  
+            VarArgsListExpressionNode(  
                             unsigned int start, unsigned int end, 
                             std::shared_ptr<std::vector<std::shared_ptr<ExpressionNode>>> nodes,
                             std::shared_ptr<std::vector<std::shared_ptr<Token>>> separators,
                             std::shared_ptr<Token> slash,
                             std::shared_ptr<Token> mul,
-                            std::shared_ptr<StatementNode> mulNode,
+                            std::shared_ptr<NameToken> mulNode,
                             std::shared_ptr<Token> power,
-                            std::shared_ptr<StatementNode> powerNode
+                            std::shared_ptr<NameToken> powerNode
                         );
 
         protected:
@@ -27,8 +27,8 @@ namespace PythonCoreNative::RunTime::Parser::AST
             std::shared_ptr<std::vector<std::shared_ptr<Token>>> mSeparators;
             std::shared_ptr<Token> mSlash;
             std::shared_ptr<Token> mMul;
-            std::shared_ptr<StatementNode> mMulNode;
+            std::shared_ptr<NameToken> mMulNode;
             std::shared_ptr<Token> mPower;
-            std::shared_ptr<StatementNode> mPowerNode;
+            std::shared_ptr<NameToken> mPowerNode;
     };
 }

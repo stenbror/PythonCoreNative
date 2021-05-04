@@ -902,5 +902,23 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVFPAssign()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    std::shared_ptr<NameToken> left = nullptr;
+    std::shared_ptr<Token> symbol = nullptr;
+    std::shared_ptr<AST::ExpressionNode> right = nullptr;
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
+        throw ;
+
+    left = std::static_pointer_cast<NameToken>(mLexer->CurSymbol());
+    mLexer->Advance();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAssign)
+    {
+        symbol = mLexer->CurSymbol();
+        mLexer->Advance();
+        right = ParseTest();
+    }
+
+    return std::make_shared<AST::VFPDefAssignExpressionNode>(startPos, mLexer->Position(), left, symbol, right);
 }

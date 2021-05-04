@@ -67,6 +67,8 @@
 #include <ast/CompIfNode.h>
 #include <ast/YieldExprNode.h>
 #include <ast/YieldFromNode.h>
+#include <ast/VarArgsListExpressionNode.h>
+#include <ast/VFPDefAssignExpressionNode.h>
 
 
 #include <memory>
