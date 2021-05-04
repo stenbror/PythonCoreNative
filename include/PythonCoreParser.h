@@ -69,6 +69,10 @@
 #include <ast/YieldFromNode.h>
 #include <ast/VarArgsListExpressionNode.h>
 #include <ast/VFPDefAssignExpressionNode.h>
+#include <ast/DictionaryKWEntryNode.h>
+#include <ast/DictionaryEntryNode.h>
+#include <ast/DictionaryContainerNode.h>
+#include <ast/SetContainerNode.h>
 
 
 #include <memory>

@@ -734,7 +734,61 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestList()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseDictorSetMaker()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::ExpressionNode>>>();
+    auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+    auto isDictionary = true;
+
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::PyMul:
+            {
+                isDictionary = false;
+                auto right = ParseStarExpr();
+                nodes->push_back(right);
+            }
+            break;
+        case TokenKind::PyPower:
+            {
+                auto powerOp = mLexer->CurSymbol();
+                mLexer->Advance();
+                auto powerNode = ParseOrExpr();
+                nodes->push_back(std::make_shared<AST::DictionaryKWEntryNode>(startPos, mLexer->Position(), powerOp, powerNode));
+            }
+            break;
+        default:
+            {
+                auto key = ParseTest();
+
+                if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColon)
+                {
+                    auto symbol = mLexer->CurSymbol();
+                    mLexer->Advance();
+                    auto value = ParseOrExpr();
+                    nodes->push_back(std::make_shared<AST::DictionaryEntryNode>(startPos, mLexer->Position(), key, symbol, value));
+                }
+                else
+                {
+                    isDictionary = false;
+                    nodes->push_back(key);
+                }
+            }
+            break;
+    }
+
+    if (    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAsync ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyFor) 
+                nodes->push_back(ParseCompIter());
+
+    else
+    {
+
+    }
+
+    if (isDictionary)
+        return std::make_shared<AST::DictionaryContainerNode>(startPos, mLexer->Position(), nodes, separators);
+    
+    return std::make_shared<AST::SetContainerNode>(startPos, mLexer->Position(), nodes, separators);
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseArgList()
