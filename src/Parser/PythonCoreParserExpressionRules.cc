@@ -909,7 +909,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
         mLexer->Advance();
         
         if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
-            throw ;
+            throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expected Name literal after '*' argument!"));
 
         mulNode = std::static_pointer_cast<NameToken>(mLexer->CurSymbol());
         mLexer->Advance();
@@ -1030,7 +1030,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
                     mLexer->Advance();
                     
                     if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
-                        throw ;
+                        throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expected Name literal after '*' argument!"));
 
                     mulNode = std::static_pointer_cast<NameToken>(mLexer->CurSymbol());
                     mLexer->Advance();
