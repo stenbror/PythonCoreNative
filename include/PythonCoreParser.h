@@ -58,6 +58,8 @@
 #include <ast/DotNameNode.h>
 #include <ast/SubscriptListNode.h>
 #include <ast/SubscriptNode.h>
+#include <ast/ExprListNode.h>
+#include <ast/TestListNode.h>
 
 
 #include <memory>
