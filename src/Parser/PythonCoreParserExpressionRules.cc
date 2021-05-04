@@ -760,7 +760,46 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseArgList()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseArgument()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::PyMul:
+        case TokenKind::PyPower:
+            {
+                auto symbol = mLexer->CurSymbol();
+                mLexer->Advance();
+                auto right = ParseTest();
+
+                return std::make_shared<AST::ArgumentNode>(startPos, mLexer->Position(), nullptr, symbol, right);
+            }
+        default:
+            {
+                auto left = ParseTest();
+
+                switch (mLexer->CurSymbol()->GetSymbolKind())
+                {
+                    case TokenKind::PyAsync:
+                    case TokenKind::PyFor:
+                        {
+                            auto right = ParseCompIter();
+
+                            return std::make_shared<AST::ArgumentNode>(startPos, mLexer->Position(), left, nullptr, right);
+                        }
+                    case TokenKind::PyColonAssign:
+                    case TokenKind::PyAssign:
+                        {
+                            auto symbol = mLexer->CurSymbol();
+                            mLexer->Advance();
+                            auto right = ParseTest();
+
+                            return std::make_shared<AST::ArgumentNode>(startPos, mLexer->Position(), left, symbol, right);
+                        }
+                    default:
+                        return left;
+                }
+            }
+    }
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseCompIter()
