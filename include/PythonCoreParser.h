@@ -62,6 +62,7 @@
 #include <ast/TestListNode.h>
 #include <ast/ArgsListNode.h>
 #include <ast/ArgumentNode.h>
+#include <ast/SyncCompForNode.h>
 
 
 #include <memory>
