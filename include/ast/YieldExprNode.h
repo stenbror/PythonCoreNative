@@ -1,22 +1,24 @@
+#pragma once
 
 #include <ast/ExpressionNode.h>
+#include <ast/StatementNode.h>
 #include <Token.h>
 
 #include <memory>
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class YieldExprNode : protected ExpressionNode
+    class YieldExprNode : public ExpressionNode
     {
         public:
             YieldExprNode(  
                             unsigned int start, unsigned int end, 
                             std::shared_ptr<Token> op1,
-                            std::shared_ptr<ExpressionNode> right
+                            std::shared_ptr<StatementNode> right
                         );
 
         protected:
             std::shared_ptr<Token> mOp1;
-            std::shared_ptr<ExpressionNode> mRight;
+            std::shared_ptr<StatementNode> mRight;
     };
 }

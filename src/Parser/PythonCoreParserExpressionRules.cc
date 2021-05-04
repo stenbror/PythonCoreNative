@@ -876,7 +876,23 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseCompIf()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseYieldExpr()
 {
-    return std::make_shared<AST::ExpressionNode>(0, 0);
+    auto startPos = mLexer->Position();
+    auto symbol1 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyFrom)
+    {
+        auto symbol2 = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        auto right = ParseTest();
+
+        return std::make_shared<AST::YieldFromNode>(startPos, mLexer->Position(), symbol1, symbol2, right);
+    }
+
+    auto right = ParseTestListStarExpr();
+
+    return std::make_shared<AST::YieldExprNode>(startPos, mLexer->Position(), symbol1, right);
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()

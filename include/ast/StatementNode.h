@@ -1,9 +1,10 @@
+#pragma once
 
 #include <ast/Node.h>
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class StatementNode : protected Node
+    class StatementNode : public Node
     {
         protected:
             StatementNode(unsigned int start, unsigned int end);

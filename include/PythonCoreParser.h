@@ -65,6 +65,8 @@
 #include <ast/SyncCompForNode.h>
 #include <ast/CompForNode.h>
 #include <ast/CompIfNode.h>
+#include <ast/YieldExprNode.h>
+#include <ast/YieldFromNode.h>
 
 
 #include <memory>
