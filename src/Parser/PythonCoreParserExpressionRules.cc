@@ -711,7 +711,25 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseExprList()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestList()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::ExpressionNode>>>();
+    auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    nodes->push_back(ParseTest());
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+    {
+        separators->push_back(mLexer->CurSymbol());
+        mLexer->Advance();
+        if (    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PySemiColon ||
+                mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Newline ||
+                mLexer->CurSymbol()->GetSymbolKind() == TokenKind::EndOfFile) break;
+        nodes->push_back(ParseTest());
+    }
+
+    if (nodes->size() == 1 && separators->size() == 0) return nodes->back();
+
+    return std::make_shared<AST::TestListNode>(startPos, mLexer->Position(), nodes, separators);
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseDictorSetMaker()
