@@ -56,6 +56,8 @@
 #include <ast/CallNode.h>
 #include <ast/IndexNode.h>
 #include <ast/DotNameNode.h>
+#include <ast/SubscriptListNode.h>
+#include <ast/SubscriptNode.h>
 
 
 #include <memory>
