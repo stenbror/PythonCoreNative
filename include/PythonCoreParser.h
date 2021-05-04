@@ -60,6 +60,8 @@
 #include <ast/SubscriptNode.h>
 #include <ast/ExprListNode.h>
 #include <ast/TestListNode.h>
+#include <ast/ArgsListNode.h>
+#include <ast/ArgumentNode.h>
 
 
 #include <memory>
