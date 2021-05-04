@@ -63,6 +63,8 @@
 #include <ast/ArgsListNode.h>
 #include <ast/ArgumentNode.h>
 #include <ast/SyncCompForNode.h>
+#include <ast/CompForNode.h>
+#include <ast/CompIfNode.h>
 
 
 #include <memory>

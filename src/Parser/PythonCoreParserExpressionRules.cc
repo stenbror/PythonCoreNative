@@ -841,7 +841,18 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseSyncCompFor()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseCompFor()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAsync)
+    {
+        auto symbol = mLexer->CurSymbol();
+        mLexer->Advance();
+        auto right = ParseSyncCompFor();
+
+        return std::make_shared<AST::CompForNode>(startPos, mLexer->Position(), symbol, right);
+    }
+
+    return ParseSyncCompFor();;
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseCompIf()
