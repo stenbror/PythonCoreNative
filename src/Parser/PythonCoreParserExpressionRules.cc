@@ -765,7 +765,9 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseArgument()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseCompIter()
 {
-    return nullptr;
+    return  mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAsync ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyFor ?
+                ParseCompFor() : ParseCompIf();
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseSyncCompFor()
