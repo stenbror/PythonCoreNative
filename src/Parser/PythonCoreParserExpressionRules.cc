@@ -664,7 +664,28 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseSubscriptList()
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseSubscript()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    std::shared_ptr<AST::ExpressionNode> first = nullptr, second = nullptr, third = nullptr;
+    std::shared_ptr<Token> one = nullptr, two = nullptr;
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon) first = ParseTest();
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColon)
+    {
+        one = mLexer->CurSymbol();
+        mLexer->Advance();
+        if (    mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma ||
+                mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon ||
+                mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightBracket ) second = ParseTest();
+        if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColon)
+        {
+            two = mLexer->CurSymbol();
+            mLexer->Advance();
+            if (    mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma ||
+                    mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightBracket ) third = ParseTest();
+        }
+    }
+
+    return std::make_shared<AST::SubscriptNode>(startPos, mLexer->Position(), first, one, second, two, third);
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseExprList()
