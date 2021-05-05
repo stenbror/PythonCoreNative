@@ -5,6 +5,29 @@ using namespace PythonCoreNative::RunTime::Parser;
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseCompound()
 {
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::PyIf:
+            return ParseIf();
+        case TokenKind::PyFor:
+            return ParseFor();
+        case TokenKind::PyWhile:
+            return ParseWhile();
+        case TokenKind::PyWith:
+            return ParseWith();
+        case TokenKind::PyTry:
+            return ParseTry();
+        case TokenKind::PyDef:
+            return ParseFuncDef();
+        case TokenKind::PyClass:
+            return ParseClass();
+        case TokenKind::PyAsync:
+            return ParseAsync();
+        case TokenKind::PyMatrice:
+            return ParseDecorated();
+        default:
+            return nullptr; // Should never happend! 
+    }
     return nullptr;
 }
 
