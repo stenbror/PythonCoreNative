@@ -74,6 +74,10 @@
 #include <ast/DictionaryContainerNode.h>
 #include <ast/SetContainerNode.h>
 
+#include <ast/IfStatementNode.h>
+#include <ast/ElifStatementNode.h>
+#include <ast/ElseStatementNode.h>
+
 
 #include <memory>
 

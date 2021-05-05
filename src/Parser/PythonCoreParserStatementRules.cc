@@ -33,7 +33,27 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseCompound()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseIf()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
+    std::shared_ptr<AST::StatementNode> node = nullptr;
+
+    auto left = ParseNamedExpr();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing ':' in 'if' statement!"));
+
+    auto symbol2 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto right = ParseSuite();
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyElif) nodes->push_back( ParseElif() );
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyElse) node = ParseElse();
+
+    return std::make_shared<AST::IfStatementNode>(startPos, mLexer->Position(), symbol, left, symbol2, right, nodes,node);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseElif()

@@ -1,3 +1,4 @@
+#pragma once
 
 #include <ast/StatementNode.h>
 #include <ast/ExpressionNode.h>
@@ -8,7 +9,7 @@
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class IfStatementNode : protected StatementNode
+    class IfStatementNode : public StatementNode
     {
         public:
             IfStatementNode(  
