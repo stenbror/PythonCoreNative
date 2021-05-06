@@ -77,7 +77,19 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseElif()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseElse()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyElif)
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing ':' in 'else' statement!"));
+
+    auto symbol2 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto right = ParseSuite();
+
+    return std::make_shared<AST::ElseStatementNode>(startPos, mLexer->Position(), symbol, symbol2, right);;
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWhile()
