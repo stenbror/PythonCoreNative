@@ -6,6 +6,7 @@ using namespace PythonCoreNative::RunTime::Parser;
 PythonCoreParser::PythonCoreParser(std::shared_ptr<PythonCoreTokenizer> lexer)
 {
     mLexer = lexer;
+    mFlowLevel = 0;
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseEvalInput()

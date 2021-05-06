@@ -77,6 +77,7 @@
 #include <ast/IfStatementNode.h>
 #include <ast/ElifStatementNode.h>
 #include <ast/ElseStatementNode.h>
+#include <ast/WhileStatementNode.h>
 
 
 #include <memory>
@@ -187,5 +188,6 @@ namespace PythonCoreNative::RunTime::Parser
 
         protected:
             std::shared_ptr<PythonCoreTokenizer> mLexer;
+            unsigned int mFlowLevel;
     };
 }

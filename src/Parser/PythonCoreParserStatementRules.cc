@@ -94,7 +94,26 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseElse()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWhile()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+    mFlowLevel++;
+
+    auto left = ParseNamedExpr();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyElif)
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing ':' in 'while' statement!"));
+
+    auto symbol2 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto right = ParseSuite();
+
+    mFlowLevel--;
+
+    auto next = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyElse ? ParseElse() : nullptr;
+
+    return std::make_shared<AST::WhileStatementNode>(startPos, mLexer->Position(), symbol, left, symbol2, right, next);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseFor()
