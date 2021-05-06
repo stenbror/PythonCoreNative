@@ -58,7 +58,21 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseIf()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseElif()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto left = ParseNamedExpr();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyElif)
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing ':' in 'elif' statement!"));
+
+    auto symbol2 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto right = ParseSuite();
+
+    return std::make_shared<AST::ElifStatementNode>(startPos, mLexer->Position(), symbol, left, symbol2, right);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseElse()
