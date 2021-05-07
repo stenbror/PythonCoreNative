@@ -118,7 +118,37 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWhile()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseFor()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol1 = mLexer->CurSymbol();
+    mLexer->Advance();
+    mFlowLevel++;
+
+    auto left = ParseExprList();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyIn)
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing 'in' in 'for' statement!"));
+
+    auto symbol2 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto right = ParseTestList();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing ':' in 'for' statement!"));
+
+    auto symbol3 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto tc = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::TypeComment ? mLexer->CurSymbol() : nullptr;
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::TypeComment) mLexer->Advance();
+
+    auto next = ParseSuite();
+
+    mFlowLevel--;
+
+    auto nodeElse = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyElse ? ParseElse() : nullptr;
+
+    return std::make_shared<AST::ForStatementNode>(startPos, mLexer->Position(), symbol1, left, symbol2, right, symbol3, tc, next, nodeElse);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWith()

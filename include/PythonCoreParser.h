@@ -78,6 +78,7 @@
 #include <ast/ElifStatementNode.h>
 #include <ast/ElseStatementNode.h>
 #include <ast/WhileStatementNode.h>
+#include <ast/ForStatementNode.h>
 
 
 #include <memory>
