@@ -184,7 +184,20 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWith()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWithItem()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto left = ParseTest();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAs)
+    {
+        auto symbol = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        auto right = ParseOrExpr();
+
+        return std::make_shared<AST::WithItemStatementNode>(startPos, mLexer->Position(), left, symbol, right);
+    }
+
+    return std::make_shared<AST::WithItemStatementNode>(startPos, mLexer->Position(), left, nullptr, nullptr);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTry()
