@@ -153,7 +153,33 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseFor()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWith()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
+    auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+    nodes->push_back( ParseWithItem() );
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+    {
+        separators->push_back( mLexer->CurSymbol() );
+        mLexer->Advance();
+
+        nodes->push_back( ParseWithItem() );
+    }
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing ':' in 'with' statement!"));
+
+    auto symbol2 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto tc = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::TypeComment ? mLexer->CurSymbol() : nullptr;
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::TypeComment) mLexer->Advance();
+
+    auto right = ParseSuite();
+
+    return std::make_shared<AST::WithStatementNode>(startPos, mLexer->Position(), symbol, nodes, separators, symbol2, tc, right);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWithItem()

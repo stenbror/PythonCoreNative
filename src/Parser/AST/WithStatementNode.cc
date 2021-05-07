@@ -8,8 +8,8 @@ WithStatementNode::WithStatementNode(
                             std::shared_ptr<Token> op1,
                             std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> withItems,
                             std::shared_ptr<std::vector<std::shared_ptr<Token>>> separators,
-                            std::shared_ptr<NameToken> op2,
-                            std::shared_ptr<NameToken> op3,
+                            std::shared_ptr<Token> op2,
+                            std::shared_ptr<Token> op3,
                             std::shared_ptr<StatementNode> right
                         ) : StatementNode(start, end)
 {

@@ -79,6 +79,8 @@
 #include <ast/ElseStatementNode.h>
 #include <ast/WhileStatementNode.h>
 #include <ast/ForStatementNode.h>
+#include <ast/WithStatementNode.h>
+#include <ast/WithItemStatementNode.h>
 
 
 #include <memory>
