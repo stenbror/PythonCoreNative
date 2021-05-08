@@ -342,7 +342,36 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDecorators()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDecorator()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto left = ParseDottedName();
+
+    std::shared_ptr<Token> symbol2 = nullptr, symbol3 = nullptr, symbol4 = nullptr;
+    std::shared_ptr<AST::ExpressionNode> right = nullptr;
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLeftParen)
+    {
+        symbol2 = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        right = mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen ? ParseArgList() : nullptr;
+
+        if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen)
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting ')' in decorator statement!"));
+
+        symbol3 = mLexer->CurSymbol();
+        mLexer->Advance();
+    }
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Newline)
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting Newline after decorator statement!"));
+
+    symbol4 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    return std::make_shared<AST::DecoratorStatementNode>(startPos, mLexer->Position(), symbol, left, symbol2, right, symbol3, symbol4);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAsyncFuncDef()
