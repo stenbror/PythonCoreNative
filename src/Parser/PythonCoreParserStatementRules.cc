@@ -332,7 +332,12 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDecorated()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDecorators()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMatrice) nodes->push_back( ParseDecorator() );
+
+    return std::make_shared<AST::DecoratorsStatementNode>(startPos, mLexer->Position(), nodes);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDecorator()
