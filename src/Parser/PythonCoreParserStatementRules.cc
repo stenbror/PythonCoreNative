@@ -207,7 +207,18 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTry()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseExcept()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto left = ParseExceptClause();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Name)
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing ':' in 'except' statement!"));
+    
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto right = ParseSuite();  
+
+    return std::make_shared<AST::ExceptNode>(startPos, mLexer->Position(), left, symbol, right);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseExceptClause()
