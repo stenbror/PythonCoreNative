@@ -202,7 +202,61 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWithItem()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTry()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Name)
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing ':' in 'try' statement!"));
+    
+    auto symbol2 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto left = ParseSuite();  
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyFinally)
+    {
+        auto symbol3 = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Name)
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing ':' in 'finally' statement!"));
+    
+        auto symbol4 = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        auto right = ParseSuite();  
+
+        return std::make_shared<AST::TryStatementNode>(startPos, mLexer->Position(), symbol, symbol2, left, nullptr, nullptr, symbol3, symbol4, right);
+    }
+    else
+    {
+        if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Name)
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing 'except' in 'try' statement!"));
+        auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();   
+
+        while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyExcept) nodes->push_back( ParseExcept() );
+
+        auto node = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyElse ? ParseElse() : nullptr;
+
+        if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyFinally)
+        {
+            auto symbol3 = mLexer->CurSymbol();
+            mLexer->Advance();
+
+            if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Name)
+                throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing ':' in 'finally' statement!"));
+        
+            auto symbol4 = mLexer->CurSymbol();
+            mLexer->Advance();
+
+            auto right = ParseSuite();
+
+            return std::make_shared<AST::TryStatementNode>(startPos, mLexer->Position(), symbol, symbol2, left, nodes, node, symbol3, symbol4, right);
+        }
+
+        return std::make_shared<AST::TryStatementNode>(startPos, mLexer->Position(), symbol, symbol2, left, nodes, node, nullptr, nullptr, nullptr);
+    }
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseExcept()
