@@ -81,6 +81,9 @@
 #include <ast/ForStatementNode.h>
 #include <ast/WithStatementNode.h>
 #include <ast/WithItemStatementNode.h>
+#include <ast/TryStatementNode.h>
+#include <ast/ExceptNode.h>
+#include <ast/ExceptClauseNode.h>
 
 
 #include <memory>

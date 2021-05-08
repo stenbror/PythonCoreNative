@@ -212,7 +212,32 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseExcept()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseExceptClause()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColon)
+    {
+        return std::make_shared<AST::ExceptClauseNode>(startPos, mLexer->Position(), symbol, nullptr, nullptr, nullptr);
+    }
+
+    auto left = ParseTest();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAs)
+    {
+        auto symbol2 = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Name)
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing Name after 'as' in 'except' statement!"));
+        
+        auto right = std::static_pointer_cast<NameToken> ( mLexer->CurSymbol() );
+        mLexer->Advance();
+
+        return std::make_shared<AST::ExceptClauseNode>(startPos, mLexer->Position(), symbol, left, symbol2, right);
+    }
+
+    return std::make_shared<AST::ExceptClauseNode>(startPos, mLexer->Position(), symbol, left, nullptr, nullptr);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDecorated()
