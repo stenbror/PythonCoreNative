@@ -307,7 +307,27 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseExceptClause()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDecorated()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto left = ParseDecorators();
+
+    std::shared_ptr<AST::StatementNode> right = nullptr;
+
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::PyClass:
+            right = ParseClass();
+            break;
+        case TokenKind::PyDef:
+            right = ParseFuncDef();
+            break;
+        case TokenKind::PyAsync:
+            right = ParseAsyncFuncDef();
+            break;
+        default:
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting 'class', 'def' or 'async' after '@'in Decorator Statement!"));
+    }
+
+    return std::make_shared<AST::DecoratedStatementNode>(startPos, mLexer->Position(), left, right);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDecorators()

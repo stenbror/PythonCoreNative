@@ -84,6 +84,9 @@
 #include <ast/TryStatementNode.h>
 #include <ast/ExceptNode.h>
 #include <ast/ExceptClauseNode.h>
+#include <ast/DecoratedStatementNode.h>
+#include <ast/DecoratorsStatementNode.h>
+#include <ast/DecoratorStatementNode.h>
 
 
 #include <memory>
