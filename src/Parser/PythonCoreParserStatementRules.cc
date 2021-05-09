@@ -1123,7 +1123,32 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseGlobal()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseNonlocal()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<NameToken>>>();
+    auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expect atleast one Name in 'nonlocal' statement!"));
+
+    nodes->push_back( std::static_pointer_cast<NameToken>(mLexer->CurSymbol()) );
+    mLexer->Advance();
+
+    while ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+    {
+        separators->push_back( mLexer->CurSymbol() );
+        mLexer->Advance();
+
+        if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expect Name after ',' in 'nonlocal' statement!"));
+
+        nodes->push_back( std::static_pointer_cast<NameToken>(mLexer->CurSymbol()) );
+        mLexer->Advance();
+    }
+
+    return std::make_shared<AST::NonlocalStatementNode>(startPos, mLexer->Position(), symbol, nodes, separators);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAssert()
