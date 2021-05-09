@@ -7,6 +7,7 @@ PythonCoreParser::PythonCoreParser(std::shared_ptr<PythonCoreTokenizer> lexer)
 {
     mLexer = lexer;
     mFlowLevel = 0;
+    mFuncLevel = 0;
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseEvalInput()

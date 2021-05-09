@@ -390,7 +390,42 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAsyncFuncDef()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseFuncDef()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol1 = mLexer->CurSymbol();
+    mLexer->Advance();
+    mFuncLevel++;
+    
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting Name of function declaration!"));
+
+    auto symbol2 = std::static_pointer_cast<NameToken>(mLexer->CurSymbol());
+    mLexer->Advance();
+
+    auto left = ParseParameter();
+
+    std::shared_ptr<Token> symbol3 = nullptr;
+    std::shared_ptr<AST::ExpressionNode> right = nullptr;
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyArrow)
+    {
+        symbol3 = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        right = ParseTest();
+    }
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing ':' in function declaration!"));
+
+    auto symbol4 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto tc = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::TypeComment ? mLexer->CurSymbol() : nullptr;
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::TypeComment) mLexer->Advance();
+
+    auto next = ParseFuncBodySuite();
+
+    return std::make_shared<AST::FuncDefStatementNode>(startPos, mLexer->Position(), symbol1, symbol2, left, symbol3, right, symbol4, tc, next);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseParameter()

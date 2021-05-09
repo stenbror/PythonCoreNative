@@ -88,6 +88,8 @@
 #include <ast/DecoratorsStatementNode.h>
 #include <ast/DecoratorStatementNode.h>
 #include <ast/AsyncStatementNode.h>
+#include <ast/FuncDefStatementNode.h>
+#include <ast/ParameterStatementNode.h>
 
 
 #include <memory>
@@ -199,5 +201,6 @@ namespace PythonCoreNative::RunTime::Parser
         protected:
             std::shared_ptr<PythonCoreTokenizer> mLexer;
             unsigned int mFlowLevel;
+            unsigned int mFuncLevel;
     };
 }
