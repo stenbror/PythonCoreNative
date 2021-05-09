@@ -956,7 +956,11 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDel()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePass()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    return std::make_shared<AST::PassStatementNode>(startPos, mLexer->Position(), symbol);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseBreak()
