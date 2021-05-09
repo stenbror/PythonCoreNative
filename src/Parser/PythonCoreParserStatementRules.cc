@@ -425,12 +425,30 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseFuncDef()
 
     auto next = ParseFuncBodySuite();
 
+    mFuncLevel--;
+
     return std::make_shared<AST::FuncDefStatementNode>(startPos, mLexer->Position(), symbol1, symbol2, left, symbol3, right, symbol4, tc, next);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseParameter()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing '(' in function declaration!"));
+
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto right = mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen ? ParseTypedArgsList() : nullptr;
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing ')' in function declaration!"));
+
+    auto symbol2 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    return std::make_shared<AST::ParameterStatementNode>(startPos, mLexer->Position(), symbol, right, symbol2);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseFuncBodySuite()
