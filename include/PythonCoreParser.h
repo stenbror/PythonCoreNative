@@ -96,6 +96,7 @@
 #include <ast/TFPDefStatementNode.h>
 #include <ast/ClassStatementNode.h>
 #include <ast/SuiteStatementNode.h>
+#include <ast/SimpleStatementNode.h>
 
 
 #include <memory>

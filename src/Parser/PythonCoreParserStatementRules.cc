@@ -679,7 +679,27 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseStmt()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSimpleStmt()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
+    auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    nodes->push_back( ParseSmallStmt() );
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PySemiColon)
+    {
+        separators->push_back( mLexer->CurSymbol() );
+        mLexer->Advance();
+
+        if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Newline) nodes->push_back( ParseSmallStmt() );
+    }
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Newline)
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting Newline after simple statement list!"));
+
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    return std::make_shared<AST::SimpleStatementNode>(startPos, mLexer->Position(), nodes, separators, symbol);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSmallStmt()

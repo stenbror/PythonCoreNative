@@ -1,3 +1,4 @@
+#pragma once
 
 #include <ast/StatementNode.h>
 #include <Token.h>
@@ -8,7 +9,7 @@
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class SimpleStatementNode : protected StatementNode
+    class SimpleStatementNode : public StatementNode
     {
         public:
             SimpleStatementNode(  
