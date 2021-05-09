@@ -530,7 +530,25 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTypedAssign()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTFPDef()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing Name in argument!"));
+
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColon)
+    {
+        auto symbol2 = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        auto right = ParseTest();
+
+        return std::make_shared<AST::TFPDefStatementNode>(startPos, mLexer->Position(), symbol, symbol2, right);
+    }
+
+    return std::make_shared<AST::TFPDefStatementNode>(startPos, mLexer->Position(), symbol, nullptr, nullptr);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseClass()
