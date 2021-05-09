@@ -704,7 +704,34 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSimpleStmt()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSmallStmt()
 {
-    return nullptr;
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::PyDel:
+            return ParseDel();
+        case TokenKind::PyPass:
+            return ParsePass();
+        case TokenKind::PyBreak:
+            return ParseBreak();
+        case TokenKind::PyContinue:
+            return ParseContinue();
+        case TokenKind::PyRaise:
+            return ParseRaise();
+        case TokenKind::PyYield:
+            return ParseYieldStmt();
+        case TokenKind::PyReturn:
+            return ParseReturn();
+        case TokenKind::PyImport:
+        case TokenKind::PyFrom:
+            return ParseImport();
+        case TokenKind::PyGlobal:
+            return ParseGlobal();
+        case TokenKind::PyNonLocal:
+            return ParseNonlocal();
+        case TokenKind::PyAssert:
+            return ParseAssert();
+        default:
+            return ParseExpr();
+    }
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseExpr()
