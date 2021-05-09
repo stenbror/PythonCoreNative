@@ -376,7 +376,16 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDecorator()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAsyncFuncDef()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyDef)
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting 'def' after 'async' statement!"));
+
+    auto right = ParseFuncDef();
+
+    return std::make_shared<AST::AsyncStatementNode>(startPos, mLexer->Position(), symbol, right);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseFuncDef()

@@ -87,6 +87,7 @@
 #include <ast/DecoratedStatementNode.h>
 #include <ast/DecoratorsStatementNode.h>
 #include <ast/DecoratorStatementNode.h>
+#include <ast/AsyncStatementNode.h>
 
 
 #include <memory>
