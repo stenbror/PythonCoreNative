@@ -660,7 +660,21 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAsync()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseStmt()
 {
-    return nullptr;
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::PyIf:
+        case TokenKind::PyFor:
+        case TokenKind::PyWhile:
+        case TokenKind::PyWith:
+        case TokenKind::PyTry:
+        case TokenKind::PyDef:
+        case TokenKind::PyClass:
+        case TokenKind::PyAsync:
+        case TokenKind::PyMatrice:
+            return ParseCompound();
+        default:
+            return ParseSimpleStmt();
+    }
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSimpleStmt()
