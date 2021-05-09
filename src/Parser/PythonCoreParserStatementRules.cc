@@ -1053,7 +1053,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseRaise()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseImport()
 {
-    return nullptr;
+    return mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyImport ? ParseImportName() : ParseImportFrom();
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseImportName()
