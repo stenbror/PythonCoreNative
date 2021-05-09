@@ -945,7 +945,13 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTestListStarExpr()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDel()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto right = ParseExprList();
+
+    return std::make_shared<AST::DelStatementNode>(startPos, mLexer->Position(), symbol, right);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePass()
