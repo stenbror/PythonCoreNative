@@ -904,7 +904,43 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAnnAssign(unsigned in
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTestListStarExpr()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::ExpressionNode>>>();
+    auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    nodes->push_back( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ? ParseStarExpr() : ParseTest() );
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+    {
+        separators->push_back( mLexer->CurSymbol() );
+        mLexer->Advance();
+
+        switch (mLexer->CurSymbol()->GetSymbolKind())
+        {
+            case TokenKind::PyPlusAssign:
+            case TokenKind::PyMinusAssign:
+            case TokenKind::PyMulAssign:
+            case TokenKind::PyDivAssign:
+            case TokenKind::PyModuloAssign:
+            case TokenKind::PyMatriceAssign:
+            case TokenKind::PyPowerAssign:
+            case TokenKind::PyFloorDivAssign:
+            case TokenKind::PyShiftLeftAssign:
+            case TokenKind::PyShiftRightAssign:
+            case TokenKind::PyBitAndAssign:
+            case TokenKind::PyBitXorAssign:
+            case TokenKind::PyBitOrAssign:
+            case TokenKind::PyAssign:
+            case TokenKind::PyColon:
+            case TokenKind::PySemiColon:
+            case TokenKind::Newline:
+                break;
+            default:
+                nodes->push_back( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ? ParseStarExpr() : ParseTest() );
+        }
+    }
+
+    return std::make_shared<AST::TestListStarExprListStatementNode>(startPos, mLexer->Position(), nodes, separators);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDel()
