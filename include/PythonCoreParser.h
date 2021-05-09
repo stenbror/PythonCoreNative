@@ -121,6 +121,10 @@
 #include <ast/YieldStatementNode.h>
 #include <ast/RaiseStatementNode.h>
 
+#include <ast/GlobalStatementNode.h>
+#include <ast/NonlocalStatementNode.h>
+#include <ast/AssertStatementNode.h>
+
 
 #include <memory>
 
