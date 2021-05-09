@@ -1153,5 +1153,21 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseNonlocal()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAssert()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto left = ParseTest();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+    {
+        auto symbol2 = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        auto right = ParseTest();
+
+        return std::make_shared<AST::AssertStatementNode>(startPos, mLexer->Position(), symbol, left, symbol2, right);
+    }
+
+    return std::make_shared<AST::AssertStatementNode>(startPos, mLexer->Position(), symbol, left, nullptr, nullptr);
 }
