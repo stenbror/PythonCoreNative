@@ -987,7 +987,26 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseContinue()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseReturn()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    if (mFuncLevel == 0) throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Found 'return' outside of a func declaration!"));
+
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::Newline:
+        case TokenKind::PySemiColon:
+
+            return std::make_shared<AST::ReturnStatementNode>(startPos, mLexer->Position(), symbol, nullptr);
+
+        default:
+
+            auto right = ParseTestListStarExpr();
+
+            return std::make_shared<AST::ReturnStatementNode>(startPos, mLexer->Position(), symbol, right);
+            
+    }
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseYieldStmt()

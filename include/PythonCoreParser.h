@@ -117,6 +117,7 @@
 #include <ast/PassStatementNode.h>
 #include <ast/BreakStatementNode.h>
 #include <ast/ContinueStatementNode.h>
+#include <ast/ReturnStatementNode.h>
 
 
 #include <memory>
