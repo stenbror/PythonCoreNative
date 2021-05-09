@@ -1022,7 +1022,33 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseYieldStmt()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseRaise()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::Newline:
+        case TokenKind::PySemiColon:
+
+            return std::make_shared<AST::RaiseStatementNode>(startPos, mLexer->Position(), symbol, nullptr, nullptr, nullptr);
+
+        default:
+            
+            auto left = ParseTest();
+
+            if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyFrom)
+            {
+                auto symbol2 = mLexer->CurSymbol();
+                mLexer->Advance();
+
+                auto right = ParseTest();
+
+                return std::make_shared<AST::RaiseStatementNode>(startPos, mLexer->Position(), symbol, left, symbol2, right);
+            }
+
+            return std::make_shared<AST::RaiseStatementNode>(startPos, mLexer->Position(), symbol, left, nullptr, nullptr);
+    }
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseImport()
