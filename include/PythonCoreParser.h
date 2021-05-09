@@ -90,6 +90,7 @@
 #include <ast/AsyncStatementNode.h>
 #include <ast/FuncDefStatementNode.h>
 #include <ast/ParameterStatementNode.h>
+#include <ast/FuncBodySuiteStatementNode.h>
 
 
 #include <memory>

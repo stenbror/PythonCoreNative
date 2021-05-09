@@ -453,7 +453,57 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseParameter()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseFuncBodySuite()
 {
-    return nullptr;
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Newline)
+    {
+        auto startPos = mLexer->Position();
+        auto symbol1 = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        std::shared_ptr<Token> tc = nullptr, nl = nullptr;
+
+        if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::TypeComment)
+        {
+            tc = mLexer->CurSymbol();
+            mLexer->Advance();
+
+            if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Newline)
+                throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing Newline after TypeComment in Suite!"));
+
+            nl = mLexer->CurSymbol();
+            mLexer->Advance();
+
+            if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Indent)
+                throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing Indent in suite!"));
+
+            auto symbol2 = mLexer->CurSymbol();
+            mLexer->Advance();
+
+            auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
+            nodes->push_back( ParseStmt() );
+            auto newlines = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+            while (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Dedent)
+            {
+                if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Newline)
+                {
+                    newlines->push_back(mLexer->CurSymbol());
+                    mLexer->Advance();
+                }
+                else
+                {
+                    nodes->push_back( ParseStmt() );
+                }
+            }
+
+            auto symbol3 = mLexer->CurSymbol();
+            mLexer->Advance();
+
+            return std::make_shared<AST::FuncBodySuiteStatementNode>(startPos, mLexer->Position(), symbol1, tc, nl, symbol2,  nodes, newlines, symbol3);
+        }
+
+    }
+
+    return ParseSimpleStmt();
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTypedArgsList()

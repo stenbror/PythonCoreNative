@@ -1,3 +1,4 @@
+#pragma once
 
 #include <ast/StatementNode.h>
 #include <Token.h>
@@ -7,7 +8,7 @@
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class FuncBodySuiteStatementNode : protected StatementNode
+    class FuncBodySuiteStatementNode : public StatementNode
     {
         public:
             FuncBodySuiteStatementNode(  
@@ -17,6 +18,7 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             std::shared_ptr<Token> op3,
                             std::shared_ptr<Token> op4,
                             std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> nodes,
+                            std::shared_ptr<std::vector<std::shared_ptr<Token>>> newlines,
                             std::shared_ptr<Token> op5
                         );
 
@@ -26,6 +28,7 @@ namespace PythonCoreNative::RunTime::Parser::AST
             std::shared_ptr<Token> mOp3;
             std::shared_ptr<Token> mOp4;
             std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> mNodes;
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> mNewlines;
             std::shared_ptr<Token> mOp5;
     };
 }

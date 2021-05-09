@@ -10,6 +10,7 @@ FuncBodySuiteStatementNode::FuncBodySuiteStatementNode(
                             std::shared_ptr<Token> op3,
                             std::shared_ptr<Token> op4,
                             std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> nodes,
+                            std::shared_ptr<std::vector<std::shared_ptr<Token>>> newlines,
                             std::shared_ptr<Token> op5
                         ) : StatementNode(start, end)
 {
@@ -18,5 +19,6 @@ FuncBodySuiteStatementNode::FuncBodySuiteStatementNode(
     mOp3 = op3;
     mOp4 = op4;
     mNodes = nodes;
+    mNewlines = newlines;
     mOp5 = op5;
 }
