@@ -97,6 +97,20 @@
 #include <ast/ClassStatementNode.h>
 #include <ast/SuiteStatementNode.h>
 #include <ast/SimpleStatementNode.h>
+#include <ast/PlusAssignStatementNode.h>
+#include <ast/MinusAssignStatementNode.h>
+#include <ast/MulAssignStatementNode.h>
+#include <ast/DivAssignStatementNode.h>
+#include <ast/PowerAssignStatementNode.h>
+#include <ast/FloorDivAssignStatementNode.h>
+#include <ast/ShiftLeftAssignStatementNode.h>
+#include <ast/ShiftRightAssignStatementNode.h>
+#include <ast/ModuloAssignStatementNode.h>
+#include <ast/MatriceAssignStatementNode.h>
+#include <ast/BitAndAssignStatementNode.h>
+#include <ast/BitXorAssignStatementNode.h>
+#include <ast/BitOrAssignStatementNode.h>
+#include <ast/AssignStatementNode.h>
 
 
 #include <memory>

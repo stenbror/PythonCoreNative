@@ -5,7 +5,7 @@
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class ExpressionNode : protected Node
+    class ExpressionNode : public Node
     {
         public:
             ExpressionNode(unsigned int start, unsigned int end);

@@ -736,7 +736,148 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSmallStmt()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseExpr()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    std::shared_ptr<Token> symbol = nullptr;
+    std::shared_ptr<AST::ExpressionNode> right = nullptr;
+    auto left = ParseTestListStarExpr();
+
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::PyPlusAssign:
+
+            symbol = mLexer->CurSymbol();
+            mLexer->Advance();
+            right = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield ? ParseYieldExpr() : ParseTestList();
+
+            return std::make_shared<AST::PlusAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right);
+
+        case TokenKind::PyMinusAssign:
+
+            symbol = mLexer->CurSymbol();
+            mLexer->Advance();
+            right = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield ? ParseYieldExpr() : ParseTestList();
+
+            return std::make_shared<AST::MinusAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right);
+
+        case TokenKind::PyMulAssign:
+
+            symbol = mLexer->CurSymbol();
+            mLexer->Advance();
+            right = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield ? ParseYieldExpr() : ParseTestList();
+
+            return std::make_shared<AST::MulAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right);
+
+        case TokenKind::PyDivAssign:
+
+            symbol = mLexer->CurSymbol();
+            mLexer->Advance();
+            right = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield ? ParseYieldExpr() : ParseTestList();
+
+            return std::make_shared<AST::DivAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right);
+
+        case TokenKind::PyPowerAssign:
+
+            symbol = mLexer->CurSymbol();
+            mLexer->Advance();
+            right = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield ? ParseYieldExpr() : ParseTestList();
+
+            return std::make_shared<AST::PowerAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right);
+
+        case TokenKind::PyFloorDivAssign:
+
+            symbol = mLexer->CurSymbol();
+            mLexer->Advance();
+            right = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield ? ParseYieldExpr() : ParseTestList();
+
+            return std::make_shared<AST::FloorDivAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right);
+
+        case TokenKind::PyShiftLeftAssign:
+
+            symbol = mLexer->CurSymbol();
+            mLexer->Advance();
+            right = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield ? ParseYieldExpr() : ParseTestList();
+
+            return std::make_shared<AST::ShiftLeftAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right);
+
+        case TokenKind::PyShiftRightAssign:
+
+            symbol = mLexer->CurSymbol();
+            mLexer->Advance();
+            right = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield ? ParseYieldExpr() : ParseTestList();
+
+            return std::make_shared<AST::ShiftRightAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right);
+
+        case TokenKind::PyModuloAssign:
+
+            symbol = mLexer->CurSymbol();
+            mLexer->Advance();
+            right = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield ? ParseYieldExpr() : ParseTestList();
+
+            return std::make_shared<AST::ModuloAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right);
+
+        case TokenKind::PyMatriceAssign:
+
+            symbol = mLexer->CurSymbol();
+            mLexer->Advance();
+            right = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield ? ParseYieldExpr() : ParseTestList();
+
+            return std::make_shared<AST::MatriceAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right);
+
+        case TokenKind::PyBitAndAssign:
+
+            symbol = mLexer->CurSymbol();
+            mLexer->Advance();
+            right = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield ? ParseYieldExpr() : ParseTestList();
+
+            return std::make_shared<AST::BitAndAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right);
+
+        case TokenKind::PyBitXorAssign:
+
+            symbol = mLexer->CurSymbol();
+            mLexer->Advance();
+            right = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield ? ParseYieldExpr() : ParseTestList();
+
+            return std::make_shared<AST::BitXorAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right);
+
+        case TokenKind::PyBitOrAssign:
+
+            symbol = mLexer->CurSymbol();
+            mLexer->Advance();
+            right = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield ? ParseYieldExpr() : ParseTestList();
+
+            return std::make_shared<AST::BitOrAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right);
+
+        case TokenKind::PyColon:
+
+            return ParseAnnAssign();
+
+        case TokenKind::PyAssign:
+            
+            {
+                auto operators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+                auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::Node>>>();
+
+                while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAssign)
+                {
+                    operators->push_back( mLexer->CurSymbol() );
+                    mLexer->Advance();
+
+                    nodes->push_back( 
+                        mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield ? 
+                            std::static_pointer_cast<AST::Node>( ParseYieldExpr() ) :
+                            std::static_pointer_cast<AST::Node>( ParseTestListStarExpr() ) 
+                    );
+                }
+
+                auto tc = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::TypeComment ? mLexer->CurSymbol() : nullptr;
+                if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::TypeComment) mLexer->Advance();
+
+                return std::make_shared<AST::AssignStatementNode>(startPos, mLexer->Position(), left, operators, nodes, tc);
+            }
+
+        default:
+            return left;
+    }
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAnnAssign()

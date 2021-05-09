@@ -1,3 +1,4 @@
+#pragma once
 
 #include <ast/StatementNode.h>
 #include <ast/ExpressionNode.h>
@@ -9,7 +10,7 @@
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class BitOrAssignStatementNode : protected StatementNode
+    class BitOrAssignStatementNode : public StatementNode
     {
         public:
             BitOrAssignStatementNode(  
