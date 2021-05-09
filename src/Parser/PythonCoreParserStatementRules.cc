@@ -500,7 +500,6 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseFuncBodySuite()
 
             return std::make_shared<AST::FuncBodySuiteStatementNode>(startPos, mLexer->Position(), symbol1, tc, nl, symbol2,  nodes, newlines, symbol3);
         }
-
     }
 
     return ParseSimpleStmt();
@@ -513,7 +512,20 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTypedArgsList()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTypedAssign()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto left =ParseTFPDef();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAssign)
+    {
+        auto symbol = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        auto right = ParseTest();
+
+        return std::make_shared<AST::TFPDefAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right);
+    }
+
+    return left;
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTFPDef()

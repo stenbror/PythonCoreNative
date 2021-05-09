@@ -91,6 +91,9 @@
 #include <ast/FuncDefStatementNode.h>
 #include <ast/ParameterStatementNode.h>
 #include <ast/FuncBodySuiteStatementNode.h>
+#include <ast/TypedArgsListStatementNode.h>
+#include <ast/TFPDefAssignStatementNode.h>
+#include <ast/TFPDefStatementNode.h>
 
 
 #include <memory>
