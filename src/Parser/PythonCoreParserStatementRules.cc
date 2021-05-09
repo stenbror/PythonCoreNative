@@ -634,7 +634,28 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSuite()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAsync()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    std::shared_ptr<AST::StatementNode> right = nullptr;
+
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::PyWith:
+            right = ParseWith();
+            break;
+        case TokenKind::PyDef:
+            right = ParseFuncDef();
+            break;
+        case TokenKind::PyFor:
+            right = ParseFor();
+            break;
+        default:
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting 'with', 'def' or 'for' after 'async'!"));
+    }
+
+    return std::make_shared<AST::AsyncStatementNode>(startPos, mLexer->Position(), symbol, right);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseStmt()
