@@ -965,12 +965,24 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePass()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseBreak()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    if (mFlowLevel == 0) throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Found 'break' outside of a loop statement!"));
+
+    return std::make_shared<AST::BreakStatementNode>(startPos, mLexer->Position(), symbol);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseContinue()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    if (mFlowLevel == 0) throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Found 'continue' outside of a loop statement!"));
+
+    return std::make_shared<AST::ContinueStatementNode>(startPos, mLexer->Position(), symbol);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseReturn()
