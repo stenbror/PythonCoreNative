@@ -194,7 +194,7 @@ namespace PythonCoreNative::RunTime::Parser
             std::shared_ptr<AST::StatementNode> ParseSimpleStmt();
             std::shared_ptr<AST::StatementNode> ParseSmallStmt();
             std::shared_ptr<AST::StatementNode> ParseExpr();
-            std::shared_ptr<AST::StatementNode> ParseAnnAssign();
+            std::shared_ptr<AST::StatementNode> ParseAnnAssign(unsigned int startPos, std::shared_ptr<AST::StatementNode> left);
             std::shared_ptr<AST::StatementNode> ParseTestListStarExpr();
             std::shared_ptr<AST::StatementNode> ParseDel();
             std::shared_ptr<AST::StatementNode> ParsePass();

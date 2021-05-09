@@ -849,7 +849,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseExpr()
 
         case TokenKind::PyColon:
 
-            return ParseAnnAssign();
+            return ParseAnnAssign(startPos, left);
 
         case TokenKind::PyAssign:
             
@@ -880,7 +880,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseExpr()
     }
 }
 
-std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAnnAssign()
+std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAnnAssign(unsigned int startPos, std::shared_ptr<AST::StatementNode> left)
 {
     return nullptr;
 }
