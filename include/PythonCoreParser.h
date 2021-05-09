@@ -111,6 +111,7 @@
 #include <ast/BitXorAssignStatementNode.h>
 #include <ast/BitOrAssignStatementNode.h>
 #include <ast/AssignStatementNode.h>
+#include <ast/AnnAssignStatementNode.h>
 
 
 #include <memory>

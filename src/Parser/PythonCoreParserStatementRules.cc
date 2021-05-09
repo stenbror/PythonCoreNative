@@ -882,7 +882,24 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseExpr()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAnnAssign(unsigned int startPos, std::shared_ptr<AST::StatementNode> left)
 {
-    return nullptr;
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto right = ParseTest();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAssign)
+    {
+        auto symbol2 = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        auto next = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield ? 
+                            std::static_pointer_cast<AST::Node>( ParseYieldExpr() ) :
+                            std::static_pointer_cast<AST::Node>( ParseTestListStarExpr() );
+
+        return std::make_shared<AST::AnnAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right, symbol2, next);
+    }
+
+    return std::make_shared<AST::AnnAssignStatementNode>(startPos, mLexer->Position(), left, symbol, right, nullptr, nullptr);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTestListStarExpr()
