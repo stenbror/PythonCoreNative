@@ -94,6 +94,7 @@
 #include <ast/TypedArgsListStatementNode.h>
 #include <ast/TFPDefAssignStatementNode.h>
 #include <ast/TFPDefStatementNode.h>
+#include <ast/ClassStatementNode.h>
 
 
 #include <memory>

@@ -553,7 +553,43 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTFPDef()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseClass()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol1 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing Name in 'class' declaration!"));
+
+    auto symbol2 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    std::shared_ptr<Token> symbol3 = nullptr, symbol4 = nullptr;
+    std::shared_ptr<AST::ExpressionNode> left = nullptr;
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLeftParen)
+    {
+        symbol3 = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        left = mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen ? ParseArgList() : nullptr;
+
+        if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen)
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing ')' in 'class' declaration!"));
+    
+        symbol4 = mLexer->CurSymbol();
+        mLexer->Advance();
+    }
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing ':' in 'class' declaration!"));
+
+
+    auto symbol5 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto right = ParseSuite();
+
+    return std::make_shared<AST::ClassStatementNode>(startPos, mLexer->Position(), symbol1, symbol2, symbol3, left, symbol4, symbol5, right);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSuite()
