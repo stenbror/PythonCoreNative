@@ -1,3 +1,4 @@
+#pragma once
 
 #include <ast/StatementNode.h>
 #include <ast/ExpressionNode.h>
@@ -9,7 +10,7 @@
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class SuiteStatementNode : protected StatementNode
+    class SuiteStatementNode : public StatementNode
     {
         public:
             SuiteStatementNode(  
@@ -17,6 +18,7 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             std::shared_ptr<Token> op1,
                             std::shared_ptr<Token> op2,
                             std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> nodes,
+                            std::shared_ptr<std::vector<std::shared_ptr<Token>>> newlines,
                             std::shared_ptr<Token> op3
                         );
 
@@ -25,5 +27,6 @@ namespace PythonCoreNative::RunTime::Parser::AST
             std::shared_ptr<Token> mOp2;
             std::shared_ptr<Token> mOp3;
             std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> mNodes;
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> mNewlines;
     };
 }

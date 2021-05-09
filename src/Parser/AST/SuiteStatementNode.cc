@@ -8,11 +8,13 @@ SuiteStatementNode::SuiteStatementNode(
                             std::shared_ptr<Token> op1,
                             std::shared_ptr<Token> op2,
                             std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> nodes,
+                            std::shared_ptr<std::vector<std::shared_ptr<Token>>> newlines,
                             std::shared_ptr<Token> op3
                         ) : StatementNode(start, end)
 {
     mOp1 = op1;
     mOp2 = op2;
     mNodes = nodes;
+    mNewlines = newlines;
     mOp3 = op3;
 }
