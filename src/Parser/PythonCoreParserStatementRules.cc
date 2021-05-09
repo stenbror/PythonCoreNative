@@ -1011,7 +1011,13 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseReturn()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseYieldStmt()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+
+    if (mFuncLevel == 0) throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Found 'yield' outside of a func declaration!"));
+
+    auto right = ParseYieldExpr();
+
+    return std::make_shared<AST::YieldStatementNode>(startPos, mLexer->Position(), right);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseRaise()

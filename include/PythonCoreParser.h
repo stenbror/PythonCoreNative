@@ -118,6 +118,7 @@
 #include <ast/BreakStatementNode.h>
 #include <ast/ContinueStatementNode.h>
 #include <ast/ReturnStatementNode.h>
+#include <ast/YieldStatementNode.h>
 
 
 #include <memory>
