@@ -1232,7 +1232,29 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDottedAsNames()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDottedName()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<NameToken>>>();
+    auto dots = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name )
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting atleast one Name literal in dotted argument!"));
+
+    nodes->push_back( std::static_pointer_cast<NameToken>(mLexer->CurSymbol()) );
+    mLexer->Advance();
+
+    while ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyDot )
+    {
+        dots->push_back( mLexer->CurSymbol() );
+        mLexer->Advance();
+
+        if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name )
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting Name literal after '.' in dotted argument!"));
+
+        nodes->push_back( std::static_pointer_cast<NameToken>(mLexer->CurSymbol()) );
+        mLexer->Advance();
+    }
+
+    return std::make_shared<AST::DottedNameStatementNode>(startPos, mLexer->Position(), nodes, dots);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseGlobal()
