@@ -315,15 +315,22 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDecorated()
     switch (mLexer->CurSymbol()->GetSymbolKind())
     {
         case TokenKind::PyClass:
+
             right = ParseClass();
             break;
+
         case TokenKind::PyDef:
+
             right = ParseFuncDef();
             break;
+
         case TokenKind::PyAsync:
+
             right = ParseAsyncFuncDef();
             break;
+
         default:
+
             throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting 'class', 'def' or 'async' after '@'in Decorator Statement!"));
     }
 
@@ -588,6 +595,123 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTypedArgsList()
             break;
 
         default:
+            {
+                nodes->push_back( ParseTFPDef() );
+
+                while ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+                {
+                    separators->push_back( mLexer->CurSymbol() );
+                    mLexer->Advance();
+
+                    if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+                        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Unexpected ',' in argument!"));
+ 
+                    if (    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ||
+                            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyPower ||
+                            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColon ||
+                            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyDiv) continue;
+
+                    nodes->push_back( ParseTFPDef() );
+                }
+
+                if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyDiv )
+                {
+                    div = mLexer->CurSymbol();
+                    mLexer->Advance();
+
+                    auto lastToken = div;
+
+                    if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon )
+                    {
+                        while ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+                        {
+                            separators->push_back( mLexer->CurSymbol() );
+                            lastToken = mLexer->CurSymbol();
+                            mLexer->Advance();
+
+                            if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+                                throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Unexpected ',' in argument!"));
+                             
+                            if (    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ||
+                                    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyPower ||
+                                    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColon) continue;
+
+                            nodes->push_back( ParseTFPDef() );
+
+                            if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma)
+                                return std::make_shared<AST::TypedArgsListStatementNode>(startPos, mLexer->Position(), nodes, separators, div, mulOp, mulNode, powerOp, powerNode, tc);
+                        }
+
+                        if (lastToken->GetSymbolKind() != TokenKind::PyComma)
+                            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting ',' after '/' in argument list!"));
+
+                        if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul)
+                        {
+                            mulOp = mLexer->CurSymbol();
+                            mLexer->Advance();
+
+                            if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name )
+                                throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing Name literal after '*' in argument list!"));
+
+                            mulNode = ParseTFPDef();
+
+                            while ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+                            {
+                                separators->push_back( mLexer->CurSymbol() );
+                                mLexer->Advance();
+
+                                if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma )
+                                    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Unexpected ',' in argument list!"));
+
+                                if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColon ) continue;
+
+                                if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyPower )
+                                {
+                                    powerOp = mLexer->CurSymbol();
+                                    mLexer->Advance();
+
+                                    if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name )
+                                        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing Name literal after '**' in argument list!"));
+
+                                    powerNode = ParseTFPDef();
+
+                                    if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+                                    {
+                                        separators->push_back( mLexer->CurSymbol() );
+                                        mLexer->Advance();
+                                    }
+
+                                    if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+                                        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Unexpected ',' in argument!"));
+                
+                                    continue;
+                                }
+
+                                nodes->push_back( ParseTFPDef() );
+                            }
+                        }
+                        else if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyPower)
+                        {
+                            powerOp = mLexer->CurSymbol();
+                            mLexer->Advance();
+
+                            if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name )
+                                throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing Name literal after '**' in argument list!"));
+
+                            powerNode = ParseTFPDef();
+
+                            if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+                            {
+                                separators->push_back( mLexer->CurSymbol() );
+                                mLexer->Advance();
+                            }
+
+                            if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+                                throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Unexpected ',' in argument!"));
+                        }
+                    }
+                }
+            }
             break;
     }
 
@@ -727,15 +851,22 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAsync()
     switch (mLexer->CurSymbol()->GetSymbolKind())
     {
         case TokenKind::PyWith:
+
             right = ParseWith();
             break;
+
         case TokenKind::PyDef:
+
             right = ParseFuncDef();
             break;
+
         case TokenKind::PyFor:
+
             right = ParseFor();
             break;
+
         default:
+
             throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting 'with', 'def' or 'for' after 'async'!"));
     }
 
@@ -755,8 +886,11 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseStmt()
         case TokenKind::PyClass:
         case TokenKind::PyAsync:
         case TokenKind::PyMatrice:
+
             return ParseCompound();
+        
         default:
+
             return ParseSimpleStmt();
     }
 }
@@ -791,29 +925,52 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSmallStmt()
     switch (mLexer->CurSymbol()->GetSymbolKind())
     {
         case TokenKind::PyDel:
+
             return ParseDel();
+
         case TokenKind::PyPass:
+            
             return ParsePass();
+        
         case TokenKind::PyBreak:
+            
             return ParseBreak();
+        
         case TokenKind::PyContinue:
+            
             return ParseContinue();
+        
         case TokenKind::PyRaise:
+            
             return ParseRaise();
+        
         case TokenKind::PyYield:
+            
             return ParseYieldStmt();
+        
         case TokenKind::PyReturn:
+            
             return ParseReturn();
+        
         case TokenKind::PyImport:
         case TokenKind::PyFrom:
+            
             return ParseImport();
+        
         case TokenKind::PyGlobal:
+            
             return ParseGlobal();
+        
         case TokenKind::PyNonLocal:
+            
             return ParseNonlocal();
+        
         case TokenKind::PyAssert:
+            
             return ParseAssert();
+        
         default:
+            
             return ParseExpr();
     }
 }
@@ -1020,6 +1177,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTestListStarExpr()
             case TokenKind::Newline:
                 break;
             default:
+            
                 nodes->push_back( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ? ParseStarExpr() : ParseTest() );
         }
     }
