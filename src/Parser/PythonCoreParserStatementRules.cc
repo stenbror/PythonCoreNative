@@ -1132,12 +1132,55 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseImportFrom()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseImportAsName()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+
+    if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name )
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting Name in import argument!"));
+
+    auto symbol1 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAs )
+    {
+        auto symbol2 = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name )
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting Name in import argument!"));
+
+        auto symbol3 = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        return std::make_shared<AST::ImportAsNameStatementNode>(startPos, mLexer->Position(), symbol1, symbol2, symbol3);
+    }
+
+    return std::make_shared<AST::ImportAsNameStatementNode>(startPos, mLexer->Position(), symbol1, nullptr, nullptr);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDottedAsName()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+
+    if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name )
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting Name in import argument!"));
+
+    auto left = ParseDottedName();
+
+    if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAs )
+    {
+        auto symbol2 = mLexer->CurSymbol();
+        mLexer->Advance();
+
+        if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name )
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting Name in import argument!"));
+
+        auto symbol3 = std::static_pointer_cast<NameToken>( mLexer->CurSymbol() );
+        mLexer->Advance();
+
+        return std::make_shared<AST::DottedAsNameStatementNode>(startPos, mLexer->Position(), left, symbol2, symbol3);
+    }
+
+    return std::make_shared<AST::DottedAsNameStatementNode>(startPos, mLexer->Position(), left, nullptr, nullptr);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseImportAsNames()

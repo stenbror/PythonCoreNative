@@ -122,7 +122,11 @@
 #include <ast/RaiseStatementNode.h>
 #include <ast/ImportStatementNode.h>
 #include <ast/ImportFromStatementNode.h>
-
+#include <ast/ImportAsNamesStatementNode.h>
+#include <ast/DottedAsNamesStatementNode.h>
+#include <ast/ImportAsNameStatementNode.h>
+#include <ast/DottedAsNameStatementNode.h>
+#include <ast/DottedNameStatementNode.h>
 #include <ast/GlobalStatementNode.h>
 #include <ast/NonlocalStatementNode.h>
 #include <ast/AssertStatementNode.h>
