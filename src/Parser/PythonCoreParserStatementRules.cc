@@ -1185,7 +1185,28 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDottedAsName()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseImportAsNames()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
+    auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    nodes->push_back( ParseImportAsName() );
+
+    while ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+    {
+        separators->push_back( mLexer->CurSymbol() );
+        mLexer->Advance();
+
+        if (    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightParen ||
+                mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Newline ||
+                mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PySemiColon )
+                    continue;
+
+        nodes->push_back( ParseImportAsName() );
+    }
+
+    if ( nodes->size() == 1 && separators->size() == 0 ) return nodes->back();
+
+    return std::make_shared<AST::ImportAsNamesStatementNode>(startPos, mLexer->Position(), nodes, separators);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDottedAsNames()
