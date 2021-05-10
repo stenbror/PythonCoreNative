@@ -507,7 +507,15 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseFuncBodySuite()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTypedArgsList()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
+    auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+    auto tc = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+    std::shared_ptr<Token> div = nullptr;
+    std::shared_ptr<Token> mulOp = nullptr, powerOp = nullptr;
+    std::shared_ptr<AST::StatementNode> mulNode = nullptr, powerNode = nullptr;
+
+    return std::make_shared<AST::TypedArgsListStatementNode>(startPos, mLexer->Position(), nodes, separators, div, mulOp, mulNode, powerOp, powerNode, tc);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTypedAssign()
