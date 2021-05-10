@@ -1,3 +1,4 @@
+#pragma once
 
 #include <ast/StatementNode.h>
 #include <Token.h>
@@ -7,7 +8,7 @@
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class DottedAsNamesStatementNode : protected StatementNode
+    class DottedAsNamesStatementNode : public StatementNode
     {
         public:
             DottedAsNamesStatementNode(  
