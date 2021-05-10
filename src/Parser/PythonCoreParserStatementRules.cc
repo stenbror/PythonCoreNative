@@ -515,6 +515,82 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTypedArgsList()
     std::shared_ptr<Token> mulOp = nullptr, powerOp = nullptr;
     std::shared_ptr<AST::StatementNode> mulNode = nullptr, powerNode = nullptr;
 
+    switch ( mLexer->CurSymbol()->GetSymbolKind() )
+    {
+        case TokenKind::PyMul:
+
+            {
+                mulOp = mLexer->CurSymbol();
+                mLexer->Advance();
+
+                if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name )
+                    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing Name literal after '*' in argument list!"));
+
+                mulNode = ParseTFPDef();
+
+                while ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+                {
+                    separators->push_back( mLexer->CurSymbol() );
+                    mLexer->Advance();
+
+                    if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma )
+                        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Unexpected ',' in argument list!"));
+
+                    if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColon ) continue;
+
+                    if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyPower )
+                    {
+                        powerOp = mLexer->CurSymbol();
+                        mLexer->Advance();
+
+                        if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name )
+                            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing Name literal after '**' in argument list!"));
+
+                        powerNode = ParseTFPDef();
+
+                        if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+                        {
+                            separators->push_back( mLexer->CurSymbol() );
+                            mLexer->Advance();
+                        }
+
+                        if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+                            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Unexpected ',' in argument!"));
+       
+                        continue;
+                    }
+
+                    nodes->push_back( ParseTFPDef() );
+                }
+            }
+            break;
+
+        case TokenKind::PyPower:
+            
+            {
+                powerOp = mLexer->CurSymbol();
+                mLexer->Advance();
+
+                if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name )
+                    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Missing Name literal after '**' in argument list!"));
+
+                powerNode = ParseTFPDef();
+
+                if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+                {
+                    separators->push_back( mLexer->CurSymbol() );
+                    mLexer->Advance();
+                }
+
+                if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma )
+                    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Unexpected ',' in argument!"));
+            }
+            break;
+
+        default:
+            break;
+    }
+
     return std::make_shared<AST::TypedArgsListStatementNode>(startPos, mLexer->Position(), nodes, separators, div, mulOp, mulNode, powerOp, powerNode, tc);
 }
 
