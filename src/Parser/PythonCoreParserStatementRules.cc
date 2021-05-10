@@ -1180,7 +1180,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDottedAsName()
         return std::make_shared<AST::DottedAsNameStatementNode>(startPos, mLexer->Position(), left, symbol2, symbol3);
     }
 
-    return std::make_shared<AST::DottedAsNameStatementNode>(startPos, mLexer->Position(), left, nullptr, nullptr);
+    return left;
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseImportAsNames()
