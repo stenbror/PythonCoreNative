@@ -120,6 +120,8 @@
 #include <ast/ReturnStatementNode.h>
 #include <ast/YieldStatementNode.h>
 #include <ast/RaiseStatementNode.h>
+#include <ast/ImportStatementNode.h>
+#include <ast/ImportFromStatementNode.h>
 
 #include <ast/GlobalStatementNode.h>
 #include <ast/NonlocalStatementNode.h>

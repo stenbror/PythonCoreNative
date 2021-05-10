@@ -1058,12 +1058,76 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseImport()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseImportName()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto right = ParseDottedName();
+
+    return std::make_shared<AST::ImportStatementNode>(startPos, mLexer->Position(), symbol, right);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseImportFrom()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol1 = mLexer->CurSymbol(); // 'from'
+    mLexer->Advance();
+    auto dots = std::shared_ptr<std::vector<std::shared_ptr<Token>>>();
+    std::shared_ptr<AST::StatementNode> left = nullptr, right = nullptr;
+
+    while ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyDot ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyElipsis)
+            {
+                dots->push_back( mLexer->CurSymbol() );
+                mLexer->Advance();
+            }
+
+    if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyImport && dots->size() == 0 )
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting 'from' part in import statement!"));
+    
+    else if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyImport )
+        left = ParseDottedName(); 
+
+    if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyImport )
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting 'import' in from statement!"));
+
+    auto symbol2 = mLexer->CurSymbol(); // 'import'
+    mLexer->Advance();
+
+    switch ( mLexer->CurSymbol()->GetSymbolKind() )
+    {
+        case TokenKind::PyMul:
+            
+            {
+                auto symbol5 = mLexer->CurSymbol();
+                mLexer->Advance();
+
+                return std::make_shared<AST::ImportFromStatementNode>(startPos, mLexer->Position(), symbol1, dots, left, symbol2, symbol5, nullptr, nullptr);
+            }
+
+        case TokenKind::PyLeftParen:
+
+            {
+                auto symbol3 = mLexer->CurSymbol(); // '(')
+                mLexer->Advance();
+
+                right = ParseImportAsNames();
+
+                if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen )
+                    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting ')' in 'from' statement!"));
+
+                auto symbol4 = mLexer->CurSymbol(); // ')'
+                mLexer->Advance();
+
+                return std::make_shared<AST::ImportFromStatementNode>(startPos, mLexer->Position(), symbol1, dots, left, symbol2, symbol3, right, symbol4);
+            }
+
+        default:
+
+            right = ParseImportAsNames();
+
+            return std::make_shared<AST::ImportFromStatementNode>(startPos, mLexer->Position(), symbol1, dots, left, symbol2, nullptr, right, nullptr);
+    }
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseImportAsName()
