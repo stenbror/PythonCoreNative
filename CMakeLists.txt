@@ -13,15 +13,6 @@ SET (CMAKE_NM      "/usr/bin/llvm-nm")
 SET (CMAKE_OBJDUMP "/usr/bin/llvm-objdump")
 SET (CMAKE_RANLIB  "/usr/bin/llvm-ranlib")
 
-Include(FetchContent)
-
-FetchContent_Declare(
-  Catch2
-  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  GIT_TAG        v2.13.1)
-
-FetchContent_MakeAvailable(Catch2)
-
 
 file(GLOB SOURCES src/Parser/AST/*.cc
                   src/Parser/*.cc)
@@ -33,3 +24,5 @@ set(CMAKE_BUILD_TYPE Release)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
+
+add_subdirectory(tests)
