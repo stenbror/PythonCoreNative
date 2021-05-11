@@ -1,5 +1,14 @@
 cmake_minimum_required(VERSION 3.18.4)
 
+Include(FetchContent)
+
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v2.13.6)
+
+FetchContent_MakeAvailable(Catch2)
+
 SET (CMAKE_CXX_COMPILER             "/usr/bin/clang++")
 SET (CMAKE_CXX_FLAGS                "-Wall -std=c++17 -fPIC")
 SET (CMAKE_CXX_FLAGS_DEBUG          "-g")
@@ -25,4 +34,3 @@ set(CMAKE_BUILD_TYPE Release)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
-add_subdirectory(tests)
