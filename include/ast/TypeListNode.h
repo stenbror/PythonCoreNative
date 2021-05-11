@@ -1,3 +1,4 @@
+#pragma once
 
 #include <ast/TypeNode.h>
 #include <ast/ExpressionNode.h>
@@ -8,7 +9,7 @@
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class TypeListNode : protected TypeNode
+    class TypeListNode : public TypeNode
     {
         public:
             TypeListNode(  

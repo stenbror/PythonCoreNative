@@ -61,5 +61,104 @@ std::shared_ptr<AST::TypeNode> PythonCoreParser::ParseFuncType()
 
 std::shared_ptr<AST::TypeNode> PythonCoreParser::ParseTypeList()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::ExpressionNode>>>();
+    auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+    std::shared_ptr<Token> mulOp = nullptr, powerOp = nullptr;
+    std::shared_ptr<AST::ExpressionNode> mulNode = nullptr, powerNode = nullptr;
+
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::PyMul:
+
+            mulOp = mLexer->CurSymbol();
+            mLexer->Advance();
+
+            mulNode = ParseTest();
+
+            while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+            {
+                separators->push_back( mLexer->CurSymbol() );
+                mLexer->Advance();
+
+                if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyPower) nodes->push_back( ParseTest() );
+                else
+                {
+                    powerOp = mLexer->CurSymbol();
+                    mLexer->Advance();
+
+                    powerNode = ParseTest();
+
+
+                    if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma )
+                        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Unexpected ',' after '**' argument!"));
+
+                }
+            }
+
+            break;
+
+        case TokenKind::PyPower:
+
+            powerOp = mLexer->CurSymbol();
+            mLexer->Advance();
+
+            powerNode = ParseTest();
+
+            break;
+
+        default:
+
+            nodes->push_back( ParseTest() );
+
+            while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+            {
+                separators->push_back( mLexer->CurSymbol() );
+                mLexer->Advance();
+
+                if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyPower)
+                {
+                    powerOp = mLexer->CurSymbol();
+                    mLexer->Advance();
+
+                    powerNode = ParseTest();
+
+                    if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma )
+                        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Unexpected ',' after '**' argument!"));
+
+                }
+                else if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul)
+                {
+                    mulOp = mLexer->CurSymbol();
+                    mLexer->Advance();
+
+                    mulNode = ParseTest();
+
+                    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+                    {
+                        separators->push_back( mLexer->CurSymbol() );
+                        mLexer->Advance();
+
+                        if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyPower) nodes->push_back( ParseTest() );
+                        else
+                        {
+                            powerOp = mLexer->CurSymbol();
+                            mLexer->Advance();
+
+                            powerNode = ParseTest();
+
+
+                            if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma )
+                                throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Unexpected ',' after '**' argument!"));
+
+                        }
+                    }
+                }
+                else nodes->push_back( ParseTest() );
+            }
+
+            break;
+    }
+
+    return std::make_shared<AST::TypeListNode>(startPos, mLexer->Position(), nodes, separators, mulOp, mulNode, powerOp, powerNode);
 }
