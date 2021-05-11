@@ -27,7 +27,23 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSingleInput()
 
 std::shared_ptr<AST::TypeNode> PythonCoreParser::ParseFuncTypeInput()
 {
-    return nullptr;
+    mLexer->Advance();
+    auto startPos = mLexer->Position();
+    auto newlines = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    auto right = ParseFuncType();
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Newline)
+    {
+        newlines->push_back( mLexer->CurSymbol() );
+        mLexer->Advance();
+    }
+
+    if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::EndOfFile )
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting End of File in Func!"));
+
+
+    return std::make_shared<AST::TypeInputNode>(startPos, mLexer->Position(), newlines, right, mLexer->CurSymbol());
 }
 
 std::shared_ptr<AST::TypeNode> PythonCoreParser::ParseFuncType()

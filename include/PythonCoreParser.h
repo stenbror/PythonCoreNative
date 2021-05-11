@@ -135,6 +135,10 @@
 #include <ast/FuncTypeNode.h>
 #include <ast/TypeListNode.h>
 
+#include <ast/EvalInputNode.h>
+#include <ast/FileInputNode.h>
+#include <ast/SingleInputNode.h>
+
 
 
 #include <memory>

@@ -1,3 +1,4 @@
+#pragma once
 
 #include <ast/TypeNode.h>
 #include <Token.h>
@@ -7,7 +8,7 @@
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class TypeInputNode : protected TypeNode
+    class TypeInputNode : public TypeNode
     {
         public:
             TypeInputNode(  
