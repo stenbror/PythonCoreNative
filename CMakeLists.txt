@@ -31,6 +31,9 @@ project (PythonCoreNative)
 set(CMAKE_BUILD_TYPE Release)
 
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include
+                    ${CMAKE_CURRENT_SOURCE_DIR}/build/_deps/catch2-src/include)
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
+
+add_subdirectory(tests)
