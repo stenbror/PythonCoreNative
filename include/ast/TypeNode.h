@@ -1,9 +1,10 @@
+#pragma once
 
 #include <ast/Node.h>
 
 namespace PythonCoreNative::RunTime::Parser::AST
 {
-    class TypeNode : protected Node
+    class TypeNode : public Node
     {
         protected:
             TypeNode(unsigned int start, unsigned int end);

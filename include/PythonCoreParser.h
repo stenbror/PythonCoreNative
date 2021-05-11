@@ -131,6 +131,11 @@
 #include <ast/NonlocalStatementNode.h>
 #include <ast/AssertStatementNode.h>
 
+#include <ast/TypeInputNode.h>
+#include <ast/FuncTypeNode.h>
+#include <ast/TypeListNode.h>
+
+
 
 #include <memory>
 

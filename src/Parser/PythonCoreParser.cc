@@ -32,7 +32,31 @@ std::shared_ptr<AST::TypeNode> PythonCoreParser::ParseFuncTypeInput()
 
 std::shared_ptr<AST::TypeNode> PythonCoreParser::ParseFuncType()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+
+    if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyLeftParen )
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting '(' in Func!"));
+
+    auto symbol1 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto left = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightParen ? nullptr : ParseTypeList();
+
+    if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen )
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting ')' in Func!"));
+
+    auto symbol2 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyArrow )
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting '->' in Func!"));
+
+    auto symbol3 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto right = ParseTest();
+
+    return std::make_shared<AST::FuncTypeNode>(startPos, mLexer->Position(), symbol1, left, symbol2, symbol3, right);
 }
 
 std::shared_ptr<AST::TypeNode> PythonCoreParser::ParseTypeList()
