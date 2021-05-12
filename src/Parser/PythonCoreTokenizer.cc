@@ -3,6 +3,13 @@
 
 using namespace PythonCoreNative::RunTime::Parser;
 
+
+
+PythonCoreTokenizer::PythonCoreTokenizer(unsigned int tabSize)
+{
+    //auto remove = mReservedKeywords.find(U"as");
+}
+
 std::shared_ptr<Token> PythonCoreTokenizer::CurSymbol()
 {
     return mCurSymbol;
