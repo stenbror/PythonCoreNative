@@ -12,7 +12,22 @@ PythonCoreParser::PythonCoreParser(std::shared_ptr<PythonCoreTokenizer> lexer)
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseEvalInput()
 {
-    return nullptr;
+    mLexer->Advance();
+    auto startPos = mLexer->Position();
+    auto newlines = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    auto right = ParseTestList();
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Newline)
+    {
+        newlines->push_back( mLexer->CurSymbol() );
+        mLexer->Advance();
+    }
+
+    if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::EndOfFile )
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting End of File in Func!"));
+
+    return std::make_shared<AST::EvalInputNode>(startPos, mLexer->Position(), newlines, right, mLexer->CurSymbol());
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseFileInput()
