@@ -48,7 +48,7 @@ void PythonCoreTokenizer::Advance()
             
             return ;
         }
-        else if (mSourceBuffer->PeekChar() == L'"' || mSourceBuffer->PeekChar() == L'\'')
+        else if (mSourceBuffer->PeekChar() == '"' || mSourceBuffer->PeekChar() == '\'')
         {
 
         }
@@ -61,5 +61,55 @@ void PythonCoreTokenizer::Advance()
             
             return;
         }
+    }
+
+
+
+
+
+    /* Handle Opetator and delimiters */
+    switch (mSourceBuffer->GetChar())
+    {
+        case '(':
+
+            mCurSymbol = std::make_shared<Token>(   mPosition, 
+                                                    mSourceBuffer->BufferPosition(),
+                                                    TokenKind::PyLeftParen);
+            break;
+
+        case '[':
+        
+            mCurSymbol = std::make_shared<Token>(   mPosition, 
+                                                    mSourceBuffer->BufferPosition(),
+                                                    TokenKind::PyLeftBracket);
+            break;
+
+        case '{':
+        
+            mCurSymbol = std::make_shared<Token>(   mPosition, 
+                                                    mSourceBuffer->BufferPosition(),
+                                                    TokenKind::PyLeftCurly);
+            break;
+
+        case ')':
+        
+            mCurSymbol = std::make_shared<Token>(   mPosition, 
+                                                    mSourceBuffer->BufferPosition(),
+                                                    TokenKind::PyRightParen);
+            break;
+
+        case ']':
+        
+            mCurSymbol = std::make_shared<Token>(   mPosition, 
+                                                    mSourceBuffer->BufferPosition(),
+                                                    TokenKind::PyRightBracket);
+            break;
+
+        case '}':
+        
+            mCurSymbol = std::make_shared<Token>(   mPosition, 
+                                                    mSourceBuffer->BufferPosition(),
+                                                    TokenKind::PyRightCurly);
+            break;
     }
 }
