@@ -2,7 +2,7 @@
 
 using namespace PythonCoreNative::RunTime::Parser;
 
-NumberToken::NumberToken(unsigned int startPosition, unsigned int endPosition, std::shared_ptr<std::basic_string<char32_t>> text) 
+NumberToken::NumberToken(unsigned int startPosition, unsigned int endPosition, std::shared_ptr<std::wstring> text) 
     :   Token(startPosition, endPosition, TokenKind::Number) 
 {
     mText = text;

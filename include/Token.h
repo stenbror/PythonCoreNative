@@ -25,27 +25,27 @@ namespace PythonCoreNative::RunTime::Parser
     class NameToken : public Token
     {
         public:
-            NameToken(unsigned int startPosition, unsigned int endPosition, std::shared_ptr<std::basic_string<char32_t>> text);
+            NameToken(unsigned int startPosition, unsigned int endPosition, std::shared_ptr<std::wstring> text);
 
         protected:
-            std::shared_ptr<std::basic_string<char32_t>> mText;
+            std::shared_ptr<std::wstring> mText;
     };
 
     class NumberToken  : public Token
     {
         public:
-            NumberToken(unsigned int startPosition, unsigned int endPosition, std::shared_ptr<std::basic_string<char32_t>> text);
+            NumberToken(unsigned int startPosition, unsigned int endPosition, std::shared_ptr<std::wstring> text);
 
         protected:
-            std::shared_ptr<std::basic_string<char32_t>> mText;
+            std::shared_ptr<std::wstring> mText;
     };
 
     class StringToken : public Token
     {
         public:
-            StringToken(unsigned int startPosition, unsigned int endPosition, std::shared_ptr<std::vector<std::shared_ptr<std::basic_string<char32_t>>>> text);
+            StringToken(unsigned int startPosition, unsigned int endPosition, std::shared_ptr<std::vector<std::shared_ptr<std::wstring>>> text);
 
         protected:
-            std::shared_ptr<std::vector<std::shared_ptr<std::basic_string<char32_t>>>> mText;
+            std::shared_ptr<std::vector<std::shared_ptr<std::wstring>>> mText;
     };
 }

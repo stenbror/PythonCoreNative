@@ -6,6 +6,7 @@
 #include <memory>
 #include <map>
 #include <string>
+#include <sstream>
 
 namespace PythonCoreNative::RunTime::Parser
 {
@@ -22,44 +23,47 @@ namespace PythonCoreNative::RunTime::Parser
         protected:
             std::shared_ptr<Token> mCurSymbol;
 
-            const static inline std::map<std::basic_string<char32_t>, TokenKind> mReservedKeywords
+            const static inline std::map<std::wstring, TokenKind> mReservedKeywords
                 {
-                    { U"False",     TokenKind::PyFalse },
-                    { U"None",      TokenKind::PyNone },
-                    { U"True",      TokenKind::PyTrue },
-                    { U"and",       TokenKind::PyAnd },
-                    { U"as",        TokenKind::PyAs },
-                    { U"assert",    TokenKind::PyAssert },
-                    { U"async",     TokenKind::PyAsync },
-                    { U"await",     TokenKind::PyAwait },
-                    { U"break",     TokenKind::PyBreak },
-                    { U"class",     TokenKind::PyClass },
-                    { U"continue",  TokenKind::PyContinue },
-                    { U"def",       TokenKind::PyDef },
-                    { U"del",       TokenKind::PyDel },
-                    { U"elif",      TokenKind::PyElif },
-                    { U"else",      TokenKind::PyElse },
-                    { U"except",    TokenKind::PyExcept },
-                    { U"finally",   TokenKind::PyFinally },
-                    { U"for",       TokenKind::PyFor },
-                    { U"from",      TokenKind::PyFrom },
-                    { U"global",    TokenKind::PyGlobal },
-                    { U"if",        TokenKind::PyIf },
-                    { U"import",    TokenKind::PyImport },
-                    { U"in",        TokenKind::PyIn },
-                    { U"is",        TokenKind::PyIs },
-                    { U"lambda",    TokenKind::PyLambda },
-                    { U"nonlocal",  TokenKind::PyNonLocal },
-                    { U"not",       TokenKind::PyNot },
-                    { U"or",        TokenKind::PyOr },
-                    { U"pass",      TokenKind::PyPass },
-                    { U"raise",     TokenKind::PyRaise },
-                    { U"return",    TokenKind::PyReturn },
-                    { U"try",       TokenKind::PyTry },
-                    { U"while",     TokenKind::PyWhile },
-                    { U"with",      TokenKind::PyWith },
-                    { U"yield",     TokenKind::PyYield }
+                    { L"False",     TokenKind::PyFalse },
+                    { L"None",      TokenKind::PyNone },
+                    { L"True",      TokenKind::PyTrue },
+                    { L"and",       TokenKind::PyAnd },
+                    { L"as",        TokenKind::PyAs },
+                    { L"assert",    TokenKind::PyAssert },
+                    { L"async",     TokenKind::PyAsync },
+                    { L"await",     TokenKind::PyAwait },
+                    { L"break",     TokenKind::PyBreak },
+                    { L"class",     TokenKind::PyClass },
+                    { L"continue",  TokenKind::PyContinue },
+                    { L"def",       TokenKind::PyDef },
+                    { L"del",       TokenKind::PyDel },
+                    { L"elif",      TokenKind::PyElif },
+                    { L"else",      TokenKind::PyElse },
+                    { L"except",    TokenKind::PyExcept },
+                    { L"finally",   TokenKind::PyFinally },
+                    { L"for",       TokenKind::PyFor },
+                    { L"from",      TokenKind::PyFrom },
+                    { L"global",    TokenKind::PyGlobal },
+                    { L"if",        TokenKind::PyIf },
+                    { L"import",    TokenKind::PyImport },
+                    { L"in",        TokenKind::PyIn },
+                    { L"is",        TokenKind::PyIs },
+                    { L"lambda",    TokenKind::PyLambda },
+                    { L"nonlocal",  TokenKind::PyNonLocal },
+                    { L"not",       TokenKind::PyNot },
+                    { L"or",        TokenKind::PyOr },
+                    { L"pass",      TokenKind::PyPass },
+                    { L"raise",     TokenKind::PyRaise },
+                    { L"return",    TokenKind::PyReturn },
+                    { L"try",       TokenKind::PyTry },
+                    { L"while",     TokenKind::PyWhile },
+                    { L"with",      TokenKind::PyWith },
+                    { L"yield",     TokenKind::PyYield }
                 };
+
+            std::shared_ptr<SourceBuffer> mSourceBuffer;
+            unsigned int mPosition;
 
     };
 }

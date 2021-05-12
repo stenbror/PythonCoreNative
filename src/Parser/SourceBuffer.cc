@@ -7,42 +7,52 @@ SourceBuffer::SourceBuffer()
 
 }
 
-char32_t SourceBuffer::GetChar()
+wchar_t SourceBuffer::GetChar()
 {
-    return U'\0';
+    return L'\0';
 }
 
-void SourceBuffer::UngetChar(char32_t ch)
+wchar_t SourceBuffer::PeekChar()
+{
+    return L'\0';
+}
+
+void SourceBuffer::UngetChar(wchar_t ch)
 {
 
 }
 
-bool inline SourceBuffer::IsLiteralStartCharacter(char32_t ch)
+unsigned int SourceBuffer::BufferPosition()
 {
-    return false; // Dummy for now!
+    return 0;
 }
 
-bool inline SourceBuffer::IsLiteralOrNumberCharacter(char32_t ch)
-{
-    return false; // Dummy for now!
-}
-
-bool inline SourceBuffer::IsHexDigit(char32_t ch)
-{
-    return false; // Dummy for now!
-}
-
-bool inline SourceBuffer::IsOctetDigit(char32_t ch)
+bool SourceBuffer::IsLiteralStartCharacter()
 {
     return false; // Dummy for now!
 }
 
-bool inline SourceBuffer::IsBinaryDigit(char32_t ch)
+bool SourceBuffer::IsLiteralOrNumberCharacter()
 {
     return false; // Dummy for now!
 }
 
-bool inline SourceBuffer::IsDigit(char32_t ch)
+bool SourceBuffer::IsHexDigit()
+{
+    return false; // Dummy for now!
+}
+
+bool SourceBuffer::IsOctetDigit()
+{
+    return false; // Dummy for now!
+}
+
+bool SourceBuffer::IsBinaryDigit()
+{
+    return false; // Dummy for now!
+}
+
+bool SourceBuffer::IsDigit()
 {
     return false; // Dummy for now!
 }

@@ -11,18 +11,20 @@ namespace PythonCoreNative::RunTime::Parser
         public:
             SourceBuffer();
 
-            char32_t GetChar();
-            void UngetChar(char32_t ch);
+            wchar_t GetChar();
+            wchar_t PeekChar();
+            void UngetChar(wchar_t ch);
+            unsigned int BufferPosition();
 
-            bool inline IsLiteralStartCharacter(char32_t ch);
-            bool inline IsLiteralOrNumberCharacter(char32_t ch);
-            bool inline IsHexDigit(char32_t ch);
-            bool inline IsOctetDigit(char32_t ch);
-            bool inline IsBinaryDigit(char32_t ch);
-            bool inline IsDigit(char32_t ch);
+            bool IsLiteralStartCharacter();
+            bool IsLiteralOrNumberCharacter();
+            bool IsHexDigit();
+            bool IsOctetDigit();
+            bool IsBinaryDigit();
+            bool IsDigit();
 
         protected:
 
-            std::shared_ptr<std::basic_string<char32_t>> mSourceCode;
+            std::shared_ptr<std::wstring> mSourceCode;
     };
 }
