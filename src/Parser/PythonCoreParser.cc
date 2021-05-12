@@ -32,7 +32,23 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseEvalInput()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseFileInput()
 {
-    return nullptr;
+    mLexer->Advance();
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
+    auto newlines = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    while ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::EndOfFile )
+    {
+        if ( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Newline )
+        {
+            newlines->push_back( mLexer->CurSymbol() );
+            mLexer->Advance();
+        }
+        else
+            nodes->push_back( ParseStmt() );
+    }
+
+    return std::make_shared<AST::FileInputNode>(startPos, mLexer->Position(), newlines, nodes, mLexer->CurSymbol());
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSingleInput()
