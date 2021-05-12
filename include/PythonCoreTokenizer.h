@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Token.h>
+#include <SourceBuffer.h>
 
 #include <memory>
 #include <map>
@@ -12,7 +13,7 @@ namespace PythonCoreNative::RunTime::Parser
     {
 
         public:
-            PythonCoreTokenizer(unsigned int tabSize);
+            PythonCoreTokenizer(unsigned int tabSize, std::shared_ptr<SourceBuffer> sourceBuffer);
 
             std::shared_ptr<Token> CurSymbol();
             unsigned int Position();

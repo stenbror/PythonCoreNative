@@ -5,7 +5,7 @@ using namespace PythonCoreNative::RunTime::Parser;
 
 
 
-PythonCoreTokenizer::PythonCoreTokenizer(unsigned int tabSize)
+PythonCoreTokenizer::PythonCoreTokenizer(unsigned int tabSize, std::shared_ptr<SourceBuffer> sourceBuffer)
 {
     //auto remove = mReservedKeywords.find(U"as");
 }
