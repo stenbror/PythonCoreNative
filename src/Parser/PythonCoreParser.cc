@@ -25,7 +25,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseEvalInput()
     }
 
     if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::EndOfFile )
-        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting End of File in Func!"));
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting End of File in Func!"));
 
     return std::make_shared<AST::EvalInputNode>(startPos, mLexer->Position(), newlines, right, mLexer->CurSymbol());
 }
@@ -71,7 +71,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSingleInput()
                 auto right = ParseCompound();
 
                 if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::EndOfFile )
-                    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting Newline after compund statement!"));
+                    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting Newline after compund statement!"));
 
                 return std::make_shared<AST::SingleInputNode>(startPos, mLexer->Position(), mLexer->CurSymbol(), right);
             }
@@ -105,7 +105,7 @@ std::shared_ptr<AST::TypeNode> PythonCoreParser::ParseFuncTypeInput()
     }
 
     if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::EndOfFile )
-        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting End of File in Func!"));
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting End of File in Func!"));
 
 
     return std::make_shared<AST::TypeInputNode>(startPos, mLexer->Position(), newlines, right, mLexer->CurSymbol());
@@ -116,7 +116,7 @@ std::shared_ptr<AST::TypeNode> PythonCoreParser::ParseFuncType()
     auto startPos = mLexer->Position();
 
     if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyLeftParen )
-            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting '(' in Func!"));
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting '(' in Func!"));
 
     auto symbol1 = mLexer->CurSymbol();
     mLexer->Advance();
@@ -124,13 +124,13 @@ std::shared_ptr<AST::TypeNode> PythonCoreParser::ParseFuncType()
     auto left = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightParen ? nullptr : ParseTypeList();
 
     if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen )
-            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting ')' in Func!"));
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting ')' in Func!"));
 
     auto symbol2 = mLexer->CurSymbol();
     mLexer->Advance();
 
     if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyArrow )
-            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting '->' in Func!"));
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting '->' in Func!"));
 
     auto symbol3 = mLexer->CurSymbol();
     mLexer->Advance();
@@ -172,7 +172,7 @@ std::shared_ptr<AST::TypeNode> PythonCoreParser::ParseTypeList()
 
 
                     if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma )
-                        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Unexpected ',' after '**' argument!"));
+                        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected ',' after '**' argument!"));
 
                 }
             }
@@ -205,7 +205,7 @@ std::shared_ptr<AST::TypeNode> PythonCoreParser::ParseTypeList()
                     powerNode = ParseTest();
 
                     if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma )
-                        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Unexpected ',' after '**' argument!"));
+                        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected ',' after '**' argument!"));
 
                 }
                 else if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul)
@@ -230,7 +230,7 @@ std::shared_ptr<AST::TypeNode> PythonCoreParser::ParseTypeList()
 
 
                             if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma )
-                                throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Unexpected ',' after '**' argument!"));
+                                throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected ',' after '**' argument!"));
 
                         }
                     }
