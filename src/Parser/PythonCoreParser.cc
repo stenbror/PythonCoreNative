@@ -53,7 +53,41 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseFileInput()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSingleInput()
 {
-    return nullptr;
+    mLexer->Advance();
+    auto startPos = mLexer->Position();
+
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::PyIf:
+        case TokenKind::PyWhile:
+        case TokenKind::PyFor:
+        case TokenKind::PyTry:
+        case TokenKind::PyWith:
+        case TokenKind::PyAsync:
+        case TokenKind::PyDef:
+        case TokenKind::PyClass:
+        case TokenKind::PyMatrice:
+            {
+                auto right = ParseCompound();
+
+                if ( mLexer->CurSymbol()->GetSymbolKind() != TokenKind::EndOfFile )
+                    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::basic_string<char32_t>>(U"Expecting Newline after compund statement!"));
+
+                return std::make_shared<AST::SingleInputNode>(startPos, mLexer->Position(), mLexer->CurSymbol(), right);
+            }
+            break;
+
+        case TokenKind::Newline:
+
+            return std::make_shared<AST::SingleInputNode>(startPos, mLexer->Position(), mLexer->CurSymbol(), nullptr);
+
+        default:
+            {
+                auto right = ParseSimpleStmt();
+
+                return std::make_shared<AST::SingleInputNode>(startPos, mLexer->Position(), nullptr, right);
+            }
+    }
 }
 
 std::shared_ptr<AST::TypeNode> PythonCoreParser::ParseFuncTypeInput()
