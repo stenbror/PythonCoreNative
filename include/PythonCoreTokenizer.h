@@ -2,6 +2,7 @@
 
 #include <Token.h>
 #include <SourceBuffer.h>
+#include <LexicalError.h>
 
 #include <memory>
 #include <map>

@@ -439,7 +439,9 @@ void PythonCoreTokenizer::Advance()
         case '!':
 
             if (mSourceBuffer->PeekChar() != '=') 
-                throw ;
+                throw std::make_shared<LexicalError>(
+                                mSourceBuffer->BufferPosition(),
+                                std::make_shared<std::wstring>(L"Expecting '!=' but found only '!' in source code!"));
             
             mSourceBuffer->Next();
 
@@ -450,7 +452,10 @@ void PythonCoreTokenizer::Advance()
 
         default:
 
-            throw ;
+            throw std::make_shared<LexicalError>(
+                                mSourceBuffer->BufferPosition(),
+                                std::make_shared<std::wstring>(L"Found illegal character in source code!"));
+            
             break;
     }
 
@@ -473,7 +478,10 @@ void PythonCoreTokenizer::Advance()
             }
         }
 
-        throw ;
+        throw std::make_shared<LexicalError>(
+                                mSourceBuffer->BufferPosition(),
+                                std::make_shared<std::wstring>(L"Inconsistant ')' parenthesis matching!"));
+            
     }
 
     else if (mCurSymbol->GetSymbolKind() == TokenKind::PyRightBracket)
@@ -487,7 +495,10 @@ void PythonCoreTokenizer::Advance()
             }
         }
 
-        throw ;
+        throw std::make_shared<LexicalError>(
+                                mSourceBuffer->BufferPosition(),
+                                std::make_shared<std::wstring>(L"Inconsistant ']' parenthesis matching!"));
+            
     }
 
     else if (mCurSymbol->GetSymbolKind() == TokenKind::PyRightCurly)
@@ -501,6 +512,9 @@ void PythonCoreTokenizer::Advance()
             }
         }
 
-        throw ;
+        throw std::make_shared<LexicalError>(
+                                mSourceBuffer->BufferPosition(),
+                                std::make_shared<std::wstring>(L"Inconsistant '}' parenthesis matching!"));
+            
     }
 }
