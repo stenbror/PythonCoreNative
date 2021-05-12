@@ -67,7 +67,7 @@ void PythonCoreTokenizer::Advance()
 
 
 
-    /* Handle Opetator and delimiters */
+    /* Handle Operator and delimiters */
     switch (mSourceBuffer->GetChar())
     {
         case '(':
@@ -292,14 +292,14 @@ void PythonCoreTokenizer::Advance()
                 {
                     mSourceBuffer->Next();
                     mCurSymbol = std::make_shared<Token>(   mPosition, 
-                                                        mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyShiftRightAssign);
+                                                            mSourceBuffer->BufferPosition(),
+                                                            TokenKind::PyShiftRightAssign);
                 }
                 else
                 {
                     mCurSymbol = std::make_shared<Token>(   mPosition, 
-                                                        mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyShiftRight);
+                                                            mSourceBuffer->BufferPosition(),
+                                                            TokenKind::PyShiftRight);
                 }
             }
             else if (mSourceBuffer->PeekChar() == '=')
@@ -444,8 +444,8 @@ void PythonCoreTokenizer::Advance()
             mSourceBuffer->Next();
 
             mCurSymbol = std::make_shared<Token>(   mPosition, 
-                                                        mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyNotEqual);
+                                                    mSourceBuffer->BufferPosition(),
+                                                    TokenKind::PyNotEqual);
             break;
 
         default:
