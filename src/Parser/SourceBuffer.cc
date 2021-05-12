@@ -56,3 +56,8 @@ bool SourceBuffer::IsDigit()
 {
     return false; // Dummy for now!
 }
+
+void SourceBuffer::Next()
+{
+    
+}

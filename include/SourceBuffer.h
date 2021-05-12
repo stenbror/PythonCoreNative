@@ -16,6 +16,8 @@ namespace PythonCoreNative::RunTime::Parser
             void UngetChar(wchar_t ch);
             unsigned int BufferPosition();
 
+            void Next();
+
             bool IsLiteralStartCharacter();
             bool IsLiteralOrNumberCharacter();
             bool IsHexDigit();

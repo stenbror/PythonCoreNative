@@ -7,6 +7,7 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <stack>
 
 namespace PythonCoreNative::RunTime::Parser
 {
@@ -64,6 +65,8 @@ namespace PythonCoreNative::RunTime::Parser
 
             std::shared_ptr<SourceBuffer> mSourceBuffer;
             unsigned int mPosition;
+
+            std::stack<TokenKind> mLevelStack;
 
     };
 }
