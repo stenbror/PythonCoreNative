@@ -48,4 +48,13 @@ namespace PythonCoreNative::RunTime::Parser
         protected:
             std::shared_ptr<std::vector<std::shared_ptr<std::wstring>>> mText;
     };
+
+    class TypeCommentToken : public Token
+    {
+        public:
+            TypeCommentToken(unsigned int startPosition, unsigned int endPosition, std::shared_ptr<std::wstring> text);
+
+        protected:
+            std::shared_ptr<std::wstring> mTypeComment;
+    };
 }

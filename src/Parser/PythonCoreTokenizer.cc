@@ -26,6 +26,55 @@ unsigned int PythonCoreTokenizer::Position()
             
 void PythonCoreTokenizer::Advance()
 {
+
+
+
+
+_again:
+
+    mPosition = mSourceBuffer->BufferPosition();
+
+    /* Handle whitespace and other trivia */
+    while (mSourceBuffer->PeekChar() == ' ' || mSourceBuffer->PeekChar() == '\v' || mSourceBuffer->PeekChar() == '\t')
+    {
+        auto ch = mSourceBuffer->GetChar();
+        switch (ch) // Trivia handling below later!
+        {
+            case ' ':
+            case '\t':
+            default:
+                break;
+        }
+    }
+
+    mPosition = mSourceBuffer->BufferPosition();
+
+    /* Handle comment and type comment */
+    if (mSourceBuffer->PeekChar() == '#')
+    {
+        std::wstringstream buffer;
+
+        while ( mSourceBuffer->PeekChar() != '\r' ||
+                mSourceBuffer->PeekChar() != '\n' ||
+                mSourceBuffer->PeekChar() != '\0' ) buffer << mSourceBuffer->GetChar();
+
+        std::wstring key = buffer.str(); 
+
+        if (key.find_first_of(L"# type: ", 0, sizeof(wchar_t)) == 0)
+        {
+            /* Type Comments starts with '# type: ' */
+            mCurSymbol = std::make_shared<TypeCommentToken>(
+                mPosition, 
+                mSourceBuffer->BufferPosition(), 
+                std::make_shared<std::wstring>(key));
+
+            return ;
+        }
+
+        // ADD: Trivia collecting comment.
+
+        goto _again;
+    }
     
 
     /* Handle reserved keywords or Literal names here */
