@@ -268,6 +268,33 @@ _again:
             else if (mSourceBuffer->PeekChar() == 'b' || mSourceBuffer->GetChar() == 'B')
             {
 
+                buffer << mSourceBuffer->GetChar();
+
+                do
+                {
+                    
+                    if (mSourceBuffer->PeekChar() == '_') buffer << mSourceBuffer->GetChar();
+
+                    if (!mSourceBuffer->IsBinaryDigit()) 
+                        throw std::make_shared<LexicalError>(
+                            mSourceBuffer->BufferPosition(),
+                            std::make_shared<std::wstring>(L"Expecting binary digits!"));
+
+                    do
+                    {
+                        
+                        buffer << mSourceBuffer->GetChar();
+
+                    } while (mSourceBuffer->IsBinaryDigit());
+                    
+
+                } while (mSourceBuffer->PeekChar() == '_');
+
+                if (!mSourceBuffer->IsDigit()) 
+                        throw std::make_shared<LexicalError>(
+                            mSourceBuffer->BufferPosition(),
+                            std::make_shared<std::wstring>(L"Expecting binary digits!"));
+
             }
 
             else
