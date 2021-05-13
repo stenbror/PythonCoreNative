@@ -75,6 +75,20 @@ _again:
 
         goto _again;
     }
+
+
+    /* Handle End of File */
+    if (mSourceBuffer->PeekChar() == '\0')
+    {
+        // Add check for interactive mode later!
+
+        mCurSymbol = std::make_shared<Token>(   
+            mPosition,
+            mSourceBuffer->BufferPosition(),
+            TokenKind::EndOfFile);
+
+        return;
+    }
     
 
     /* Handle reserved keywords or Literal names here */
