@@ -26,6 +26,9 @@ unsigned int PythonCoreTokenizer::Position()
             
 void PythonCoreTokenizer::Advance()
 {
+    mIsBlankLine = false;
+
+_nextLine:  ;
 
 
 
@@ -127,7 +130,28 @@ _again:
     }
 
 
+    /* Handle Newline as Token or trivia */
+    if (mSourceBuffer->PeekChar() == '\r' || mSourceBuffer->PeekChar() == '\n')
+    {
+        mAtBOL = true;
 
+        wchar_t ch1 = mSourceBuffer->PeekChar() == '\r' ? mSourceBuffer->GetChar() : ' ', 
+                ch2 = mSourceBuffer->PeekChar() == '\n' ? mSourceBuffer->GetChar() : ' ';
+
+        if (mSourceBuffer->PeekChar() != '\0' && (mIsBlankLine || !mLevelStack.empty()))
+        {
+            // Add Trivia handling here later. Save ch1, ch2 as trivia as needed.
+
+            goto _nextLine;
+        }
+
+        mCurSymbol = std::make_shared<Token>(
+            mPosition,
+            mSourceBuffer->BufferPosition(),
+            TokenKind::Newline);
+
+        return;
+    }
 
 
     /* Handle Operator and delimiters */

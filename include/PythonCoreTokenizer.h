@@ -66,6 +66,8 @@ namespace PythonCoreNative::RunTime::Parser
 
             std::shared_ptr<SourceBuffer> mSourceBuffer;
             unsigned int mPosition;
+            bool mAtBOL;
+            bool mIsBlankLine;
 
             std::stack<TokenKind> mLevelStack;
 
