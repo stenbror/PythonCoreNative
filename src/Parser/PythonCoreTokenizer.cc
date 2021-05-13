@@ -300,7 +300,108 @@ _again:
             else
             {
 
+                auto nonZero = false;
+
+                if (!mSourceBuffer->PeekChar() == '.')
+                {
+
+                    while (true)
+                    {
+
+                        while (mSourceBuffer->IsDigit()) buffer << mSourceBuffer->GetChar();
+
+                        if (mSourceBuffer->PeekChar() != '_') break;
+
+                        buffer << mSourceBuffer->GetChar();
+
+                        if (!mSourceBuffer->IsDigit())
+                            throw std::make_shared<LexicalError>(
+                                mSourceBuffer->BufferPosition(),
+                                std::make_shared<std::wstring>(L"Expected digit after '_' in Number!"));
+
+                    }
+                }
+
+                if (mSourceBuffer->PeekChar() == '.')
+                {
+
+                    buffer << mSourceBuffer->GetChar();
+
+                    while (true)
+                    {
+
+                        while (mSourceBuffer->IsDigit()) buffer << mSourceBuffer->GetChar();
+
+                        if (mSourceBuffer->PeekChar() != '_') break;
+
+                        buffer << mSourceBuffer->GetChar();
+
+                        if (!mSourceBuffer->IsDigit())
+                            throw std::make_shared<LexicalError>(
+                                mSourceBuffer->BufferPosition(),
+                                std::make_shared<std::wstring>(L"Expected digit after '_' in Number!"));
+
+                    }
+
+                }
+
+                if (mSourceBuffer->PeekChar() == 'e' || mSourceBuffer->PeekChar() == 'E')
+                {
+
+                    buffer << mSourceBuffer->GetChar();
+
+                    if (mSourceBuffer->PeekChar() == '+' || mSourceBuffer->PeekChar() == '-')
+                    {
+
+                        buffer << mSourceBuffer->GetChar();
+
+                        if (!mSourceBuffer->IsDigit())
+                            throw std::make_shared<LexicalError>(
+                                    mSourceBuffer->BufferPosition(),
+                                    std::make_shared<std::wstring>(L"Expected digit after '+' or '-' in Number!"));
+                    
+                    }
+
+                    else if (!mSourceBuffer->IsDigit())
+                        throw std::make_shared<LexicalError>(
+                                mSourceBuffer->BufferPosition(),
+                                std::make_shared<std::wstring>(L"Expected digit after 'e' or 'E' in Number!"));
+
+                    while (true)
+                    {
+                        
+                        while (mSourceBuffer->IsDigit()) buffer << mSourceBuffer->GetChar();
+
+                        if (mSourceBuffer->PeekChar() != '_') break;
+
+                        buffer << mSourceBuffer->GetChar();
+
+                        if (!mSourceBuffer->IsDigit())
+                            throw std::make_shared<LexicalError>(
+                                mSourceBuffer->BufferPosition(),
+                                std::make_shared<std::wstring>(L"Expected digit after '_' in Number!"));
+
+                    }
+                        
+                }
+
+                if (mSourceBuffer->PeekChar() == 'j' || mSourceBuffer->PeekChar() == 'J')
+                {
+
+                    buffer << mSourceBuffer->GetChar();
+                
+                }
+                else if (nonZero)
+                {
+
+                    throw std::make_shared<LexicalError>(
+                            mSourceBuffer->BufferPosition(),
+                            std::make_shared<std::wstring>(L"Unexpected digit found in Number!"));
+
+                }
+
             }
+
         }
         else    /* Decimal */
         {
