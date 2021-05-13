@@ -154,6 +154,47 @@ _again:
     }
 
 
+    /* Handle period / elipsis or start of number */
+    if (mSourceBuffer->PeekChar() == '.')
+    {
+        mPosition = mSourceBuffer->BufferPosition();
+
+        mSourceBuffer->Next();
+
+        if (mSourceBuffer->PeekChar() == '.')
+        {
+            mSourceBuffer->Next();
+
+            if (mSourceBuffer->PeekChar() == '.')
+            {
+                mSourceBuffer->Next();
+
+                mCurSymbol = std::make_shared<Token>(
+                    mPosition,
+                    mSourceBuffer->BufferPosition(),
+                    TokenKind::PyElipsis);
+
+                return;
+            }
+            else 
+                throw std::make_shared<LexicalError>(
+                    mSourceBuffer->BufferPosition(),
+                    std::make_shared<std::wstring>(L"Missing one '.' in elipsis operator '...' or uneeded '.'") );
+        }
+        else if (!mSourceBuffer->IsDigit())
+        {
+            mCurSymbol = std::make_shared<Token>(
+                    mPosition,
+                    mSourceBuffer->BufferPosition(),
+                    TokenKind::PyDot);
+
+                return;
+        }
+
+        mSourceBuffer->UngetChar(L'.');
+    }
+
+
     /* Handle Operator and delimiters */
     switch (mSourceBuffer->GetChar())
     {
