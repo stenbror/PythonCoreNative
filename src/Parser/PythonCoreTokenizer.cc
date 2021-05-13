@@ -154,7 +154,7 @@ _again:
     }
 
 
-    /* Handle period / elipsis or start of number */
+    /* Handle period, elipsis or start of number */
     if (mSourceBuffer->PeekChar() == '.')
     {
         mPosition = mSourceBuffer->BufferPosition();
@@ -192,6 +192,28 @@ _again:
         }
 
         mSourceBuffer->UngetChar(L'.');
+    }
+
+
+    /* Handle numbers */
+    if (mSourceBuffer->IsDigit() || mSourceBuffer->PeekChar() == '.')
+    {
+        mPosition = mSourceBuffer->BufferPosition();
+
+        std::wstringstream buffer;
+
+
+        // ADD
+
+
+        std::wstring key = buffer.str(); 
+
+        mCurSymbol = std::make_shared<NumberToken>(
+            mPosition,
+            mSourceBuffer->BufferPosition(),
+            std::make_shared<std::wstring>(key) );
+
+        return;
     }
 
 
