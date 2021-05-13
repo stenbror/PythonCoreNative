@@ -202,9 +202,56 @@ _again:
 
         std::wstringstream buffer;
 
+        if (mSourceBuffer->PeekChar() == '0')
+        {
+            buffer << mSourceBuffer->GetChar();
 
-        // ADD
+            if (mSourceBuffer->PeekChar() == 'x' || mSourceBuffer->GetChar() == 'X')
+            {
+                
+                buffer << mSourceBuffer->GetChar();
 
+                do
+                {
+                    
+                    if (mSourceBuffer->PeekChar() == '_') buffer << mSourceBuffer->GetChar();
+
+                    if (!mSourceBuffer->IsHexDigit()) 
+                        throw std::make_shared<LexicalError>(
+                            mSourceBuffer->BufferPosition(),
+                            std::make_shared<std::wstring>(L"Expecting hexadecimal digits!"));
+
+                    do
+                    {
+                        
+                        buffer << mSourceBuffer->GetChar();
+
+                    } while (mSourceBuffer->IsHexDigit());
+                    
+
+                } while (mSourceBuffer->PeekChar() == '_');
+                
+            }
+
+            else if (mSourceBuffer->PeekChar() == 'o' || mSourceBuffer->GetChar() == 'O')
+            {
+
+            }
+
+            else if (mSourceBuffer->PeekChar() == 'b' || mSourceBuffer->GetChar() == 'B')
+            {
+
+            }
+
+            else
+            {
+
+            }
+        }
+        else    /* Decimal */
+        {
+
+        }
 
         std::wstring key = buffer.str(); 
 
