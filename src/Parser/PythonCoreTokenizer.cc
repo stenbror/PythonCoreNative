@@ -302,7 +302,7 @@ _again:
 
                 auto nonZero = false;
 
-                if (!mSourceBuffer->PeekChar() == '.')
+                if (mSourceBuffer->PeekChar() != '.')
                 {
 
                     while (true)
