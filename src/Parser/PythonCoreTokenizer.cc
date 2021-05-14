@@ -26,11 +26,67 @@ unsigned int PythonCoreTokenizer::Position()
             
 void PythonCoreTokenizer::Advance()
 {
+
+_nextLine:  
+
     mIsBlankLine = false;
 
-_nextLine:  ;
+    /* Analyze start of source code line */
+    if (mAtBOL)
+    {
 
+        mAtBOL = false;
+        unsigned int col = 0;
 
+        while (mSourceBuffer->PeekChar() == ' ' || mSourceBuffer->PeekChar() == '\v' || mSourceBuffer->PeekChar() == '\t')
+        {
+
+        }
+
+        if (    mSourceBuffer->PeekChar() == '#' || 
+                mSourceBuffer->PeekChar() == '\r' || 
+                mSourceBuffer->PeekChar() == '\n' || 
+                mSourceBuffer->PeekChar() == '\\')
+        {
+
+        }
+
+        if (!mIsBlankLine && mLevelStack.empty())
+        {
+
+            if (col == mIndentLevel.top())
+            {
+                // No change in indentaation levels.
+            }
+            else if (col > mIndentLevel.top())
+            {
+
+                mPending++;
+                mIndentLevel.push(col);
+
+            }
+            else
+            {
+
+                while (mIndentLevel.size() > 0 && col < mIndentLevel.top())
+                {
+
+                    mPending--;
+                    mIndentLevel.pop();
+
+                }
+
+                if (col != mIndentLevel.top())
+                    throw std::make_shared<LexicalError>(
+                        mSourceBuffer->BufferPosition(),
+                        std::make_shared<std::wstring>("Inconsitant indentation level!")
+                    );
+
+            }
+
+        }
+
+    }
 
     mPosition = mSourceBuffer->BufferPosition();
 

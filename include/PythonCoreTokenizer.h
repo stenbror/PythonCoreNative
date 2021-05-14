@@ -71,6 +71,7 @@ namespace PythonCoreNative::RunTime::Parser
             int mPending;
 
             std::stack<TokenKind> mLevelStack;
+            std::stack<unsigned int> mIndentLevel;
 
     };
 }
