@@ -32,6 +32,36 @@ _nextLine:  ;
 
 
 
+    mPosition = mSourceBuffer->BufferPosition();
+
+    /* Handling indent or dedent(s) */
+    if (mPending != 0)
+    {
+
+        if (mPending < 0)
+        {
+            mPending++;
+
+            mCurSymbol = std::make_shared<Token>(
+                mPosition,
+                mSourceBuffer->BufferPosition(),
+                TokenKind::Dedent);
+        }
+        else
+        {
+
+            mPending--;
+
+            mCurSymbol = std::make_shared<Token>(
+                mPosition,
+                mSourceBuffer->BufferPosition(),
+                TokenKind::Indent);
+
+        }
+
+        return;
+
+    }
 
 _again:
 
