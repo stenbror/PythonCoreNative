@@ -43,10 +43,10 @@ namespace PythonCoreNative::RunTime::Parser
     class StringToken : public Token
     {
         public:
-            StringToken(unsigned int startPosition, unsigned int endPosition, std::shared_ptr<std::vector<std::shared_ptr<std::wstring>>> text);
+            StringToken(unsigned int startPosition, unsigned int endPosition, std::shared_ptr<std::wstring> text);
 
         protected:
-            std::shared_ptr<std::vector<std::shared_ptr<std::wstring>>> mText;
+            std::shared_ptr<std::wstring> mText;
     };
 
     class TypeCommentToken : public Token

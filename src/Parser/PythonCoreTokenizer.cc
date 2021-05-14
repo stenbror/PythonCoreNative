@@ -628,6 +628,23 @@ _letterQuote:
     if (mSourceBuffer->PeekChar() == '\'' || mSourceBuffer->PeekChar() == '"')
     {
 
+        mPosition = mSourceBuffer->BufferPosition();
+
+        std::wstringstream buffer;
+
+
+
+
+
+        std::wstring key = buffer.str(); 
+
+        mCurSymbol = std::make_shared<StringToken>(
+            mPosition,
+            mSourceBuffer->BufferPosition(),
+            std::make_shared<std::wstring>(key) );
+
+        return;
+
     }
 
 
@@ -641,7 +658,7 @@ _letterQuote:
         if (mSourceBuffer->PeekChar() == '\r' || mSourceBuffer->PeekChar() == '\n')
         {
             unsigned int start = mSourceBuffer->BufferPosition();
-            
+
             wchar_t ch1 = mSourceBuffer->PeekChar() == '\r' ? mSourceBuffer->GetChar() : ' ';
             wchar_t ch2 = mSourceBuffer->PeekChar() == '\n' ? mSourceBuffer->GetChar() : ' ';
 
