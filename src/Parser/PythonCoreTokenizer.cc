@@ -622,6 +622,43 @@ _again:
     }
 
 
+_letterQuote:
+
+    /* String handling */
+    if (mSourceBuffer->PeekChar() == '\'' || mSourceBuffer->PeekChar() == '"')
+    {
+
+    }
+
+
+    /* Handle line continuation */
+    if (mSourceBuffer->PeekChar() == '\\')
+    {
+
+        mSourceBuffer->Next();
+        // Add Trivia with position - 1, position
+
+        if (mSourceBuffer->PeekChar() == '\r' || mSourceBuffer->PeekChar() == '\n')
+        {
+            unsigned int start = mSourceBuffer->BufferPosition();
+            
+            wchar_t ch1 = mSourceBuffer->PeekChar() == '\r' ? mSourceBuffer->GetChar() : ' ';
+            wchar_t ch2 = mSourceBuffer->PeekChar() == '\n' ? mSourceBuffer->GetChar() : ' ';
+
+            // Add Trivia for newline with ch1, ch2
+
+            goto _again;
+
+        }
+        
+        throw std::make_shared<LexicalError>(
+            mSourceBuffer->BufferPosition(),
+            std::make_shared<std::wstring>(L"Line shift must follow line continuation '\'")
+        );
+
+    }
+
+
     /* Handle Operator and delimiters */
     switch (mSourceBuffer->GetChar())
     {
