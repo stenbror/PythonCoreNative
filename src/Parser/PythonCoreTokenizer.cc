@@ -230,6 +230,9 @@ _again:
         else if (mSourceBuffer->PeekChar() == '"' || mSourceBuffer->PeekChar() == '\'')
         {
 
+            // Hanbdle prefix checking for strings first here!
+
+            goto _letterQuote;
         }
         else
         {
