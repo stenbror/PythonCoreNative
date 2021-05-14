@@ -632,9 +632,111 @@ _letterQuote:
 
         std::wstringstream buffer;
 
+        auto quote = mSourceBuffer->GetChar();
+        auto quoteSize = 1;
+        auto quoteEndSize = 0;
 
+        if (mSourceBuffer->PeekChar() == quote)
+        {
 
+            mSourceBuffer->Next();
 
+            if (mSourceBuffer->PeekChar() == quote)
+            {
+
+                quoteSize = 3;
+                mSourceBuffer->Next();
+            
+            }
+            else quoteEndSize = 1;
+
+        }
+        else mSourceBuffer->UngetChar(quote);
+
+        while (quoteSize != quoteEndSize)
+        {
+
+            switch (mSourceBuffer->PeekChar())
+            {
+                case '\0':
+
+                    if (!mIsInteractive)
+                        throw std::make_shared<LexicalError>(
+                            mSourceBuffer->BufferPosition(),
+                            std::make_shared<std::wstring>(L"Unterminated string in non interactive mode!") );
+
+                    throw ; // Ask for more input....
+                    
+                case '\r':
+                case '\n':
+
+                    if (quoteSize == 1)
+                        throw std::make_shared<LexicalError>(
+                            mSourceBuffer->BufferPosition(),
+                            std::make_shared<std::wstring>(L"Found newline inside sinqle quote string!") );
+
+                    if (mSourceBuffer->PeekChar() == '\r')
+                    {
+
+                        buffer << mSourceBuffer->GetChar();
+
+                    }
+
+                    if (mSourceBuffer->PeekChar() == '\n')
+                    {
+
+                        buffer << mSourceBuffer->GetChar();
+                        
+                    }
+                    break;
+
+                default:
+
+                    if (quote == mSourceBuffer->PeekChar())
+                    {
+
+                        quoteEndSize++;
+                        buffer << mSourceBuffer->GetChar();
+
+                    }
+                    else
+                    {
+
+                        quoteEndSize = 0;
+
+                        if (mSourceBuffer->PeekChar() == '\\')
+                        {
+
+                            buffer << mSourceBuffer->GetChar();
+
+                            if (mSourceBuffer->PeekChar() == '\r')
+                            {
+
+                                buffer << mSourceBuffer->GetChar();
+
+                            }
+
+                            if (mSourceBuffer->PeekChar() == '\n')
+                            {
+
+                                buffer << mSourceBuffer->GetChar();
+                                
+                            }
+
+                        }
+                        else
+                        {
+
+                            buffer << mSourceBuffer->GetChar();
+
+                        }
+
+                    }
+
+                    break;
+            }
+
+        }
 
         std::wstring key = buffer.str(); 
 
