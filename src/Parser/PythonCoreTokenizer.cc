@@ -41,6 +41,21 @@ _nextLine:
         while (mSourceBuffer->PeekChar() == ' ' || mSourceBuffer->PeekChar() == '\v' || mSourceBuffer->PeekChar() == '\t')
         {
 
+            switch (mSourceBuffer->PeekChar())
+            {
+                case ' ':
+                    col++;
+                    break;
+                case '\t':
+                    col = (col / mTabSize + 1) * mTabSize;
+                    break;
+                case '\v':
+                    col = 0;
+                    break;
+            }
+
+            mSourceBuffer->Next();
+
         }
 
         if (    mSourceBuffer->PeekChar() == '#' || 

@@ -69,6 +69,7 @@ namespace PythonCoreNative::RunTime::Parser
             bool mAtBOL;
             bool mIsBlankLine;
             int mPending;
+            unsigned int mTabSize;
 
             std::stack<TokenKind> mLevelStack;
             std::stack<unsigned int> mIndentLevel;
