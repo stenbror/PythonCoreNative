@@ -64,6 +64,18 @@ _nextLine:
                 mSourceBuffer->PeekChar() == '\\')
         {
 
+            if (col == 0 && (mSourceBuffer->PeekChar() == '\r' || mSourceBuffer->PeekChar() == '\n') && mIsBlankLine)
+                mIsBlankLine = false;
+
+            else if (mIsInteractive)
+            {
+
+                col = 0;
+                mIsBlankLine = false;
+
+            }
+            else mIsBlankLine = true;
+
         }
 
         if (!mIsBlankLine && mLevelStack.empty())
