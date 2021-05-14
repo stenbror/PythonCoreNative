@@ -79,7 +79,7 @@ _nextLine:
                 if (col != mIndentLevel.top())
                     throw std::make_shared<LexicalError>(
                         mSourceBuffer->BufferPosition(),
-                        std::make_shared<std::wstring>("Inconsitant indentation level!")
+                        std::make_shared<std::wstring>(L"Inconsitant indentation level!")
                     );
 
             }
