@@ -888,6 +888,14 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseStmt()
         case TokenKind::PyMatrice:
 
             return ParseCompound();
+
+        case TokenKind::Name:
+            
+            {
+                auto match = std::static_pointer_cast<NameToken>(mLexer->CurSymbol());
+
+                return match->IsMatchSoftKeyword() ? ParseMatch() : ParseExpr();
+            }
         
         default:
 
@@ -969,14 +977,6 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSmallStmt()
             
             return ParseAssert();
 
-        case TokenKind::Name:
-            
-            {
-                auto match = std::static_pointer_cast<NameToken>(mLexer->CurSymbol());
-
-                return match->IsMatchSoftKeyword() ? ParseMatch() : ParseExpr();
-            }
-        
         default:
             
             return ParseExpr();
