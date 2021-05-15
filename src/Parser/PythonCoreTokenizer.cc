@@ -176,11 +176,25 @@ _again:
     while (mSourceBuffer->PeekChar() == ' ' || mSourceBuffer->PeekChar() == '\v' || mSourceBuffer->PeekChar() == '\t')
     {
         auto ch = mSourceBuffer->GetChar();
-        switch (ch) // Trivia handling below later!
+        switch (ch)
         {
             case ' ':
+
+                while (mSourceBuffer->PeekChar() == ' ')
+                {
+                    mSourceBuffer->Next();
+                }
+
+                triviaList->push_back( std::make_shared<WhiteSpaceTrivia>(mPosition, mSourceBuffer->BufferPosition(), ch) );
+                break;
+
             case '\t':
+
+                triviaList->push_back( std::make_shared<WhiteSpaceTrivia>(mPosition, mSourceBuffer->BufferPosition(), ch) );
+                break;
+
             default:
+
                 break;
         }
     }
