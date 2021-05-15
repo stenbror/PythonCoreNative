@@ -37,6 +37,9 @@ namespace PythonCoreNative::RunTime::Parser
                         std::shared_ptr<std::wstring> text,
                         std::shared_ptr<std::vector<std::shared_ptr<Trivia>>> triviaList);
 
+            bool IsCaseSoftKeyword();
+            bool IsMatchSoftKeyword();
+
         protected:
             std::shared_ptr<std::wstring> mText;
     };

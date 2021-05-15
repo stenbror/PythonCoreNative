@@ -248,6 +248,9 @@ namespace PythonCoreNative::RunTime::Parser
             std::shared_ptr<AST::TypeNode> ParseTypeList();
 
         protected:
+            std::shared_ptr<AST::StatementNode> ParseMatch();
+
+        protected:
             std::shared_ptr<PythonCoreTokenizer> mLexer;
             unsigned int mFlowLevel;
             unsigned int mFuncLevel;

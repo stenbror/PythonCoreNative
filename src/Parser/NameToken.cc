@@ -10,3 +10,13 @@ NameToken::NameToken(   unsigned int startPosition,
 {
     mText = text;
 }
+
+bool NameToken::IsCaseSoftKeyword()
+{
+    return mText->find_first_of(L"case", 0, sizeof(wchar_t)) && mText->size() == 4;
+}
+
+bool NameToken::IsMatchSoftKeyword()
+{
+    return mText->find_first_of(L"match", 0, sizeof(wchar_t)) && mText->size() == 5;
+}
