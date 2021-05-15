@@ -894,7 +894,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseStmt()
             {
                 auto match = std::static_pointer_cast<NameToken>(mLexer->CurSymbol());
 
-                return match->IsMatchSoftKeyword() ? ParseMatch() : ParseExpr();
+                return match->IsMatchSoftKeyword() ? ParseMatch() : ParseSimpleStmt();
             }
         
         default:
