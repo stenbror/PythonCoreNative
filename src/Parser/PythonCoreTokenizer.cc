@@ -275,13 +275,15 @@ _again:
     if (mSourceBuffer->PeekChar() == '\r' || mSourceBuffer->PeekChar() == '\n')
     {
         mAtBOL = true;
+        auto startPos = mSourceBuffer->BufferPosition();
 
         wchar_t ch1 = mSourceBuffer->PeekChar() == '\r' ? mSourceBuffer->GetChar() : ' ', 
                 ch2 = mSourceBuffer->PeekChar() == '\n' ? mSourceBuffer->GetChar() : ' ';
 
         if (mSourceBuffer->PeekChar() != '\0' && (mIsBlankLine || !mLevelStack.empty()))
         {
-            // Add Trivia handling here later. Save ch1, ch2 as trivia as needed.
+            
+            triviaList->push_back( std::make_shared<NewLineTrivia>(startPos, mSourceBuffer->BufferPosition(), ch1, ch2) );
 
             goto _nextLine;
         }
@@ -788,7 +790,8 @@ _letterQuote:
     {
 
         mSourceBuffer->Next();
-        // Add Trivia with position - 1, position
+        
+        triviaList->push_back( std::make_shared<LineContinuationTrivia>(mSourceBuffer->BufferPosition() - 1, mSourceBuffer->BufferPosition()) );
 
         if (mSourceBuffer->PeekChar() == '\r' || mSourceBuffer->PeekChar() == '\n')
         {
@@ -797,7 +800,7 @@ _letterQuote:
             wchar_t ch1 = mSourceBuffer->PeekChar() == '\r' ? mSourceBuffer->GetChar() : ' ';
             wchar_t ch2 = mSourceBuffer->PeekChar() == '\n' ? mSourceBuffer->GetChar() : ' ';
 
-            // Add Trivia for newline with ch1, ch2
+            triviaList->push_back( std::make_shared<NewLineTrivia>(start, mSourceBuffer->BufferPosition(), ch1, ch2) );
 
             goto _again;
 
