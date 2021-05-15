@@ -9,7 +9,7 @@ namespace PythonCoreNative::RunTime::Parser
     class SourceBuffer
     {
         public:
-            SourceBuffer();
+            SourceBuffer(std::shared_ptr<std::wstring> buf);
 
             wchar_t GetChar();
             wchar_t PeekChar();
@@ -28,5 +28,6 @@ namespace PythonCoreNative::RunTime::Parser
         protected:
 
             std::shared_ptr<std::wstring> mSourceCode;
+            unsigned int mIndex;
     };
 }

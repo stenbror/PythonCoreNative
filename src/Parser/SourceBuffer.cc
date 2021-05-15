@@ -2,29 +2,56 @@
 
 using namespace PythonCoreNative::RunTime::Parser;
 
-SourceBuffer::SourceBuffer()
+SourceBuffer::SourceBuffer(std::shared_ptr<std::wstring> buf)
 {
-
+    mSourceCode = buf;
+    mIndex = 0;
 }
 
 wchar_t SourceBuffer::GetChar()
 {
-    return L'\0';
+
+    try
+    {
+
+        return mSourceCode->at(mIndex++);
+    
+    }
+    catch(const std::out_of_range& e)
+    {
+
+        return L'\0';
+    
+    }
+    
 }
 
 wchar_t SourceBuffer::PeekChar()
 {
-    return L'\0';
+    
+    try
+    {
+
+        return mSourceCode->at(mIndex + 1);
+    
+    }
+    catch(const std::out_of_range& e)
+    {
+
+        return L'\0';
+    
+    }
+
 }
 
 void SourceBuffer::UngetChar(wchar_t ch)
 {
-
+    if (mIndex > 0 && mSourceCode->at(mIndex - 1) == ch) mIndex--;
 }
 
 unsigned int SourceBuffer::BufferPosition()
 {
-    return 0;
+    return mIndex;
 }
 
 bool SourceBuffer::IsLiteralStartCharacter()
@@ -59,5 +86,5 @@ bool SourceBuffer::IsDigit()
 
 void SourceBuffer::Next()
 {
-    
+    mIndex++;
 }
