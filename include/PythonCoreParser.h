@@ -249,6 +249,40 @@ namespace PythonCoreNative::RunTime::Parser
 
         protected:
             std::shared_ptr<AST::StatementNode> ParseMatch();
+            std::shared_ptr<AST::StatementNode> ParseSubjectExpr();
+            std::shared_ptr<AST::StatementNode> ParseCaseBlock();
+            std::shared_ptr<AST::StatementNode> ParseGuard();
+            std::shared_ptr<AST::StatementNode> ParsePatterns();
+            std::shared_ptr<AST::StatementNode> ParseAsPattern();
+            std::shared_ptr<AST::StatementNode> ParseOrPattern();
+            std::shared_ptr<AST::StatementNode> ParseClosedPattern();
+            std::shared_ptr<AST::StatementNode> ParseLiteralPattern();
+            std::shared_ptr<AST::StatementNode> ParseLiteralExpr();
+            std::shared_ptr<AST::StatementNode> ParseComplexNumber();
+            std::shared_ptr<AST::StatementNode> ParseSignedNumber();
+            std::shared_ptr<AST::StatementNode> ParseSignedRealNumber();
+            std::shared_ptr<AST::StatementNode> ParseRealNumber();
+            std::shared_ptr<AST::StatementNode> ParseImaginaryNumber();
+            std::shared_ptr<AST::StatementNode> ParseCapturePattern();
+            std::shared_ptr<AST::StatementNode> ParsePatternCaptureTarget();
+            std::shared_ptr<AST::StatementNode> ParseWildCardPattern();
+            std::shared_ptr<AST::StatementNode> ParseValuePattern();
+            std::shared_ptr<AST::StatementNode> ParseAttr();
+            std::shared_ptr<AST::StatementNode> ParseNameOrAttr();
+            std::shared_ptr<AST::StatementNode> ParseGroupPattern();
+            std::shared_ptr<AST::StatementNode> ParseSequencePattern();
+            std::shared_ptr<AST::StatementNode> ParseOpenSequencePattern();
+            std::shared_ptr<AST::StatementNode> ParseMaybeeSequencePattern();
+            std::shared_ptr<AST::StatementNode> ParseMaybeeStarExpr();
+            std::shared_ptr<AST::StatementNode> ParseStarPattern();
+            std::shared_ptr<AST::StatementNode> ParseMappingPattern();
+            std::shared_ptr<AST::StatementNode> ParseItemsPattern();
+            std::shared_ptr<AST::StatementNode> ParseKeyValuePattern();
+            std::shared_ptr<AST::StatementNode> ParseDoubleStarPattern();
+            std::shared_ptr<AST::StatementNode> ParseClassPattern();
+            std::shared_ptr<AST::StatementNode> ParsePositionalPattern();
+            std::shared_ptr<AST::StatementNode> ParseKeywordPatterns();
+            std::shared_ptr<AST::StatementNode> ParseKeywordPattern();
 
         protected:
             std::shared_ptr<PythonCoreTokenizer> mLexer;
