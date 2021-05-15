@@ -20,3 +20,8 @@ bool NameToken::IsMatchSoftKeyword()
 {
     return mText->find_first_of(L"match", 0, sizeof(wchar_t)) && mText->size() == 5;
 }
+
+bool NameToken::IsWildCardPattern()
+{
+    return mText->find_first_of(L"_", 0, sizeof(wchar_t)) && mText->size() == 1;
+}
