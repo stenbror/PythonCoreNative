@@ -968,6 +968,14 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSmallStmt()
         case TokenKind::PyAssert:
             
             return ParseAssert();
+
+        case TokenKind::Name:
+            
+            {
+                auto match = std::static_pointer_cast<NameToken>(mLexer->CurSymbol());
+
+                return match->IsMatchSoftKeyword() ? ParseMatch() : ParseExpr();
+            }
         
         default:
             
