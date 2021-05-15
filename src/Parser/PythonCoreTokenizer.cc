@@ -224,7 +224,7 @@ _again:
             return ;
         }
 
-        // ADD: Trivia collecting comment.
+        triviaList->push_back( std::make_shared<CommentTrivia>(mPosition, mSourceBuffer->BufferPosition(), std::make_shared<std::wstring>(key)) );
 
         goto _again;
     }
