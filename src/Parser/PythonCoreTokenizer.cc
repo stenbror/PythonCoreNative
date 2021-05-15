@@ -27,6 +27,8 @@ unsigned int PythonCoreTokenizer::Position()
 void PythonCoreTokenizer::Advance()
 {
 
+    auto triviaList = std::make_shared<std::vector<Trivia>>();
+
 _nextLine:  
 
     mIsBlankLine = false;

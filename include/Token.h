@@ -2,6 +2,7 @@
 #pragma once
 
 #include <TokenKind.h>
+#include <Trivia.h>
 
 #include <string>
 #include <memory>
