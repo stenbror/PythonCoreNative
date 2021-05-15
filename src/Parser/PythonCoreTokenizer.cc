@@ -27,7 +27,7 @@ unsigned int PythonCoreTokenizer::Position()
 void PythonCoreTokenizer::Advance()
 {
 
-    auto triviaList = std::make_shared<std::vector<Trivia>>();
+    auto triviaList = std::make_shared<std::vector<std::shared_ptr<Trivia>>>();
 
 _nextLine:  
 
@@ -42,21 +42,39 @@ _nextLine:
 
         while (mSourceBuffer->PeekChar() == ' ' || mSourceBuffer->PeekChar() == '\v' || mSourceBuffer->PeekChar() == '\t')
         {
+            auto startPos = mSourceBuffer->BufferPosition();
 
             switch (mSourceBuffer->PeekChar())
             {
                 case ' ':
-                    col++;
+                    {
+                        
+                        while (mSourceBuffer->PeekChar() == ' ')
+                        {
+
+                            mSourceBuffer->Next();
+                            col++;
+
+                        }
+
+                    }
+
+                    triviaList->push_back( std::make_shared<WhiteSpaceTrivia>(startPos, mSourceBuffer->BufferPosition(), L' ') );
                     break;
                 case '\t':
+                    
                     col = (col / mTabSize + 1) * mTabSize;
+                    mSourceBuffer->Next();
+                    triviaList->push_back( std::make_shared<WhiteSpaceTrivia>(startPos, mSourceBuffer->BufferPosition(), L'\t') );
                     break;
+
                 case '\v':
+                    
                     col = 0;
+                    mSourceBuffer->Next();
+                    triviaList->push_back( std::make_shared<WhiteSpaceTrivia>(startPos, mSourceBuffer->BufferPosition(), L'\v') );
                     break;
             }
-
-            mSourceBuffer->Next();
 
         }
 
