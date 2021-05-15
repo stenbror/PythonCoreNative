@@ -148,7 +148,8 @@ _nextLine:
             mCurSymbol = std::make_shared<Token>(
                 mPosition,
                 mSourceBuffer->BufferPosition(),
-                TokenKind::Dedent);
+                TokenKind::Dedent,
+                triviaList);
         }
         else
         {
@@ -158,7 +159,8 @@ _nextLine:
             mCurSymbol = std::make_shared<Token>(
                 mPosition,
                 mSourceBuffer->BufferPosition(),
-                TokenKind::Indent);
+                TokenKind::Indent,
+                triviaList);
 
         }
 
@@ -202,7 +204,8 @@ _again:
             mCurSymbol = std::make_shared<TypeCommentToken>(
                 mPosition, 
                 mSourceBuffer->BufferPosition(), 
-                std::make_shared<std::wstring>(key));
+                std::make_shared<std::wstring>(key),
+                triviaList);
 
             return ;
         }
@@ -221,7 +224,8 @@ _again:
         mCurSymbol = std::make_shared<Token>(   
             mPosition,
             mSourceBuffer->BufferPosition(),
-            TokenKind::EndOfFile);
+            TokenKind::EndOfFile,
+            triviaList);
 
         return;
     }
@@ -243,7 +247,7 @@ _again:
         
         if (mReservedKeywords.find(key) != mReservedKeywords.end() )
         {
-            mCurSymbol = std::make_shared<Token>(mPosition, mSourceBuffer->BufferPosition(), mReservedKeywords.at(key));
+            mCurSymbol = std::make_shared<Token>(mPosition, mSourceBuffer->BufferPosition(), mReservedKeywords.at(key), triviaList);
             
             return ;
         }
@@ -259,7 +263,8 @@ _again:
             mCurSymbol = std::make_shared<NameToken>(
                 mPosition, 
                 mSourceBuffer->BufferPosition(), 
-                std::make_shared<std::wstring>(key));
+                std::make_shared<std::wstring>(key),
+                triviaList);
             
             return;
         }
@@ -284,7 +289,8 @@ _again:
         mCurSymbol = std::make_shared<Token>(
             mPosition,
             mSourceBuffer->BufferPosition(),
-            TokenKind::Newline);
+            TokenKind::Newline,
+            triviaList);
 
         return;
     }
@@ -308,7 +314,8 @@ _again:
                 mCurSymbol = std::make_shared<Token>(
                     mPosition,
                     mSourceBuffer->BufferPosition(),
-                    TokenKind::PyElipsis);
+                    TokenKind::PyElipsis,
+                    triviaList);
 
                 return;
             }
@@ -322,7 +329,8 @@ _again:
             mCurSymbol = std::make_shared<Token>(
                     mPosition,
                     mSourceBuffer->BufferPosition(),
-                    TokenKind::PyDot);
+                    TokenKind::PyDot,
+                    triviaList);
 
                 return;
         }
@@ -639,7 +647,8 @@ _again:
         mCurSymbol = std::make_shared<NumberToken>(
             mPosition,
             mSourceBuffer->BufferPosition(),
-            std::make_shared<std::wstring>(key) );
+            std::make_shared<std::wstring>(key),
+            triviaList );
 
         return;
     }
@@ -766,7 +775,8 @@ _letterQuote:
         mCurSymbol = std::make_shared<StringToken>(
             mPosition,
             mSourceBuffer->BufferPosition(),
-            std::make_shared<std::wstring>(key) );
+            std::make_shared<std::wstring>(key),
+            triviaList );
 
         return;
 
@@ -808,63 +818,72 @@ _letterQuote:
 
             mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                     mSourceBuffer->BufferPosition(),
-                                                    TokenKind::PyLeftParen);
+                                                    TokenKind::PyLeftParen,
+                                                    triviaList);
             break;
 
         case '[':
         
             mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                     mSourceBuffer->BufferPosition(),
-                                                    TokenKind::PyLeftBracket);
+                                                    TokenKind::PyLeftBracket,
+                                                    triviaList);
             break;
 
         case '{':
         
             mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                     mSourceBuffer->BufferPosition(),
-                                                    TokenKind::PyLeftCurly);
+                                                    TokenKind::PyLeftCurly,
+                                                    triviaList);
             break;
 
         case ')':
         
             mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                     mSourceBuffer->BufferPosition(),
-                                                    TokenKind::PyRightParen);
+                                                    TokenKind::PyRightParen,
+                                                    triviaList);
             break;
 
         case ']':
         
             mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                     mSourceBuffer->BufferPosition(),
-                                                    TokenKind::PyRightBracket);
+                                                    TokenKind::PyRightBracket,
+                                                    triviaList);
             break;
 
         case '}':
         
             mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                     mSourceBuffer->BufferPosition(),
-                                                    TokenKind::PyRightCurly);
+                                                    TokenKind::PyRightCurly,
+                                                    triviaList);
             break;
 
         case ';':
         
             mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                     mSourceBuffer->BufferPosition(),
-                                                    TokenKind::PySemiColon);
+                                                    TokenKind::PySemiColon,
+                                                    triviaList);
             break;
 
         case ',':
         
             mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                     mSourceBuffer->BufferPosition(),
-                                                    TokenKind::PyComma);
+                                                    TokenKind::PyComma,
+                                                    triviaList);
             break;
 
         case '~':
         
             mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                     mSourceBuffer->BufferPosition(),
-                                                    TokenKind::PyBitInvert);
+                                                    TokenKind::PyBitInvert,
+                                                    triviaList);
             break;
 
         case '+':
@@ -874,13 +893,15 @@ _letterQuote:
                 mSourceBuffer->Next();
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyPlusAssign);
+                                                        TokenKind::PyPlusAssign,
+                                                        triviaList);
             }
             else
             {
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyPlus);
+                                                        TokenKind::PyPlus,
+                                                        triviaList);
             }
             break;
 
@@ -891,20 +912,23 @@ _letterQuote:
                 mSourceBuffer->Next();
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyMinusAssign);
+                                                        TokenKind::PyMinusAssign,
+                                                        triviaList);
             }
             else if (mSourceBuffer->PeekChar() == '>')
             {
                 mSourceBuffer->Next();
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyArrow);
+                                                        TokenKind::PyArrow,
+                                                        triviaList);
             }
             else
             {
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyMinus);
+                                                        TokenKind::PyMinus,
+                                                        triviaList);
             }
             break;
 
@@ -918,13 +942,15 @@ _letterQuote:
                     mSourceBuffer->Next();
                     mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                             mSourceBuffer->BufferPosition(),
-                                                            TokenKind::PyPowerAssign);
+                                                            TokenKind::PyPowerAssign,
+                                                            triviaList);
                 }
                 else
                 {
                     mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                             mSourceBuffer->BufferPosition(),
-                                                            TokenKind::PyPower);
+                                                            TokenKind::PyPower,
+                                                            triviaList);
                 }
             }
             else if (mSourceBuffer->PeekChar() == '=')
@@ -932,13 +958,15 @@ _letterQuote:
                 mSourceBuffer->Next();
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyMulAssign);
+                                                        TokenKind::PyMulAssign,
+                                                        triviaList);
             }
             else
             {
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyMul);
+                                                        TokenKind::PyMul,
+                                                        triviaList);
             }
             break;   
 
@@ -952,13 +980,15 @@ _letterQuote:
                     mSourceBuffer->Next();
                     mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                             mSourceBuffer->BufferPosition(),
-                                                            TokenKind::PyFloorDivAssign);
+                                                            TokenKind::PyFloorDivAssign,
+                                                            triviaList);
                 }
                 else
                 {
                     mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                             mSourceBuffer->BufferPosition(),
-                                                            TokenKind::PyFloorDiv);
+                                                            TokenKind::PyFloorDiv,
+                                                            triviaList);
                 }
             }
             else if (mSourceBuffer->PeekChar() == '=')
@@ -966,13 +996,15 @@ _letterQuote:
                 mSourceBuffer->Next();
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyDivAssign);
+                                                        TokenKind::PyDivAssign,
+                                                        triviaList);
             }
             else
             {
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyDiv);
+                                                        TokenKind::PyDiv,
+                                                        triviaList);
             }
             break;   
 
@@ -986,13 +1018,15 @@ _letterQuote:
                     mSourceBuffer->Next();
                     mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                             mSourceBuffer->BufferPosition(),
-                                                            TokenKind::PyShiftLeftAssign);
+                                                            TokenKind::PyShiftLeftAssign,
+                                                            triviaList);
                 }
                 else
                 {
                     mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                             mSourceBuffer->BufferPosition(),
-                                                            TokenKind::PyShiftLeft);
+                                                            TokenKind::PyShiftLeft,
+                                                            triviaList);
                 }
             }
             else if (mSourceBuffer->PeekChar() == '>')
@@ -1000,20 +1034,23 @@ _letterQuote:
                 mSourceBuffer->Next();
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyNotEqual);
+                                                        TokenKind::PyNotEqual,
+                                                        triviaList);
             }
             else if (mSourceBuffer->PeekChar() == '=')
             {
                 mSourceBuffer->Next();
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyLessEqual);
+                                                        TokenKind::PyLessEqual,
+                                                        triviaList);
             }
             else
             {
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyLess);
+                                                        TokenKind::PyLess,
+                                                        triviaList);
             }
             break;   
 
@@ -1027,13 +1064,15 @@ _letterQuote:
                     mSourceBuffer->Next();
                     mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                             mSourceBuffer->BufferPosition(),
-                                                            TokenKind::PyShiftRightAssign);
+                                                            TokenKind::PyShiftRightAssign,
+                                                            triviaList);
                 }
                 else
                 {
                     mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                             mSourceBuffer->BufferPosition(),
-                                                            TokenKind::PyShiftRight);
+                                                            TokenKind::PyShiftRight,
+                                                            triviaList);
                 }
             }
             else if (mSourceBuffer->PeekChar() == '=')
@@ -1041,13 +1080,15 @@ _letterQuote:
                 mSourceBuffer->Next();
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyGreaterEqual);
+                                                        TokenKind::PyGreaterEqual,
+                                                        triviaList);
             }
             else
             {
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyGreater);
+                                                        TokenKind::PyGreater,
+                                                        triviaList);
             }
             break;
 
@@ -1058,13 +1099,15 @@ _letterQuote:
                 mSourceBuffer->Next();
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyModuloAssign);
+                                                        TokenKind::PyModuloAssign,
+                                                        triviaList);
             }
             else
             {
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyModulo);
+                                                        TokenKind::PyModulo,
+                                                        triviaList);
             }
             break; 
 
@@ -1075,13 +1118,15 @@ _letterQuote:
                 mSourceBuffer->Next();
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyMatriceAssign);
+                                                        TokenKind::PyMatriceAssign,
+                                                        triviaList);
             }
             else
             {
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyMatrice);
+                                                        TokenKind::PyMatrice,
+                                                        triviaList);
             }
             break;
 
@@ -1092,13 +1137,15 @@ _letterQuote:
                 mSourceBuffer->Next();
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyBitAndAssign);
+                                                        TokenKind::PyBitAndAssign,
+                                                        triviaList);
             }
             else
             {
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyBitAnd);
+                                                        TokenKind::PyBitAnd,
+                                                        triviaList);
             }
             break;
 
@@ -1109,13 +1156,15 @@ _letterQuote:
                 mSourceBuffer->Next();
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyBitOrAssign);
+                                                        TokenKind::PyBitOrAssign,
+                                                        triviaList);
             }
             else
             {
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyBitOr);
+                                                        TokenKind::PyBitOr,
+                                                        triviaList);
             }
             break;
 
@@ -1126,13 +1175,15 @@ _letterQuote:
                 mSourceBuffer->Next();
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyBitXorAssign);
+                                                        TokenKind::PyBitXorAssign,
+                                                        triviaList);
             }
             else
             {
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyBitXor);
+                                                        TokenKind::PyBitXor,
+                                                        triviaList);
             }
             break;
 
@@ -1143,13 +1194,15 @@ _letterQuote:
                 mSourceBuffer->Next();
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyColonAssign);
+                                                        TokenKind::PyColonAssign,
+                                                        triviaList);
             }
             else
             {
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyColon);
+                                                        TokenKind::PyColon,
+                                                        triviaList);
             }
             break;
 
@@ -1160,13 +1213,15 @@ _letterQuote:
                 mSourceBuffer->Next();
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyEqual);
+                                                        TokenKind::PyEqual,
+                                                        triviaList);
             }
             else
             {
                 mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                         mSourceBuffer->BufferPosition(),
-                                                        TokenKind::PyAssign);
+                                                        TokenKind::PyAssign,
+                                                        triviaList);
             }
             break;
 
@@ -1181,7 +1236,8 @@ _letterQuote:
 
             mCurSymbol = std::make_shared<Token>(   mPosition, 
                                                     mSourceBuffer->BufferPosition(),
-                                                    TokenKind::PyNotEqual);
+                                                    TokenKind::PyNotEqual,
+                                                    triviaList);
             break;
 
         default:

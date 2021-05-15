@@ -2,11 +2,12 @@
 
 using namespace PythonCoreNative::RunTime::Parser;
 
-Token::Token(unsigned int startPosition, unsigned int endPosition, TokenKind kind)
+Token::Token(unsigned int startPosition, unsigned int endPosition, TokenKind kind, std::shared_ptr<std::vector<std::shared_ptr<Trivia>>> triviaList)
 {
     mTokenStartPosition = startPosition;
     mTokenEndPosition = endPosition;
     mKind = kind;
+    mTriviaList = triviaList;
 }
 
 TokenKind Token::GetSymbolKind()

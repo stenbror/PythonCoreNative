@@ -2,8 +2,11 @@
 
 using namespace PythonCoreNative::RunTime::Parser;
 
-StringToken::StringToken(unsigned int startPosition, unsigned int endPosition, std::shared_ptr<std::wstring> text) 
-    :   Token(startPosition, endPosition, TokenKind::String) 
+StringToken::StringToken(   unsigned int startPosition, 
+                            unsigned int endPosition, 
+                            std::shared_ptr<std::wstring> text,
+                            std::shared_ptr<std::vector<std::shared_ptr<Trivia>>> triviaList) 
+    :   Token(startPosition, endPosition, TokenKind::String, triviaList) 
 {
     mText = text;
 }
