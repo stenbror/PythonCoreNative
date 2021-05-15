@@ -59,10 +59,16 @@ namespace PythonCoreNative::RunTime::Parser
             StringToken(    unsigned int startPosition, 
                             unsigned int endPosition, 
                             std::shared_ptr<std::wstring> text,
+                            bool isRaw,
+                            bool isUnicode,
+                            bool isFormated,
                             std::shared_ptr<std::vector<std::shared_ptr<Trivia>>> triviaList);
 
         protected:
             std::shared_ptr<std::wstring> mText;
+            bool mIsRaw;
+            bool mIsUnicode;
+            bool mIsFormated;
     };
 
     class TypeCommentToken : public Token

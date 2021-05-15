@@ -29,9 +29,13 @@ void PythonCoreTokenizer::Advance()
 
     auto triviaList = std::make_shared<std::vector<std::shared_ptr<Trivia>>>();
 
+    auto isUnicode = false, isFormated = false, isRaw = false;
+
 _nextLine:  
 
     mIsBlankLine = false;
+
+    isUnicode = isRaw = isFormated = false;
 
     /* Analyze start of source code line */
     if (mAtBOL)
@@ -265,15 +269,85 @@ _again:
             
             return ;
         }
-        else if (mSourceBuffer->PeekChar() == '"' || mSourceBuffer->PeekChar() == '\'')
+
+        /* Analyze string prefix */
+        else if (key.size() < 3 && ( mSourceBuffer->PeekChar() == '"' || mSourceBuffer->PeekChar() == '\'') )
         {
 
-            // Hanbdle prefix checking for strings first here!
+            if (key.find_first_of(L"r", 0, sizeof(wchar_t)))
+            {
+                isRaw = true;
+            }
+
+            else if (key.find_first_of(L"u", 0, sizeof(wchar_t)))
+            {
+                isUnicode = true;
+            }
+
+            else if (key.find_first_of(L"R", 0, sizeof(wchar_t)))
+            {
+                isRaw = true;
+            }
+
+            else if (key.find_first_of(L"U", 0, sizeof(wchar_t)))
+            {
+                isUnicode = true;
+            }
+
+            else if (key.find_first_of(L"f", 0, sizeof(wchar_t)))
+            {
+                isFormated = true;
+            }
+
+            else if (key.find_first_of(L"F", 0, sizeof(wchar_t)))
+            {
+                isFormated = true;
+            }
+
+            else if (key.find_first_of(L"fr", 0, sizeof(wchar_t)))
+            {
+                isFormated = isRaw = true;
+            }
+
+            else if (key.find_first_of(L"FR", 0, sizeof(wchar_t)))
+            {
+                isFormated = isRaw = true;
+            }
+
+            else if (key.find_first_of(L"rf", 0, sizeof(wchar_t)))
+            {
+                isFormated = isRaw = true;
+            }
+
+            else if (key.find_first_of(L"rF", 0, sizeof(wchar_t)))
+            {
+                isFormated = isRaw = true;
+            }
+
+            else if (key.find_first_of(L"Rf", 0, sizeof(wchar_t)))
+            {
+                isFormated = isRaw = true;
+            }
+
+            else if (key.find_first_of(L"RF", 0, sizeof(wchar_t)))
+            {
+                isFormated = isRaw = true;
+            }
+
+            else
+            {
+
+                throw std::make_shared<LexicalError>(   
+                    mPosition, 
+                    std::make_shared<std::wstring>(L"Illegal prefix for string!"));
+            
+            }
 
             goto _letterQuote;
         }
         else
         {
+
             mCurSymbol = std::make_shared<NameToken>(
                 mPosition, 
                 mSourceBuffer->BufferPosition(), 
@@ -281,6 +355,7 @@ _again:
                 triviaList);
             
             return;
+
         }
     }
 
@@ -792,6 +867,9 @@ _letterQuote:
             mPosition,
             mSourceBuffer->BufferPosition(),
             std::make_shared<std::wstring>(key),
+            isRaw,
+            isUnicode,
+            isFormated,
             triviaList );
 
         return;
