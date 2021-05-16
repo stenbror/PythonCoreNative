@@ -73,6 +73,7 @@
 #include <ast/DictionaryEntryNode.h>
 #include <ast/DictionaryContainerNode.h>
 #include <ast/SetContainerNode.h>
+#include <ast/StarNamedExpressionNode.h>
 
 #include <ast/IfStatementNode.h>
 #include <ast/ElifStatementNode.h>
@@ -182,6 +183,10 @@ namespace PythonCoreNative::RunTime::Parser
             std::shared_ptr<AST::ExpressionNode> ParseTestNoCond();
             std::shared_ptr<AST::ExpressionNode> ParseTest();
             std::shared_ptr<AST::ExpressionNode> ParseNamedExpr();
+
+            std::shared_ptr<AST::ExpressionNode> ParseStarNamedExpressions();
+            std::shared_ptr<AST::ExpressionNode> ParseStarNamedExpression();
+
             std::shared_ptr<AST::ExpressionNode> ParseTestListComp();
             std::shared_ptr<AST::ExpressionNode> ParseTrailer();
             std::shared_ptr<AST::ExpressionNode> ParseSubscriptList();

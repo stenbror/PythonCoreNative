@@ -582,6 +582,35 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseNamedExpr()
     return left;;
 }
 
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseStarNamedExpressions()
+{
+    
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::ExpressionNode>>>();
+    auto separartors = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    nodes->push_back( ParseStarNamedExpression() );
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+    {
+        separartors->push_back( mLexer->CurSymbol() );
+
+        if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
+            nodes->push_back( ParseStarNamedExpression() );
+    }
+
+    return std::make_shared<AST::StarNamedExpressionNode>(startPos, mLexer->Position(), nodes, separartors);
+
+}
+
+std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseStarNamedExpression()
+{
+
+    return mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ?
+        ParseStarExpr() : ParseNamedExpr();
+
+}
+
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestListComp()
 {
     auto startPos = mLexer->Position();
