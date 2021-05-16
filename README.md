@@ -1,6 +1,6 @@
 # PythonCoreNative
 
-This is the start of a complete Python interpreter, written from scratch in modern C++ 17 and as first step will implement a complete Roslyn like parser for Python 3.10 grammar.  
+This is the start of a complete Python interpreter, written from scratch in modern C++ 17 and as a first step will implement a complete Roslyn like parser for Python 3.10 grammar.  
 
 Open project in Visual Studo Code and open terminal.
 
