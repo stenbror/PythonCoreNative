@@ -66,11 +66,22 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseMatch()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSubjectExpr()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto right = ParseStarNamedExpression();
+
+    return std::make_shared<AST::SubjectExprNode>(startPos, mLexer->Position(), right);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseCaseBlock()
 {
+    auto startPos = mLexer->Position();
+
+    if (    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Name && 
+            std::static_pointer_cast<NameToken> (mLexer->CurSymbol())->IsCaseSoftKeyword() )
+            {
+
+            }
+
     return nullptr;
 }
 

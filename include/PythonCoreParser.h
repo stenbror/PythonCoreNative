@@ -141,7 +141,7 @@
 #include <ast/SingleInputNode.h>
 
 #include <ast/MatchStatementNode.h>
-
+#include <ast/SubjectExprNode.h>
 
 #include <ast/PositionalPatternsNode.h>
 #include <ast/KeywordPatternsNode.h> 
