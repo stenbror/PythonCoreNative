@@ -230,7 +230,22 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePositionalPattern()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseKeywordPatterns()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
+    auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    nodes->push_back( ParseKeywordPattern() );
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+    {
+        separators->push_back( mLexer->CurSymbol() );
+        mLexer->Advance();
+
+        if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen)
+            nodes->push_back( ParseKeywordPattern() );
+    }
+
+    return std::make_shared<AST::KeywordPatternsNode>(startPos, mLexer->Position(), nodes, separators);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseKeywordPattern()
