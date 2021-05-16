@@ -1,6 +1,7 @@
 # PythonCoreNative
 
-This is a test of a modern C++ based Python parser. Just started, but parser is soon implemented, Tokenizer next and UnitTests.
+This is the start of a complete Python interpreter, written from scratch in modern C++ 17 and as first step will implement a complete Roslyn like parser for Python 3.10 grammar.  
+
 Open project in Visual Studo Code and open terminal.
 
 To build:
