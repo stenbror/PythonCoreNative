@@ -120,7 +120,13 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseCaseBlock()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseGuard()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();  /* 'if' */
+    mLexer->Advance();
+
+    auto right = ParseNamedExpr();
+
+    return std::make_shared<AST::GuardNode>(startPos, mLexer->Position(), symbol, right);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePatterns()

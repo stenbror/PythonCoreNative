@@ -143,6 +143,7 @@
 #include <ast/MatchStatementNode.h>
 #include <ast/SubjectExprNode.h>
 #include <ast/CaseStatementNode.h>
+#include <ast/GuardNode.h>
 
 #include <ast/PositionalPatternsNode.h>
 #include <ast/KeywordPatternsNode.h> 
