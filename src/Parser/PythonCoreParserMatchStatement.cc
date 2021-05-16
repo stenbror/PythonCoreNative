@@ -84,6 +84,11 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePatterns()
     return nullptr;
 }
 
+std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePattern()
+{
+    return nullptr;
+}
+
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAsPattern()
 {
     return nullptr;
@@ -230,5 +235,28 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseKeywordPatterns()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseKeywordPattern()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
+        throw std::make_shared<SyntaxError>(
+            mLexer->Position(), 
+            mLexer->CurSymbol(),
+            std::make_shared<std::wstring>(L"Expecting Name in keyword pattern!"));
+
+    auto symbol = std::static_pointer_cast<NameToken>( mLexer->CurSymbol() );
+    mLexer->Advance();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyAssign)
+        throw std::make_shared<SyntaxError>(
+            mLexer->Position(), 
+            mLexer->CurSymbol(),
+            std::make_shared<std::wstring>(L"Expecting '=' in keyword pattern!"));
+
+    auto symbol2 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto right = ParsePattern();
+
+    return std::make_shared<AST::KeywordPatternNode>(
+                            startPos, mLexer->Position(), symbol, symbol2, right);
 }

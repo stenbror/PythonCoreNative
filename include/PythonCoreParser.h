@@ -142,6 +142,9 @@
 #include <ast/MatchStatementNode.h>
 
 
+#include <ast/KeywordPatternNode.h>
+
+
 #include <memory>
 
 namespace PythonCoreNative::RunTime::Parser
@@ -254,6 +257,7 @@ namespace PythonCoreNative::RunTime::Parser
             std::shared_ptr<AST::StatementNode> ParseCaseBlock();
             std::shared_ptr<AST::StatementNode> ParseGuard();
             std::shared_ptr<AST::StatementNode> ParsePatterns();
+            std::shared_ptr<AST::StatementNode> ParsePattern();
             std::shared_ptr<AST::StatementNode> ParseAsPattern();
             std::shared_ptr<AST::StatementNode> ParseOrPattern();
             std::shared_ptr<AST::StatementNode> ParseClosedPattern();
