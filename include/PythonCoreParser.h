@@ -142,6 +142,7 @@
 #include <ast/MatchStatementNode.h>
 
 
+#include <ast/PositionalPatternsNode.h>
 #include <ast/KeywordPatternsNode.h> 
 #include <ast/KeywordPatternNode.h>
 
