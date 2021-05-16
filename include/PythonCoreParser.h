@@ -139,6 +139,7 @@
 #include <ast/FileInputNode.h>
 #include <ast/SingleInputNode.h>
 
+#include <ast/MatchStatementNode.h>
 
 
 #include <memory>

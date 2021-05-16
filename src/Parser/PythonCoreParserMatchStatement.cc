@@ -7,7 +7,61 @@ using namespace PythonCoreNative::RunTime::Parser;
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseMatch()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol(); /* Identifier 'match' */
+    mLexer->Advance();
+
+    auto left = ParseSubjectExpr();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
+        throw std::make_shared<SyntaxError>(
+            mLexer->Position(), 
+            mLexer->CurSymbol(),
+            std::make_shared<std::wstring>(L"Expecting ':' in 'match' statement!"));
+
+    auto symbol2 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Newline)
+        throw std::make_shared<SyntaxError>(
+            mLexer->Position(), 
+            mLexer->CurSymbol(),
+            std::make_shared<std::wstring>(L"Expecting Newline in 'match' statement!"));
+
+    auto symbol3 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Indent)
+        throw std::make_shared<SyntaxError>(
+            mLexer->Position(), 
+            mLexer->CurSymbol(),
+            std::make_shared<std::wstring>(L"Expecting Indent in 'match' statement!"));
+
+    auto symbol4 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
+
+    do
+    {
+        
+        nodes->push_back( ParseCaseBlock() );
+
+    } while (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Dedent);
+    
+    auto symbol5 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    return std::make_shared<AST::MatchStatementNode>(
+        startPos,
+        mLexer->Position(),
+        symbol,     /* 'match' */
+        left, 
+        symbol2,    /* ':' */
+        symbol3,    /* 'NEWLINE' */
+        symbol4,    /* 'INDENT' */
+        nodes,
+        symbol5 );  /* 'DEDENT' */
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSubjectExpr()
