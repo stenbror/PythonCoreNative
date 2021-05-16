@@ -80,9 +80,42 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseCaseBlock()
             std::static_pointer_cast<NameToken> (mLexer->CurSymbol())->IsCaseSoftKeyword() )
             {
 
+                auto symbol = mLexer->CurSymbol();
+                mLexer->Advance();
+
+                auto left = ParsePatterns();
+
+                auto right = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyIf ?
+                                ParseGuard() : nullptr;
+
+                if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
+                    throw std::make_shared<SyntaxError>(
+                                mLexer->Position(), 
+                                mLexer->CurSymbol(),
+                                std::make_shared<std::wstring>(L"Expecting ':' in 'case' statement!"));
+
+                auto symbol2 = mLexer->CurSymbol();
+                mLexer->Advance();
+
+                auto next = ParseSuite();
+
+                return std::make_shared<AST::CaseStatementNode>(
+                        startPos,
+                        mLexer->Position(),
+                        std::static_pointer_cast<NameToken>(symbol), 
+                        left, 
+                        right, 
+                        symbol2, 
+                        next);
+
             }
 
-    return nullptr;
+    else
+        throw std::make_shared<SyntaxError>(
+            mLexer->Position(), 
+            mLexer->CurSymbol(),
+            std::make_shared<std::wstring>(L"Expecting 'case' in 'match' statement!"));
+
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseGuard()
