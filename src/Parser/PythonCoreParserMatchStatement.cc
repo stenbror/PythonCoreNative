@@ -131,7 +131,11 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseGuard()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePatterns()
 {
-    return nullptr;
+
+    return mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyBitOr ? 
+        ParsePattern() :
+        ParseOpenSequencePattern(); 
+        
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePattern()
