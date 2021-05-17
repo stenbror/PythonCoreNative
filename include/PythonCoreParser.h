@@ -144,6 +144,7 @@
 #include <ast/SubjectExprNode.h>
 #include <ast/CaseStatementNode.h>
 #include <ast/GuardNode.h>
+#include <ast/WildCardPatternNode.h>
 
 #include <ast/PositionalPatternsNode.h>
 #include <ast/KeywordPatternsNode.h> 

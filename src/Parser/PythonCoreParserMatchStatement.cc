@@ -200,7 +200,19 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePatternCaptureTarget(
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWildCardPattern()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Name && std::static_pointer_cast<NameToken>(mLexer->CurSymbol())->IsWildCardPattern() )
+    {
+
+        auto symbol = mLexer->CurSymbol();  /* '_' */
+        mLexer->Advance();
+
+        return std::make_shared<AST::WildCardPatternNode>(startPos, mLexer->Position(), symbol);
+
+    }
+
+    return nullptr; /* Should never happend, because we need '_' to get to this rule. */
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseValuePattern()
