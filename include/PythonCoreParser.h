@@ -148,6 +148,7 @@
 #include <ast/LiteralPatternNode.h>
 #include <ast/LiteralExprNode.h>
 #include <ast/ComplexNumberNode.h>
+#include <ast/SignedNumberNode.h>
 
 #include <ast/PositionalPatternsNode.h>
 #include <ast/KeywordPatternsNode.h> 

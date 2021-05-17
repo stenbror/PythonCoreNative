@@ -322,22 +322,24 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseComplexNumber( unsign
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSignedNumber( unsigned int startPos, std::shared_ptr<Token> symbol, std::shared_ptr<NumberToken> left )
 {
-    return nullptr;
+
+    return std::make_shared<AST::SignedNumberNode>(startPos, mLexer->Position(), symbol, left);
+
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSignedRealNumber()
 {
-    return nullptr;
+    return nullptr; // Not needed.
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseRealNumber()
 {
-    return nullptr;
+    return nullptr; // Not needed.
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseImaginaryNumber()
 {
-    return nullptr;
+    return nullptr; // Not needed.
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseCapturePattern()
