@@ -135,15 +135,22 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePatterns()
     return mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyBitOr ? 
         ParsePattern() :
         ParseOpenSequencePattern(); 
-        
+
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePattern()
 {
-    return nullptr;
+
+    auto startPos = mLexer->Position();
+    auto left = ParseOrPattern();
+
+    return mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAs ?
+        ParseAsPattern(startPos, left) :
+        left;
+
 }
 
-std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAsPattern()
+std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAsPattern(unsigned int startPos, std::shared_ptr<AST::StatementNode> left)
 {
     return nullptr;
 }

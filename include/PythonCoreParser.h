@@ -272,7 +272,7 @@ namespace PythonCoreNative::RunTime::Parser
             std::shared_ptr<AST::StatementNode> ParseGuard();
             std::shared_ptr<AST::StatementNode> ParsePatterns();
             std::shared_ptr<AST::StatementNode> ParsePattern();
-            std::shared_ptr<AST::StatementNode> ParseAsPattern();
+            std::shared_ptr<AST::StatementNode> ParseAsPattern( unsigned int startPos, std::shared_ptr<AST::StatementNode> left );
             std::shared_ptr<AST::StatementNode> ParseOrPattern();
             std::shared_ptr<AST::StatementNode> ParseClosedPattern();
             std::shared_ptr<AST::StatementNode> ParseLiteralPattern();
