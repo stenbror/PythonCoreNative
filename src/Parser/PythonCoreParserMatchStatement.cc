@@ -263,7 +263,61 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseLiteralExpr()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseComplexNumber( unsigned int startPos, std::shared_ptr<Token> symbol, std::shared_ptr<NumberToken> left )
 {
-    return nullptr;
+
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::PyPlus:
+        case TokenKind::PyMinus:
+            {
+
+                auto symbol2 = mLexer->CurSymbol();
+                mLexer->Advance();
+
+                if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Number)
+                {
+
+                    auto right = std::static_pointer_cast<NumberToken>(mLexer->CurSymbol());
+
+                    if (right->IsImaginaryNumber())
+                    {
+
+                        mLexer->Advance();
+
+                        return std::make_shared<AST::ComplexNumberNode>(
+                            startPos,
+                            mLexer->Position(),
+                            symbol,
+                            left,
+                            symbol2,
+                            right );
+
+                    }
+
+                    throw std::make_shared<SyntaxError>(
+                        mLexer->Position(), 
+                        mLexer->CurSymbol(),
+                        std::make_shared<std::wstring>(L"Expecting imaginary number part of complex number!"));
+
+                }
+
+                throw std::make_shared<SyntaxError>(
+                        mLexer->Position(), 
+                        mLexer->CurSymbol(),
+                        std::make_shared<std::wstring>(L"Expecting imaginary number after '+' or '-' in part of complex number!"));
+
+            }
+
+            break;
+
+        default:
+
+            throw std::make_shared<SyntaxError>(
+                        mLexer->Position(), 
+                        mLexer->CurSymbol(),
+                        std::make_shared<std::wstring>(L"Expecting imaginary number and '+' or '-' in part of complex number!"));
+
+    }
+
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSignedNumber( unsigned int startPos, std::shared_ptr<Token> symbol, std::shared_ptr<NumberToken> left )
