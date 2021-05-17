@@ -1,3 +1,6 @@
+
+#pragma once
+
 namespace PythonCoreNative::RunTime::Parser
 {
     enum class TokenKind

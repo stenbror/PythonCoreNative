@@ -145,6 +145,7 @@
 #include <ast/CaseStatementNode.h>
 #include <ast/GuardNode.h>
 #include <ast/WildCardPatternNode.h>
+#include <ast/LiteralPatternNode.h>
 
 #include <ast/PositionalPatternsNode.h>
 #include <ast/KeywordPatternsNode.h> 
@@ -273,8 +274,8 @@ namespace PythonCoreNative::RunTime::Parser
             std::shared_ptr<AST::StatementNode> ParseClosedPattern();
             std::shared_ptr<AST::StatementNode> ParseLiteralPattern();
             std::shared_ptr<AST::StatementNode> ParseLiteralExpr();
-            std::shared_ptr<AST::StatementNode> ParseComplexNumber();
-            std::shared_ptr<AST::StatementNode> ParseSignedNumber();
+            std::shared_ptr<AST::StatementNode> ParseComplexNumber( unsigned int startPos, std::shared_ptr<Token> symbol, std::shared_ptr<NumberToken> left );
+            std::shared_ptr<AST::StatementNode> ParseSignedNumber( unsigned int startPos, std::shared_ptr<Token> symbol, std::shared_ptr<NumberToken> left );
             std::shared_ptr<AST::StatementNode> ParseSignedRealNumber();
             std::shared_ptr<AST::StatementNode> ParseRealNumber();
             std::shared_ptr<AST::StatementNode> ParseImaginaryNumber();

@@ -153,9 +153,61 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseClosedPattern()
 {
     return nullptr;
 }
+
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseLiteralPattern()
 {
-    return nullptr;
+
+    auto startPos = mLexer->Position();
+
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::PyNone:
+        case TokenKind::PyTrue:
+        case TokenKind::PyFalse:
+        case TokenKind::String:
+            {
+                
+                auto symbol = mLexer->CurSymbol();
+                mLexer->Advance();
+
+                return std::make_shared<AST::LiteralPatternNode>(
+                    startPos,
+                    mLexer->Position(),
+                    symbol,
+                    nullptr );
+
+            }
+        default:    /* signed_number | complex_number */
+            {
+                auto symbol = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMinus ?
+                    mLexer->CurSymbol() : nullptr;
+
+                if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMinus) mLexer->Advance();
+
+                if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind:: Number)
+                    throw std::make_shared<SyntaxError>(
+                            mLexer->Position(), 
+                            mLexer->CurSymbol(),
+                            std::make_shared<std::wstring>(L"Expecting Number after '-' in signed number!"));
+
+                auto left = std::static_pointer_cast<NumberToken>(mLexer->CurSymbol());
+
+                auto node = left->IsRealNumber() ? 
+                    ParseComplexNumber(startPos, symbol, left) :
+                    ParseSignedNumber(startPos, symbol, left);
+
+                return std::make_shared<AST::LiteralPatternNode>(
+                    startPos,
+                    mLexer->Position(),
+                    nullptr,
+                    node );
+                
+            }
+            
+    }
+
+    return nullptr; /* Should never happend. */
+
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseLiteralExpr()
@@ -163,12 +215,12 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseLiteralExpr()
     return nullptr;
 }
 
-std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseComplexNumber()
+std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseComplexNumber( unsigned int startPos, std::shared_ptr<Token> symbol, std::shared_ptr<NumberToken> left )
 {
     return nullptr;
 }
 
-std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSignedNumber()
+std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSignedNumber( unsigned int startPos, std::shared_ptr<Token> symbol, std::shared_ptr<NumberToken> left )
 {
     return nullptr;
 }
