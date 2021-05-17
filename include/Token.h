@@ -50,11 +50,18 @@ namespace PythonCoreNative::RunTime::Parser
         public:
             NumberToken(    unsigned int startPosition, 
                             unsigned int endPosition, 
+                            bool isImaginaryNumber,
+                            bool isRealNumber,
                             std::shared_ptr<std::wstring> text,
                             std::shared_ptr<std::vector<std::shared_ptr<Trivia>>> triviaList);
 
+            bool IsImaginaryNumber();
+            bool IsRealNumber();
+
         protected:
             std::shared_ptr<std::wstring> mText;
+            bool mIsImaginaryNumber;
+            bool mIsRealNumber;
     };
 
     class StringToken : public Token

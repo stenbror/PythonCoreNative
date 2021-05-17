@@ -433,6 +433,8 @@ _again:
     /* Handle numbers */
     if (mSourceBuffer->IsDigit() || mSourceBuffer->PeekChar() == '.')
     {
+        bool isImaginary = false, isReal = false;
+
         mPosition = mSourceBuffer->BufferPosition();
 
         std::wstringstream buffer;
@@ -559,6 +561,8 @@ _again:
 
                 if (mSourceBuffer->PeekChar() == '.')
                 {
+                    
+                    isReal = true;
 
                     buffer << mSourceBuffer->GetChar();
 
@@ -582,6 +586,8 @@ _again:
 
                 if (mSourceBuffer->PeekChar() == 'e' || mSourceBuffer->PeekChar() == 'E')
                 {
+
+                    isReal = true;
 
                     buffer << mSourceBuffer->GetChar();
 
@@ -622,6 +628,8 @@ _again:
 
                 if (mSourceBuffer->PeekChar() == 'j' || mSourceBuffer->PeekChar() == 'J')
                 {
+
+                    isImaginary = true;
 
                     buffer << mSourceBuffer->GetChar();
                 
@@ -664,6 +672,8 @@ _again:
             if (mSourceBuffer->PeekChar() == '.')
             {
 
+                isReal = true;
+
                 buffer << mSourceBuffer->GetChar();
 
                 while (true)
@@ -686,6 +696,8 @@ _again:
 
             if (mSourceBuffer->PeekChar() == 'e' || mSourceBuffer->PeekChar() == 'E')
             {
+
+                isReal = true;
 
                 buffer << mSourceBuffer->GetChar();
 
@@ -727,6 +739,8 @@ _again:
             if (mSourceBuffer->PeekChar() == 'j' || mSourceBuffer->PeekChar() == 'J')
             {
 
+                isImaginary = true;
+
                 buffer << mSourceBuffer->GetChar();
             
             }
@@ -737,6 +751,8 @@ _again:
 
         mCurSymbol = std::make_shared<NumberToken>(
             mPosition,
+            isImaginary,
+            isReal,
             mSourceBuffer->BufferPosition(),
             std::make_shared<std::wstring>(key),
             triviaList );
