@@ -152,7 +152,19 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePattern()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAsPattern(unsigned int startPos, std::shared_ptr<AST::StatementNode> left)
 {
-    return nullptr;
+
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto right = ParsePatternCaptureTarget();
+
+    return std::make_shared<AST::AsPatternNode>(
+        startPos,
+        mLexer->Position(),
+        left,
+        symbol, /* 'as' */
+        right );
+
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseOrPattern()
