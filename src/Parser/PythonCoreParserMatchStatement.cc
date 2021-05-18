@@ -266,7 +266,11 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseClosedPattern()
                         mLexer->Advance();
 
                         if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Name) mLexer->Advance();
-                        else throw ;
+                        else 
+                            throw std::make_shared<SyntaxError>(
+                                        mLexer->Position(), 
+                                        mLexer->CurSymbol(),
+                                        std::make_shared<std::wstring>(L"Expecting Name after '.' in pattern!"));
 
                     }
 
@@ -289,7 +293,11 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseClosedPattern()
 
         default:
 
-            throw ;
+            throw std::make_shared<SyntaxError>(
+                        mLexer->Position(), 
+                        mLexer->CurSymbol(),
+                        std::make_shared<std::wstring>(L"Expecting a valid pattern!"));
+
 
     }
 }
