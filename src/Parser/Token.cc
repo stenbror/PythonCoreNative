@@ -13,4 +13,14 @@ Token::Token(unsigned int startPosition, unsigned int endPosition, TokenKind kin
 TokenKind Token::GetSymbolKind()
 {
     return mKind;
-}    
+}   
+
+unsigned int Token::GetTokenStartPosition()
+{
+    return mTokenStartPosition;
+}
+
+unsigned int Token::GetTokenEndPosition()
+{
+    return mTokenEndPosition;
+}

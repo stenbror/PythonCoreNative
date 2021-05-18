@@ -54,6 +54,11 @@ unsigned int SourceBuffer::BufferPosition()
     return mIndex;
 }
 
+void SourceBuffer::SetPosition(unsigned int pos)
+{
+    mIndex = pos;
+}
+
 bool SourceBuffer::IsLiteralStartCharacter()
 {
     return false; // Dummy for now!

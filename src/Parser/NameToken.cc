@@ -25,3 +25,8 @@ bool NameToken::IsWildCardPattern()
 {
     return mText->find_first_of(L"_", 0, sizeof(wchar_t)) && mText->size() == 1;
 }
+
+bool NameToken::IsNotWildCardPrefixed()
+{
+    return !mText->find_first_of(L"_", 0, sizeof(wchar_t));
+}

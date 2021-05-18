@@ -195,7 +195,103 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseOrPattern()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseClosedPattern()
 {
-    return nullptr;
+
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::PyMinus:
+        case TokenKind::Number:
+        case TokenKind::String:
+        case TokenKind::PyNone:
+        case TokenKind::PyTrue:
+        case TokenKind::PyFalse:
+
+            return ParseLiteralPattern();
+
+        case TokenKind::PyLeftBracket:
+
+            return ParseSequencePattern();
+
+        case TokenKind::PyLeftParen:
+            {
+
+                auto startPos = mLexer->CurSymbol()->GetTokenStartPosition(); /* Start of first token */
+                auto symbol = mLexer->CurSymbol();
+                mLexer->Advance();
+
+                if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyBitOr)
+                {
+
+                    mLexer->UnWindTokenStream(startPos); /* Reset back Token stream */
+
+                    return ParseGroupPattern();
+                
+                }
+
+                mLexer->UnWindTokenStream(startPos); /* Reset back Token stream */
+
+                return ParseSequencePattern();
+
+            }
+            
+
+        case TokenKind::PyLeftCurly:
+
+            return ParseMappingPattern();
+
+        case TokenKind::Name:
+            {
+                auto symbol = std::static_pointer_cast<NameToken>( mLexer->CurSymbol() );
+                auto startPos = mLexer->CurSymbol()->GetTokenStartPosition();
+
+                if (symbol->IsWildCardPattern() ) return ParseWildCardPattern();
+
+                if (symbol->IsNotWildCardPrefixed())
+                {
+                    mLexer->Advance();
+
+                    if (    mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyDot &&
+                            mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyLeftParen &&
+                            mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyAssign )
+                            {
+
+                                mLexer->UnWindTokenStream(startPos); /* Reset back Token stream */
+
+                                return ParseCapturePattern();
+
+                            }
+
+                    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyDot)
+                    {
+
+                        mLexer->Advance();
+
+                        if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Name) mLexer->Advance();
+                        else throw ;
+
+                    }
+
+                    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLeftParen)
+                    {
+
+                        mLexer->UnWindTokenStream(startPos); /* Reset back Token stream */
+
+                        return ParseClassPattern();
+                    
+                    }
+
+                    mLexer->UnWindTokenStream(startPos); /* Reset back Token stream */
+
+                    return ParseValuePattern();
+                    
+                }
+
+            }
+
+        default:
+
+            throw ;
+
+    }
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseLiteralPattern()

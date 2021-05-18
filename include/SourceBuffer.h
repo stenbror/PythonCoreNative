@@ -16,6 +16,7 @@ namespace PythonCoreNative::RunTime::Parser
             wchar_t PeekChar();
             void UngetChar(wchar_t ch);
             unsigned int BufferPosition();
+            void SetPosition(unsigned int pos);
 
             void Next();
 

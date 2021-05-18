@@ -21,6 +21,7 @@ namespace PythonCoreNative::RunTime::Parser
             std::shared_ptr<Token> CurSymbol();
             unsigned int Position();
             void Advance();
+            void UnWindTokenStream(unsigned int pos);
 
         protected:
             std::shared_ptr<Token> mCurSymbol;

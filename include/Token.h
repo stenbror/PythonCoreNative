@@ -20,6 +20,8 @@ namespace PythonCoreNative::RunTime::Parser
                     std::shared_ptr<std::vector<std::shared_ptr<Trivia>>> triviaList);
 
             TokenKind GetSymbolKind();
+            unsigned int GetTokenStartPosition();
+            unsigned int GetTokenEndPosition();
 
         protected:
             TokenKind mKind;
@@ -40,6 +42,7 @@ namespace PythonCoreNative::RunTime::Parser
             bool IsCaseSoftKeyword();   /* 'case' */
             bool IsMatchSoftKeyword();  /* 'match' */
             bool IsWildCardPattern();    /* '_' */
+            bool IsNotWildCardPrefixed();   /* ! _Name */
 
         protected:
             std::shared_ptr<std::wstring> mText;

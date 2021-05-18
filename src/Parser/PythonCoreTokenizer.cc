@@ -23,6 +23,11 @@ unsigned int PythonCoreTokenizer::Position()
 {
     return mSourceBuffer->BufferPosition();
 }
+
+void PythonCoreTokenizer::UnWindTokenStream(unsigned int pos)
+{
+    mSourceBuffer->SetPosition(pos);
+}
             
 void PythonCoreTokenizer::Advance()
 {
