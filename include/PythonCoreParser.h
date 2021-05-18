@@ -151,6 +151,7 @@
 #include <ast/SignedNumberNode.h>
 #include <ast/AsPatternNode.h>
 #include <ast/OrPatternNode.h>
+#include <ast/CapturePatternNode.h>
 
 #include <ast/PositionalPatternsNode.h>
 #include <ast/KeywordPatternsNode.h> 

@@ -245,8 +245,9 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseClosedPattern()
 
                 if (symbol->IsWildCardPattern() ) return ParseWildCardPattern();
 
-                if (symbol->IsNotWildCardPrefixed())
+                else  
                 {
+
                     mLexer->Advance();
 
                     if (    mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyDot &&
@@ -492,12 +493,20 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseImaginaryNumber()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseCapturePattern()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol = std::static_pointer_cast<NameToken>( mLexer->CurSymbol() );
+    mLexer->Advance();
+
+    return std::make_shared<AST::CapturePatternNode>(
+        startPos,
+        mLexer->Position(),
+        symbol );
+        
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePatternCaptureTarget()
 {
-    return nullptr;
+    return nullptr; // Not needed.
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWildCardPattern()
