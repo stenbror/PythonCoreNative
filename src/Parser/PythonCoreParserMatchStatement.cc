@@ -169,7 +169,28 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAsPattern(unsigned in
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseOrPattern()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
+    auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    separators->push_back( mLexer->CurSymbol() );
+    mLexer->Advance();
+    nodes->push_back( ParseClosedPattern() );
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyBitOr)
+    {
+
+        separators->push_back( mLexer->CurSymbol() );
+        mLexer->Advance();
+        nodes->push_back( ParseClosedPattern() );
+    
+    }
+
+    return std::make_shared<AST::OrPatternNode>(
+        startPos,
+        mLexer->Position(),
+        nodes,
+        separators );
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseClosedPattern()
