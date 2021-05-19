@@ -750,7 +750,15 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseKeyValuePattern()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDoubleStarPattern()
 {
-    return nullptr;
+
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol(); /* Should be '**', checked before this rule */
+    mLexer->Advance();
+
+    auto right = ParseCapturePattern();
+
+    return std::make_shared<AST::DoubleStarPatternNode>(startPos, mLexer->Position(), symbol, right);
+
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseClassPattern()
