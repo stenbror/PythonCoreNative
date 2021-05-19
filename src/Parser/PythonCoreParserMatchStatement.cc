@@ -600,7 +600,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSequencePattern()
         mLexer->Advance();
 
         auto right = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightParen ?
-                        ParseOpenSequencePattern() :
+                        ParseOpenSequencePattern() : // Check for single entry. Group Pattern if onlye one.
                         nullptr;
 
         if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen)
@@ -608,6 +608,18 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSequencePattern()
 
         auto symbol2 = mLexer->CurSymbol();
         mLexer->Advance();
+
+        if (right != nullptr && std::static_pointer_cast<AST::OpenSequencePatternNode>(right)->IsGroupPattern() )
+        {
+
+            return std::make_shared<AST::GroupPatternNode>(
+                    startPos,
+                    mLexer->Position(),
+                    symbol1,
+                    right,
+                    symbol2 );
+
+        }
 
         return std::make_shared<AST::SequencePatternNode>(
                     startPos,
@@ -622,17 +634,69 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSequencePattern()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseOpenSequencePattern()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    mLexer->Advance();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
+    auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    nodes->push_back( ParseMaybeeStarExpr() );
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+    {
+
+        separators->push_back( mLexer->CurSymbol() );
+        mLexer->Advance();
+
+        if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightParen ) continue;
+
+        nodes->push_back( ParseMaybeeStarExpr() );
+    
+    }
+
+    return std::make_shared<AST::OpenSequencePatternNode>(
+                        startPos,
+                        mLexer->Position(),
+                        nodes,
+                        separators );
+
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseMaybeeSequencePattern()
 {
-    return nullptr;
+    
+    auto startPos = mLexer->Position();
+    mLexer->Advance();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
+    auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    nodes->push_back( ParseMaybeeStarExpr() );
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+    {
+
+        separators->push_back( mLexer->CurSymbol() );
+        mLexer->Advance();
+
+        if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightBracket ) continue;
+
+        nodes->push_back( ParseMaybeeStarExpr() );
+    
+    }
+
+    return std::make_shared<AST::MaybeeStarSequencePatternNode>(
+                        startPos,
+                        mLexer->Position(),
+                        nodes,
+                        separators );
+
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseMaybeeStarExpr()
 {
-    return nullptr;
+    return mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ?
+                ParseStarPattern() :
+                ParsePattern();
+
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseStarPattern()

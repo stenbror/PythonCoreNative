@@ -156,6 +156,8 @@
 #include <ast/GroupPatternNode.h>
 #include <ast/SequencePatternNode.h>
 #include <ast/StarPatternNode.h>
+#include <ast/OpenSequencePatternNode.h>
+#include <ast/MaybeeStarSequencePatternNode.h>
 
 #include <ast/PositionalPatternsNode.h>
 #include <ast/KeywordPatternsNode.h> 
