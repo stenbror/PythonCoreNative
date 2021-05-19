@@ -911,7 +911,124 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDoubleStarPattern()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseClassPattern()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<NameToken>>>();
+    auto dots = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    std::shared_ptr<Token> symbol1 = nullptr, symbol2 = nullptr, symbol3 = nullptr, symbol4 = nullptr;
+    std::shared_ptr<AST::StatementNode> left = nullptr, right = nullptr;
+
+    nodes->push_back( std::static_pointer_cast<NameToken>(mLexer->CurSymbol()) );
+    mLexer->Advance();
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyDot)
+    {
+
+        dots->push_back( mLexer->CurSymbol() );
+        mLexer->Advance();
+
+        if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
+            throw std::make_shared<SyntaxError>(
+                                    mLexer->Position(), 
+                                    mLexer->CurSymbol(),
+                                    std::make_shared<std::wstring>(L"Expecting Name in class pattern!"));
+
+        nodes->push_back( std::static_pointer_cast<NameToken>( std::static_pointer_cast<NameToken>(mLexer->CurSymbol()) ) );
+        mLexer->Advance();
+    
+    }
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyLeftParen)
+        throw std::make_shared<SyntaxError>(
+                                    mLexer->Position(), 
+                                    mLexer->CurSymbol(),
+                                    std::make_shared<std::wstring>(L"Expecting ')' in class pattern!"));
+
+    symbol1 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+
+        case TokenKind::PyRightParen:
+
+            symbol2 = mLexer->CurSymbol();
+            mLexer->Advance();
+
+            break;
+
+        case TokenKind::PyBitOr:
+
+            left = ParsePositionalPattern();
+
+            if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+            {
+
+                symbol3 = mLexer->CurSymbol();
+                mLexer->Advance();
+
+                if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen)
+                {
+
+                    right = ParseKeywordPatterns();
+
+                    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+                    {
+
+                        symbol4 = mLexer->CurSymbol();
+                        mLexer->Advance();
+
+                    }
+                }
+            }
+
+            if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen)
+                throw std::make_shared<SyntaxError>(
+                                    mLexer->Position(), 
+                                    mLexer->CurSymbol(),
+                                    std::make_shared<std::wstring>(L"Expecting ')' in class pattern!"));
+
+            symbol2 = mLexer->CurSymbol();
+            mLexer->Advance();
+
+            break;
+
+        default:
+
+            right = ParseKeywordPatterns();
+
+            if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+            {
+
+                symbol4 = mLexer->CurSymbol();
+                mLexer->Advance();
+
+            }
+
+            if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen)
+                throw std::make_shared<SyntaxError>(
+                                    mLexer->Position(), 
+                                    mLexer->CurSymbol(),
+                                    std::make_shared<std::wstring>(L"Expecting ')' in class pattern!"));
+
+            symbol2 = mLexer->CurSymbol();
+            mLexer->Advance();
+
+            break;
+    }
+
+    return std::make_shared<AST::ClassPatternNode>(
+                                startPos,
+                                mLexer->Position(),
+                                nodes,
+                                dots,
+                                symbol1,
+                                left,
+                                symbol3,
+                                right,
+                                symbol4,
+                                symbol2 );
+
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePositionalPattern()
