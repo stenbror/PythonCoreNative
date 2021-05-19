@@ -745,7 +745,52 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseItemsPattern()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseKeyValuePattern()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    std::shared_ptr<AST::StatementNode> key = nullptr;
+
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::Name:
+
+            key = ParseValuePattern();
+            break;
+
+        case TokenKind::PyMinus:
+        case TokenKind::Number:
+        case TokenKind::String:
+        case TokenKind::PyNone:
+        case TokenKind::PyTrue:
+        case TokenKind::PyFalse:
+
+            key = ParseLiteralExpr();
+            break;
+
+        default:
+
+            throw std::make_shared<SyntaxError>(
+                                        mLexer->Position(), 
+                                        mLexer->CurSymbol(),
+                                        std::make_shared<std::wstring>(L"Expecting valid key in key / value pattern!"));
+                                }
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
+        throw std::make_shared<SyntaxError>(
+                                    mLexer->Position(), 
+                                    mLexer->CurSymbol(),
+                                    std::make_shared<std::wstring>(L"Expecting ':' in key / value pattern!"));
+
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto value = ParsePattern();
+
+    return std::make_shared<AST::KeyValuePatternNode>(
+                    startPos,
+                    mLexer->Position(),
+                    key,
+                    symbol,
+                    value );
+
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseDoubleStarPattern()
