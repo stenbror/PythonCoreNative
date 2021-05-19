@@ -541,7 +541,27 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseValuePattern()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseGroupPattern()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol1 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    auto right = ParsePattern();
+
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen)
+        throw std::make_shared<SyntaxError>(
+            mLexer->Position(), 
+            mLexer->CurSymbol(),
+            std::make_shared<std::wstring>(L"Expecting ')' in pattern!"));
+
+    auto symbol2 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    return std::make_shared<AST::GroupPatternNode>(
+        startPos,
+        mLexer->Position(),
+        symbol1,
+        right,
+        symbol2 );
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSequencePattern()
