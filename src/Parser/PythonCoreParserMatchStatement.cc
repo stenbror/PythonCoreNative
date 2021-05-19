@@ -156,7 +156,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAsPattern(unsigned in
     auto symbol = mLexer->CurSymbol();
     mLexer->Advance();
 
-    auto right = ParsePatternCaptureTarget();
+    auto right = ParseCapturePattern();
 
     return std::make_shared<AST::AsPatternNode>(
         startPos,
@@ -476,21 +476,6 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSignedNumber( unsigne
 
 }
 
-std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseSignedRealNumber()
-{
-    return nullptr; // Not needed.
-}
-
-std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseRealNumber()
-{
-    return nullptr; // Not needed.
-}
-
-std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseImaginaryNumber()
-{
-    return nullptr; // Not needed.
-}
-
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseCapturePattern()
 {
     auto startPos = mLexer->Position();
@@ -502,11 +487,6 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseCapturePattern()
         mLexer->Position(),
         symbol );
 
-}
-
-std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePatternCaptureTarget()
-{
-    return nullptr; // Not needed.
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWildCardPattern()
@@ -556,17 +536,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseValuePattern()
                         mLexer->Position(),
                         nodes,
                         dots );
-                        
-}
 
-std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAttr()
-{
-    return nullptr; // Not needed.
-}
-
-std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseNameOrAttr()
-{
-    return nullptr; // Not needed.
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseGroupPattern()

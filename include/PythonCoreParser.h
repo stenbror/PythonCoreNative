@@ -283,15 +283,9 @@ namespace PythonCoreNative::RunTime::Parser
             std::shared_ptr<AST::StatementNode> ParseLiteralExpr();
             std::shared_ptr<AST::StatementNode> ParseComplexNumber( unsigned int startPos, std::shared_ptr<Token> symbol, std::shared_ptr<NumberToken> left );
             std::shared_ptr<AST::StatementNode> ParseSignedNumber( unsigned int startPos, std::shared_ptr<Token> symbol, std::shared_ptr<NumberToken> left );
-            std::shared_ptr<AST::StatementNode> ParseSignedRealNumber();
-            std::shared_ptr<AST::StatementNode> ParseRealNumber();
-            std::shared_ptr<AST::StatementNode> ParseImaginaryNumber();
             std::shared_ptr<AST::StatementNode> ParseCapturePattern();
-            std::shared_ptr<AST::StatementNode> ParsePatternCaptureTarget();
             std::shared_ptr<AST::StatementNode> ParseWildCardPattern();
             std::shared_ptr<AST::StatementNode> ParseValuePattern();
-            std::shared_ptr<AST::StatementNode> ParseAttr();
-            std::shared_ptr<AST::StatementNode> ParseNameOrAttr();
             std::shared_ptr<AST::StatementNode> ParseGroupPattern();
             std::shared_ptr<AST::StatementNode> ParseSequencePattern();
             std::shared_ptr<AST::StatementNode> ParseOpenSequencePattern();
