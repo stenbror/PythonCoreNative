@@ -154,6 +154,7 @@
 #include <ast/CapturePatternNode.h>
 #include <ast/ValuePatternNode.h>
 #include <ast/GroupPatternNode.h>
+#include <ast/SequencePatternNode.h>
 
 #include <ast/PositionalPatternsNode.h>
 #include <ast/KeywordPatternsNode.h> 
