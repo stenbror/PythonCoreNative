@@ -637,7 +637,36 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseMaybeeStarExpr()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseStarPattern()
 {
-    return nullptr;
+
+    auto startPos = mLexer->Position();
+    auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    std::shared_ptr<AST::StatementNode> right = nullptr;
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Name)
+    {
+
+        auto a = std::static_pointer_cast<NameToken>( mLexer->CurSymbol() );
+
+        if (a->IsNotWildCardPrefixed()) right = ParseWildCardPattern();
+
+        else
+            throw std::make_shared<SyntaxError>(
+                        mLexer->Position(), 
+                        mLexer->CurSymbol(),
+                        std::make_shared<std::wstring>(L"Expecting '*' '_' pattern!"));
+
+    }
+    else
+    {
+
+        right = ParseCapturePattern();
+    
+    }
+
+    return std::make_shared<AST::StarPatternNode>(startPos, mLexer->Position(), symbol, right);
+
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseMappingPattern()
