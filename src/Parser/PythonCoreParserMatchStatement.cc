@@ -501,7 +501,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseCapturePattern()
         startPos,
         mLexer->Position(),
         symbol );
-        
+
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParsePatternCaptureTarget()
@@ -528,17 +528,45 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWildCardPattern()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseValuePattern()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<NameToken>>>();
+    auto dots = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    nodes->push_back( std::static_pointer_cast<NameToken>(mLexer->CurSymbol()) );
+    mLexer->Advance();
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyDot)
+    {
+
+        dots->push_back( mLexer->CurSymbol() );
+        mLexer->Advance();
+
+        if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
+            throw ;
+
+        nodes->push_back( std::static_pointer_cast<NameToken>(mLexer->CurSymbol()) );
+        mLexer->Advance();
+
+    }
+
+    /* We alredy made sure we dont have more '.', '(' or '=' */
+
+    return std::make_shared<AST::ValuePatternNode>(
+                        startPos,
+                        mLexer->Position(),
+                        nodes,
+                        dots );
+                        
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseAttr()
 {
-    return nullptr;
+    return nullptr; // Not needed.
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseNameOrAttr()
 {
-    return nullptr;
+    return nullptr; // Not needed.
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseGroupPattern()
