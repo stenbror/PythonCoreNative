@@ -735,7 +735,85 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseStarPattern()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseMappingPattern()
 {
-    return nullptr;
+    auto startPos = mLexer->Position();
+    auto symbol1 = mLexer->CurSymbol();
+    mLexer->Advance();
+
+    std::shared_ptr<AST::StatementNode> left = nullptr, right = nullptr;
+    std::shared_ptr<Token> symbol2 = nullptr, symbol3 = nullptr, symbol4 = nullptr;
+
+    switch (mLexer->CurSymbol()->GetSymbolKind())
+    {
+        case TokenKind::PyRightCurly:   /* Empty mapping pattern '{' '}' */
+            
+            symbol2 = mLexer->CurSymbol();
+            mLexer->Advance();
+
+            break;
+
+        case TokenKind::PyPower:
+            
+            right = ParseDoubleStarPattern();
+
+            if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+            {
+
+                symbol4 = mLexer->CurSymbol();
+                mLexer->Advance();
+
+            }
+
+            if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightCurly)
+                throw std::make_shared<SyntaxError>(
+                                        mLexer->Position(), 
+                                        mLexer->CurSymbol(),
+                                        std::make_shared<std::wstring>(L"Expecting '}' in mapping pattern!"));
+
+            symbol2 = mLexer->CurSymbol();
+            mLexer->Advance();
+
+            break;
+
+        default:
+
+            left = ParseItemsPattern();
+
+            if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma)
+                throw std::make_shared<SyntaxError>(
+                                        mLexer->Position(), 
+                                        mLexer->CurSymbol(),
+                                        std::make_shared<std::wstring>(L"Expecting ',' in mapping pattern!"));
+
+            symbol3 = mLexer->CurSymbol();
+            mLexer->Advance();
+
+            if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+            {
+
+                symbol4 = mLexer->CurSymbol();
+                mLexer->Advance();
+
+            }
+
+            if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightCurly)
+                throw std::make_shared<SyntaxError>(
+                                        mLexer->Position(), 
+                                        mLexer->CurSymbol(),
+                                        std::make_shared<std::wstring>(L"Expecting '}' in mapping pattern!"));
+                
+            break;
+            
+    }
+
+    return std::make_shared<AST::MappingPatternNode>(
+                                startPos,
+                                mLexer->Position(),
+                                symbol1,
+                                left,
+                                symbol3,
+                                right,
+                                symbol4,
+                                symbol2 );
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseItemsPattern()

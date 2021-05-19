@@ -161,6 +161,7 @@
 #include <ast/DoubleStarPatternNode.h>
 #include <ast/KeyValuePatternNode.h>
 #include <ast/ItemsPatternNode.h>
+#include <ast/MappingPatternNode.h>
 
 #include <ast/PositionalPatternsNode.h>
 #include <ast/KeywordPatternsNode.h> 
