@@ -740,7 +740,32 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseMappingPattern()
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseItemsPattern()
 {
-    return nullptr;
+
+    auto startPos = mLexer->Position();
+    auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
+    auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
+    nodes->push_back( ParseKeyValuePattern() );
+
+    while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
+    {
+
+        separators->push_back( mLexer->CurSymbol() );
+        mLexer->Advance();
+
+        if( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightBracket ||
+            mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyPower ) continue;
+
+        nodes->push_back( ParseKeyValuePattern() );
+
+    }
+
+    return std::make_shared<AST::ItemsPatternNode>(
+                                startPos,
+                                mLexer->Position(),
+                                nodes,
+                                separators );
+
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseKeyValuePattern()
