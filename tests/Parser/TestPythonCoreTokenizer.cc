@@ -697,7 +697,7 @@ TEST_CASE( "Operators and Delimitors", "Tokenizer" )
 TEST_CASE( "Reserved keywords", "Tokenizer" )
 {
 
-    SECTION( "Reserved keyword '' in lexer!" )
+    SECTION( "Reserved keyword 'False' in lexer!" )
     {
 
         auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"False " ) );
@@ -707,6 +707,58 @@ TEST_CASE( "Reserved keywords", "Tokenizer" )
 
         REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyFalse );
         REQUIRE( sourceBuffer->BufferPosition() == 5);
+    
+    }
+
+    SECTION( "Reserved keyword 'None' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"None " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyNone );
+        REQUIRE( sourceBuffer->BufferPosition() == 4);
+    
+    }
+
+    SECTION( "Reserved keyword 'True' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"True " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyTrue );
+        REQUIRE( sourceBuffer->BufferPosition() == 4);
+    
+    }
+
+    SECTION( "Reserved keyword 'and' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"and " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAnd );
+        REQUIRE( sourceBuffer->BufferPosition() == 3);
+    
+    }
+
+    SECTION( "Reserved keyword 'as' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"as " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAs );
+        REQUIRE( sourceBuffer->BufferPosition() == 2);
     
     }
 
