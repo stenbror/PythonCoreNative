@@ -160,13 +160,32 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWith()
     auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
     nodes->push_back( ParseWithItem() );
 
+    auto symbol10 = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLeftParen ?
+                        mLexer->CurSymbol() : nullptr;
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLeftParen) mLexer->Advance();
+
     while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
     {
+
         separators->push_back( mLexer->CurSymbol() );
         mLexer->Advance();
 
+        if (    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightParen &&
+                symbol10 != nullptr ) continue;
+
         nodes->push_back( ParseWithItem() );
+    
     }
+
+    if (symbol10->GetSymbolKind() == TokenKind::PyLeftParen && mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen)
+        throw ;
+
+    auto symbol11 = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightParen ?
+                        mLexer->CurSymbol() :
+                        nullptr;
+
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightParen) mLexer->Advance();
 
     if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
         throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Missing ':' in 'with' statement!"));
@@ -179,7 +198,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWith()
 
     auto right = ParseSuite();
 
-    return std::make_shared<AST::WithStatementNode>(startPos, mLexer->Position(), symbol, nodes, separators, symbol2, tc, right);
+    return std::make_shared<AST::WithStatementNode>(startPos, mLexer->Position(), symbol, symbol10, nodes, separators, symbol11, symbol2, tc, right);
 }
 
 std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWithItem()

@@ -6,8 +6,10 @@ using namespace PythonCoreNative::RunTime::Parser::AST;
 WithStatementNode::WithStatementNode(  
                             unsigned int start, unsigned int end, 
                             std::shared_ptr<Token> op1,
+                            std::shared_ptr<Token> openParenthesis,
                             std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> withItems,
                             std::shared_ptr<std::vector<std::shared_ptr<Token>>> separators,
+                            std::shared_ptr<Token> closeParenthesis,
                             std::shared_ptr<Token> op2,
                             std::shared_ptr<Token> op3,
                             std::shared_ptr<StatementNode> right
@@ -19,4 +21,6 @@ WithStatementNode::WithStatementNode(
     mRight = right;
     mWithItems = withItems;
     mSeparators = separators;
+    mOpenParenthesis = openParenthesis;
+    mCloseParenthesis = closeParenthesis;
 }
