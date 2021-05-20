@@ -1,5 +1,6 @@
 
-file(GLOB SOURCES_TESTS *.cc)
+file(GLOB SOURCES_TESTS Parser/*.cc
+                        *.cc)
 
 
 add_executable(TestPythonCore ${SOURCES_TESTS})
