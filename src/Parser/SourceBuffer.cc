@@ -61,32 +61,49 @@ void SourceBuffer::SetPosition(unsigned int pos)
 
 bool SourceBuffer::IsLiteralStartCharacter()
 {
-    return false; // Dummy for now!
+    wchar_t ch = mSourceCode->at(mIndex);
+
+    return  ( ch >= L'a' && ch <= L'z' ) ||
+            ( ch >= L'A' && ch <= L'Z' ) ||
+            ch == L'_';
 }
 
 bool SourceBuffer::IsLiteralOrNumberCharacter()
 {
-    return false; // Dummy for now!
+    wchar_t ch = mSourceCode->at(mIndex);
+
+    return  (ch >= L'0' && ch <= L'9' ) ||
+            IsLiteralStartCharacter();
 }
 
 bool SourceBuffer::IsHexDigit()
 {
-    return false; // Dummy for now!
+    wchar_t ch = mSourceCode->at(mIndex);
+
+    return  (ch >= L'0' && ch <= L'9') ||
+            (ch >= L'a' && ch <= L'f') ||
+            (ch >= L'A' && ch <= L'F');
 }
 
 bool SourceBuffer::IsOctetDigit()
 {
-    return false; // Dummy for now!
+    wchar_t ch = mSourceCode->at(mIndex);
+
+    return  (ch >= L'0' && ch <= L'7');
 }
 
 bool SourceBuffer::IsBinaryDigit()
 {
-    return false; // Dummy for now!
+    wchar_t ch = mSourceCode->at(mIndex);
+
+    return ch == L'0' || ch == L'1';
 }
 
 bool SourceBuffer::IsDigit()
 {
-    return false; // Dummy for now!
+    wchar_t ch = mSourceCode->at(mIndex);
+
+    return ch >= L'0' && ch <= L'9';
 }
 
 void SourceBuffer::Next()
