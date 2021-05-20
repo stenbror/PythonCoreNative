@@ -2,8 +2,7 @@
 #include <PythonCoreTokenizer.h>
 
 using namespace PythonCoreNative::RunTime::Parser;
-
-
+#include <iostream>
 
 PythonCoreTokenizer::PythonCoreTokenizer(unsigned int tabSize, std::shared_ptr<SourceBuffer> sourceBuffer)
 {
@@ -11,6 +10,9 @@ PythonCoreTokenizer::PythonCoreTokenizer(unsigned int tabSize, std::shared_ptr<S
 
     mSourceBuffer = sourceBuffer;
     mPosition = mSourceBuffer->BufferPosition();
+    mAtBOL = true;
+    mPending = 0;
+    
     
 }
 
@@ -148,7 +150,7 @@ _nextLine:
 
     /* Handling indent or dedent(s) */
     if (mPending != 0)
-    {
+    {   std::wcout << L" Pending: " << mPending << L" " << std::endl;
 
         if (mPending < 0)
         {

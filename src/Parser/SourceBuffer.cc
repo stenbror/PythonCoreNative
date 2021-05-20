@@ -32,7 +32,7 @@ wchar_t SourceBuffer::PeekChar()
     try
     {
 
-        return mSourceCode->at(mIndex + 1);
+        return mSourceCode->at(mIndex);
     
     }
     catch(const std::out_of_range& e)
