@@ -1152,4 +1152,46 @@ TEST_CASE( "Reserved keywords", "Tokenizer" )
     
     }
 
+    SECTION( "Soft keyword 'match' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"match " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Name );
+        REQUIRE( std::static_pointer_cast<NameToken>(lexer->CurSymbol())->IsMatchSoftKeyword() );
+        REQUIRE( sourceBuffer->BufferPosition() == 5);
+    
+    }
+
+    SECTION( "Soft keyword 'case' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"case " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Name );
+        REQUIRE( std::static_pointer_cast<NameToken>(lexer->CurSymbol())->IsCaseSoftKeyword() );
+        REQUIRE( sourceBuffer->BufferPosition() == 4);
+    
+    }
+
+    SECTION( "Soft keyword '_' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"_ " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Name );
+        REQUIRE( std::static_pointer_cast<NameToken>(lexer->CurSymbol())->IsWildCardPattern() );
+        REQUIRE( sourceBuffer->BufferPosition() == 1);
+    
+    }
+
 }
