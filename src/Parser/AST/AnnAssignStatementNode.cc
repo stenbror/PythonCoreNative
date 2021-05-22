@@ -2,6 +2,7 @@
 #include <ast/AnnAssignStatementNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 AnnAssignStatementNode::AnnAssignStatementNode(  
                             unsigned int start, unsigned int end, 
@@ -17,4 +18,29 @@ AnnAssignStatementNode::AnnAssignStatementNode(
     mOp2 = op2;
     mRight = right;
     mNext = next;
+}
+
+std::shared_ptr<Node> AnnAssignStatementNode::GetLeftNode()
+{
+    return mLeft;
+}
+
+std::shared_ptr<Token> AnnAssignStatementNode::GetOperator1()
+{
+    return mOp1;
+}
+
+std::shared_ptr<ExpressionNode> AnnAssignStatementNode::GetRightNode()
+{
+    return mRight;
+}
+
+std::shared_ptr<Token> AnnAssignStatementNode::GetOperator2()
+{
+    return mOp2;
+}
+
+std::shared_ptr<Node> AnnAssignStatementNode::GetNextNode()
+{
+    return mNext;
 }
