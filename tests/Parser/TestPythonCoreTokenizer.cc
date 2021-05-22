@@ -762,4 +762,56 @@ TEST_CASE( "Reserved keywords", "Tokenizer" )
     
     }
 
+    SECTION( "Reserved keyword 'assert' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"assert " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAssert );
+        REQUIRE( sourceBuffer->BufferPosition() == 6);
+    
+    }
+
+    SECTION( "Reserved keyword 'async' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"async " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAsync );
+        REQUIRE( sourceBuffer->BufferPosition() == 5);
+    
+    }
+
+    SECTION( "Reserved keyword 'await' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"await " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyAwait );
+        REQUIRE( sourceBuffer->BufferPosition() == 5);
+    
+    }
+
+    SECTION( "Reserved keyword 'break' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"break " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyBreak );
+        REQUIRE( sourceBuffer->BufferPosition() == 5);
+    
+    }
+
 }
