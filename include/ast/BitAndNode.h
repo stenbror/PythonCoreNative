@@ -27,4 +27,3 @@ namespace PythonCoreNative::RunTime::Parser::AST
             std::shared_ptr<ExpressionNode> mRight;
     };
 }
-
