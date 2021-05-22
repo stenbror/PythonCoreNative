@@ -17,3 +17,18 @@ AsPatternNode::AsPatternNode(
     mRight = right;
 
 }
+
+std::shared_ptr<StatementNode> AsPatternNode::GetLeft()
+{
+    return mLeft;
+}
+
+std::shared_ptr<Token> AsPatternNode::GetOperator()
+{
+    return mOp1;
+}
+
+std::shared_ptr<StatementNode> AsPatternNode::GetRight()
+{
+    return mRight;
+}
