@@ -102,7 +102,7 @@ namespace PythonCoreNative::RunTime::Parser
                                 std::shared_ptr<std::wstring> text,
                                 std::shared_ptr<std::vector<std::shared_ptr<Trivia>>> triviaList);
 
-            std::shared_ptr<std::wstring> GetTyåeCommentText();
+            std::shared_ptr<std::wstring> GetTypeCommentText();
 
         protected:
             std::shared_ptr<std::wstring> mTypeComment;

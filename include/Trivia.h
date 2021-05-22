@@ -12,6 +12,8 @@ namespace PythonCoreNative::RunTime::Parser
     {
         public:
             Trivia(unsigned int startPosition, unsigned int endPosition);
+            unsigned int GetStartPosition();
+            unsigned int GetEndPosition();
 
         protected:
             unsigned int mTriviaStartPosition;
@@ -26,6 +28,9 @@ namespace PythonCoreNative::RunTime::Parser
                             unsigned int endPosition, 
                             wchar_t ch1, 
                             wchar_t ch2);
+
+            wchar_t GetNewLineCharOne();
+            wchar_t GetNewLineCharTwo();
 
         protected:
             wchar_t mChar1, mChar2;
@@ -51,6 +56,7 @@ namespace PythonCoreNative::RunTime::Parser
     {
         public:
             CommentTrivia(unsigned int startPosition, unsigned int endPosition, std::shared_ptr<std::wstring> text);
+            std::shared_ptr<std::wstring> GetCommentText();
 
         protected:
             std::shared_ptr<std::wstring> mCommentText;

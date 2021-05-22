@@ -11,7 +11,7 @@ TypeCommentToken::TypeCommentToken( unsigned int startPosition,
     mTypeComment = text;
 }
 
-std::shared_ptr<std::wstring> TypeCommentToken::GetTyåeCommentText()
+std::shared_ptr<std::wstring> TypeCommentToken::GetTypeCommentText()
 {
     return mTypeComment;
 }
