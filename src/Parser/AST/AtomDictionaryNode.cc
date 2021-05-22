@@ -2,6 +2,7 @@
 #include <ast/AtomDictionaryNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 AtomDictionaryNode::AtomDictionaryNode(  
                             unsigned int start, unsigned int end, 
@@ -13,4 +14,19 @@ AtomDictionaryNode::AtomDictionaryNode(
     mOp1 = op1;
     mRight = right;
     mOp2 = op2;
+}
+
+std::shared_ptr<Token> AtomDictionaryNode::GetOperator1()
+{
+    return mOp1;
+}
+
+std::shared_ptr<ExpressionNode> AtomDictionaryNode::GetRight()
+{
+    return mRight;
+}
+
+std::shared_ptr<Token> AtomDictionaryNode::GetOperator2()
+{
+    return mOp2;
 }
