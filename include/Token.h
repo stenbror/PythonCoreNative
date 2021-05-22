@@ -22,6 +22,7 @@ namespace PythonCoreNative::RunTime::Parser
             TokenKind GetSymbolKind();
             unsigned int GetTokenStartPosition();
             unsigned int GetTokenEndPosition();
+            std::shared_ptr<std::vector<std::shared_ptr<Trivia>>> GetTriviaList();
 
         protected:
             TokenKind mKind;
@@ -44,6 +45,8 @@ namespace PythonCoreNative::RunTime::Parser
             bool IsWildCardPattern();    /* '_' */
             bool IsNotWildCardPrefixed();   /* ! _Name */
 
+            std::shared_ptr<std::wstring> GetText();
+
         protected:
             std::shared_ptr<std::wstring> mText;
     };
@@ -60,6 +63,7 @@ namespace PythonCoreNative::RunTime::Parser
 
             bool IsImaginaryNumber();
             bool IsRealNumber();
+            std::shared_ptr<std::wstring> GetText();
 
         protected:
             std::shared_ptr<std::wstring> mText;
@@ -78,6 +82,11 @@ namespace PythonCoreNative::RunTime::Parser
                             bool isFormated,
                             std::shared_ptr<std::vector<std::shared_ptr<Trivia>>> triviaList);
 
+            std::shared_ptr<std::wstring> GetText();
+            bool IsRaw();
+            bool IsUnicode();
+            bool IsFormated();
+
         protected:
             std::shared_ptr<std::wstring> mText;
             bool mIsRaw;
@@ -92,6 +101,8 @@ namespace PythonCoreNative::RunTime::Parser
                                 unsigned int endPosition, 
                                 std::shared_ptr<std::wstring> text,
                                 std::shared_ptr<std::vector<std::shared_ptr<Trivia>>> triviaList);
+
+            std::shared_ptr<std::wstring> GetTyåeCommentText();
 
         protected:
             std::shared_ptr<std::wstring> mTypeComment;

@@ -24,3 +24,8 @@ unsigned int Token::GetTokenEndPosition()
 {
     return mTokenEndPosition;
 }
+
+std::shared_ptr<std::vector<std::shared_ptr<Trivia>>> Token::GetTriviaList()
+{
+    return mTriviaList;
+}

@@ -30,3 +30,8 @@ bool NameToken::IsNotWildCardPrefixed()
 {
     return !mText->find_first_of(L"_", 0, sizeof(wchar_t));
 }
+
+std::shared_ptr<std::wstring> NameToken::GetText()
+{
+    return mText;
+}

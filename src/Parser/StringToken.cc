@@ -16,3 +16,23 @@ StringToken::StringToken(   unsigned int startPosition,
     mIsUnicode = isUnicode;
     mIsFormated = isFormated;
 }
+
+std::shared_ptr<std::wstring> StringToken::GetText()
+{
+    return mText;
+}
+
+bool StringToken::IsRaw()
+{
+    return mIsRaw;
+}
+
+bool StringToken::IsUnicode()
+{
+    return mIsUnicode;
+}
+
+bool StringToken::IsFormated()
+{
+    return mIsFormated;
+}

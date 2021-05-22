@@ -10,3 +10,8 @@ TypeCommentToken::TypeCommentToken( unsigned int startPosition,
 {
     mTypeComment = text;
 }
+
+std::shared_ptr<std::wstring> TypeCommentToken::GetTyåeCommentText()
+{
+    return mTypeComment;
+}

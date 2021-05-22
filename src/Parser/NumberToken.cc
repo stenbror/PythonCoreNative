@@ -24,3 +24,8 @@ bool NumberToken::IsRealNumber()
 {
     return mIsRealNumber;
 }
+
+std::shared_ptr<std::wstring> NumberToken::GetText()
+{
+    return mText;
+}
