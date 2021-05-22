@@ -13,6 +13,7 @@ namespace PythonCoreNative::RunTime::Parser::AST
     {
         public:
             AtomStringNode(unsigned int start, unsigned int end, std::shared_ptr<std::vector<std::shared_ptr<StringToken>>> ops);
+            std::shared_ptr<std::vector<std::shared_ptr<StringToken>>> GetStringNodes();
 
         protected:
             std::shared_ptr<std::vector<std::shared_ptr<StringToken>>> mOps;
