@@ -814,4 +814,342 @@ TEST_CASE( "Reserved keywords", "Tokenizer" )
     
     }
 
+    SECTION( "Reserved keyword 'class' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"class " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyClass );
+        REQUIRE( sourceBuffer->BufferPosition() == 5);
+    
+    }
+
+    SECTION( "Reserved keyword 'continue' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"continue " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyContinue );
+        REQUIRE( sourceBuffer->BufferPosition() == 8);
+    
+    }
+
+    SECTION( "Reserved keyword 'def' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"def " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyDef );
+        REQUIRE( sourceBuffer->BufferPosition() == 3);
+    
+    }
+
+    SECTION( "Reserved keyword 'del' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"del " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyDel );
+        REQUIRE( sourceBuffer->BufferPosition() == 3);
+    
+    }
+
+    SECTION( "Reserved keyword 'elif' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"elif " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyElif );
+        REQUIRE( sourceBuffer->BufferPosition() == 4);
+    
+    }
+
+    SECTION( "Reserved keyword 'else' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"else " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyElse );
+        REQUIRE( sourceBuffer->BufferPosition() == 4);
+    
+    }
+
+    SECTION( "Reserved keyword 'except' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"except " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyExcept );
+        REQUIRE( sourceBuffer->BufferPosition() == 6);
+    
+    }
+
+    SECTION( "Reserved keyword 'finally' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"finally " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyFinally );
+        REQUIRE( sourceBuffer->BufferPosition() == 7);
+    
+    }
+
+    SECTION( "Reserved keyword 'for' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"for " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyFor );
+        REQUIRE( sourceBuffer->BufferPosition() == 3);
+    
+    }
+
+    SECTION( "Reserved keyword 'from' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"from " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyFrom );
+        REQUIRE( sourceBuffer->BufferPosition() == 4);
+    
+    }
+
+    SECTION( "Reserved keyword 'global' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"global " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyGlobal );
+        REQUIRE( sourceBuffer->BufferPosition() == 6);
+    
+    }
+
+    SECTION( "Reserved keyword 'if' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"if " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyIf );
+        REQUIRE( sourceBuffer->BufferPosition() == 2);
+    
+    }
+
+    SECTION( "Reserved keyword 'import' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"import " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyImport );
+        REQUIRE( sourceBuffer->BufferPosition() == 6);
+    
+    }
+
+    SECTION( "Reserved keyword 'in' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"in " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyIn );
+        REQUIRE( sourceBuffer->BufferPosition() == 2);
+    
+    }
+
+    SECTION( "Reserved keyword 'is' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"is " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyIs );
+        REQUIRE( sourceBuffer->BufferPosition() == 2);
+    
+    }
+
+    SECTION( "Reserved keyword 'lambda' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"lambda " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLambda );
+        REQUIRE( sourceBuffer->BufferPosition() == 6);
+    
+    }
+
+    SECTION( "Reserved keyword 'nonlocal' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"nonlocal " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyNonLocal );
+        REQUIRE( sourceBuffer->BufferPosition() == 8);
+    
+    }
+
+    SECTION( "Reserved keyword 'not' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"not " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyNot );
+        REQUIRE( sourceBuffer->BufferPosition() == 3);
+    
+    }
+
+    SECTION( "Reserved keyword 'or' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"or " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyOr );
+        REQUIRE( sourceBuffer->BufferPosition() == 2);
+    
+    }
+
+    SECTION( "Reserved keyword 'pass' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"pass " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyPass );
+        REQUIRE( sourceBuffer->BufferPosition() == 4);
+    
+    }
+
+    SECTION( "Reserved keyword 'raise' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"raise " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRaise );
+        REQUIRE( sourceBuffer->BufferPosition() == 5);
+    
+    }
+
+    SECTION( "Reserved keyword 'return' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"return " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyReturn );
+        REQUIRE( sourceBuffer->BufferPosition() == 6);
+    
+    }
+
+    SECTION( "Reserved keyword 'try' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"try " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyTry );
+        REQUIRE( sourceBuffer->BufferPosition() == 3);
+    
+    }
+
+    SECTION( "Reserved keyword 'while' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"while " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyWhile );
+        REQUIRE( sourceBuffer->BufferPosition() == 5);
+    
+    }
+
+    SECTION( "Reserved keyword 'with' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"with " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyWith );
+        REQUIRE( sourceBuffer->BufferPosition() == 4);
+    
+    }
+
+    SECTION( "Reserved keyword 'yield' in lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"yield " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyYield );
+        REQUIRE( sourceBuffer->BufferPosition() == 5);
+    
+    }
+
 }
