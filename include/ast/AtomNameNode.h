@@ -12,6 +12,7 @@ namespace PythonCoreNative::RunTime::Parser::AST
     {
         public:
             AtomNameNode(unsigned int start, unsigned int end, std::shared_ptr<NameToken> op1);
+            std::shared_ptr<NameToken> GetNameText();
 
         protected:
             std::shared_ptr<NameToken> mOp1;
