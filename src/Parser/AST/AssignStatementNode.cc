@@ -2,6 +2,7 @@
 #include <ast/AssignStatementNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 AssignStatementNode::AssignStatementNode(  
                             unsigned int start, unsigned int end, 
@@ -15,4 +16,24 @@ AssignStatementNode::AssignStatementNode(
     mOps = ops;
     mOp2 = op2;
     mRightNodes = rightNodes;
+}
+
+std::shared_ptr<Node> AssignStatementNode::GetLeft()
+{
+    return mLeft;
+}
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> AssignStatementNode::GetOperators()
+{
+    return mOps;
+}
+
+std::shared_ptr<std::vector<std::shared_ptr<Node>>> AssignStatementNode::GetRightNodes()
+{
+    return mRightNodes;
+}
+
+std::shared_ptr<Token> AssignStatementNode::GetOperator2()
+{
+    return mOp2;
 }
