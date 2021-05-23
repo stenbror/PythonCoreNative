@@ -13,13 +13,16 @@ namespace PythonCoreNative::RunTime::Parser::AST
             DottedAsNameStatementNode(  
                             unsigned int start, unsigned int end, 
                             std::shared_ptr<StatementNode> left,
-                            std::shared_ptr<Token> op2,
-                            std::shared_ptr<NameToken> op3
+                            std::shared_ptr<Token> op1,
+                            std::shared_ptr<NameToken> op2
                         );
+            std::shared_ptr<StatementNode> GetLeft();
+            std::shared_ptr<Token> GetOperator();
+            std::shared_ptr<NameToken> GetOperator2();
 
         protected:
             std::shared_ptr<StatementNode> mLeft;
-            std::shared_ptr<Token> mOp2;
-            std::shared_ptr<NameToken> mOp3;
+            std::shared_ptr<Token> mOp1;
+            std::shared_ptr<NameToken> mOp2;
     };
 }
