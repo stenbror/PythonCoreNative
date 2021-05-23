@@ -2,6 +2,7 @@
 #include <ast/ClassStatementNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 ClassStatementNode::ClassStatementNode(  
                             unsigned int start, unsigned int end, 
@@ -21,4 +22,39 @@ ClassStatementNode::ClassStatementNode(
     mOp4 = op4;
     mOp5 = op5;
     mRight = right;
+}
+
+std::shared_ptr<Token> ClassStatementNode::GetOperator1()
+{
+    return mOp1;
+}
+
+std::shared_ptr<Token> ClassStatementNode::GetOperator2()
+{
+    return mOp2;
+}
+
+std::shared_ptr<Token> ClassStatementNode::GetOperators3()
+{
+    return mOp3;
+}
+
+std::shared_ptr<ExpressionNode> ClassStatementNode::GetLeft()
+{
+    return mLeft;
+}
+
+std::shared_ptr<Token> ClassStatementNode::GetOperator4()
+{
+    return mOp4;
+}
+
+std::shared_ptr<Token> ClassStatementNode::GetOperator5()
+{
+    return mOp5;
+}
+
+std::shared_ptr<StatementNode> ClassStatementNode::GetRight()
+{
+    return mRight;
 }
