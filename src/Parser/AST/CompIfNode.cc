@@ -2,6 +2,7 @@
 #include <ast/CompIfNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 CompIfNode::CompIfNode(  
                             unsigned int start, unsigned int end,
@@ -13,4 +14,19 @@ CompIfNode::CompIfNode(
     mOp1 = op1;
     mRight = right;
     mNext = next;
+}
+
+std::shared_ptr<Token> CompIfNode::GetOperator()
+{
+    return mOp1;
+}
+
+std::shared_ptr<ExpressionNode> CompIfNode::GetRight()
+{
+    return mRight;
+}
+
+std::shared_ptr<ExpressionNode> CompIfNode::GetNext()
+{
+    return mNext;
 }
