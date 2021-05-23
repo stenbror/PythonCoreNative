@@ -25,6 +25,15 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             std::shared_ptr<Token> closeCurly
                         );
 
+            std::shared_ptr<std::vector<std::shared_ptr<NameToken>>> GetNodes();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> GetDots();
+            std::shared_ptr<Token> GetOpenCurly();
+            std::shared_ptr<AST::StatementNode> GetPositionals();
+            std::shared_ptr<Token> GetFirstComma();
+            std::shared_ptr<AST::StatementNode> GetKeywords();
+            std::shared_ptr<Token> GetSecondComma();
+            std::shared_ptr<Token> GetCloseCurly();
+
         protected:
             std::shared_ptr<std::vector<std::shared_ptr<NameToken>>> mNodes;
             std::shared_ptr<std::vector<std::shared_ptr<Token>>> mDots;
