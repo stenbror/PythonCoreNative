@@ -19,3 +19,23 @@ ComplexNumberNode::ComplexNumberNode(
     mImaginary = imaginary;
 
 }
+
+std::shared_ptr<Token> ComplexNumberNode::GetRealSign()
+{
+    return mRealSign;
+}
+
+std::shared_ptr<NumberToken> ComplexNumberNode::GetReal()
+{
+    return mReal;
+}
+
+std::shared_ptr<Token> ComplexNumberNode::GetImaginarySign()
+{
+    return mImaginarySign;
+}
+
+std::shared_ptr<NumberToken> ComplexNumberNode::GetImaginary()
+{
+    return mImaginary;
+}

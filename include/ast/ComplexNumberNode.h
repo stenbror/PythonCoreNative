@@ -20,6 +20,10 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             std::shared_ptr<Token> op2,
                             std::shared_ptr<NumberToken> imaginary
                         );
+            std::shared_ptr<Token> GetRealSign();
+            std::shared_ptr<NumberToken> GetReal();
+            std::shared_ptr<Token> GetImaginarySign();
+            std::shared_ptr<NumberToken> GetImaginary();
 
         protected:
             std::shared_ptr<Token> mRealSign;
