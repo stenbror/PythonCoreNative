@@ -14,6 +14,7 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             unsigned int start, unsigned int end, 
                             std::shared_ptr<Token> op1
                         );
+             std::shared_ptr<Token> GetOperator();
 
         protected:
             std::shared_ptr<Token> mOp1;
