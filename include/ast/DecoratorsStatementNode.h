@@ -15,6 +15,7 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             unsigned int start, unsigned int end, 
                             std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> nodes
                         );
+            std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> GetNodes();
 
         protected:
             std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> mNodes;

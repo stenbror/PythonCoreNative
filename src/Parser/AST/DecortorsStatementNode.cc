@@ -10,3 +10,8 @@ DecoratorsStatementNode::DecoratorsStatementNode(
 {
     mNodes = nodes;
 }
+
+std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> DecoratorsStatementNode::GetNodes()
+{
+    return mNodes;
+}
