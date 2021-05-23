@@ -12,3 +12,13 @@ DecoratedStatementNode::DecoratedStatementNode(
     mLeft = left;
     mRight = right;
 }
+
+std::shared_ptr<StatementNode> DecoratedStatementNode::GetLeft()
+{
+    return mLeft;
+}
+
+std::shared_ptr<StatementNode> DecoratedStatementNode::GetRight()
+{
+    return mRight;
+}

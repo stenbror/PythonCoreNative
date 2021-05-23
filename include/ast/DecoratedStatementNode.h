@@ -16,6 +16,8 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             std::shared_ptr<StatementNode> left,
                             std::shared_ptr<StatementNode> right
                         );
+            std::shared_ptr<StatementNode> GetLeft();
+            std::shared_ptr<StatementNode> GetRight();
 
         protected:
             std::shared_ptr<StatementNode> mLeft;
