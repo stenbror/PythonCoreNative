@@ -13,3 +13,8 @@ CapturePatternNode::CapturePatternNode(
     mOp1 = op1;
 
 }
+
+std::shared_ptr<Token> CapturePatternNode::GetOperator()
+{
+    return mOp1;
+}
