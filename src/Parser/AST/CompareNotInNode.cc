@@ -2,6 +2,7 @@
 #include <ast/CompareNotInNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 CompareNotInNode::CompareNotInNode(  
                             unsigned int start, unsigned int end, 
@@ -15,4 +16,24 @@ CompareNotInNode::CompareNotInNode(
     mOp1 = op1;
     mOp2 = op2;
     mRight = right;
+}
+
+std::shared_ptr<ExpressionNode>  CompareNotInNode::GetLeft()
+{
+    return mLeft;
+}
+
+std::shared_ptr<Token> CompareNotInNode::GetOperator1()
+{
+    return mOp1;
+}
+
+std::shared_ptr<Token> CompareNotInNode::GetOperator2()
+{
+    return mOp2;
+}
+
+std::shared_ptr<ExpressionNode> CompareNotInNode::GetRight()
+{
+    return mRight;
 }
