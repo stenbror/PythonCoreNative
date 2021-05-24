@@ -2,6 +2,7 @@
 #include <ast/MaybeeStarSequencePatternNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 MaybeeStarSequencePatternNode::MaybeeStarSequencePatternNode(  
                             unsigned int start, unsigned int end, 
@@ -13,4 +14,14 @@ MaybeeStarSequencePatternNode::MaybeeStarSequencePatternNode(
     mNodes = nodes;
     mSeparators = separators;
 
+}
+
+std::shared_ptr<std::vector<std::shared_ptr<AST::StatementNode>>> MaybeeStarSequencePatternNode::GetNodes()
+{
+    return mNodes;
+}
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> MaybeeStarSequencePatternNode::GetSeparators()
+{
+    return mSeparators;
 }
