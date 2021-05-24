@@ -17,6 +17,9 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> nodes,
                             std::shared_ptr<Token> eof
                         );
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> GetNewlines();
+            std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> GetNodes();
+            std::shared_ptr<Token> GetEof();
 
         protected:
             std::shared_ptr<std::vector<std::shared_ptr<Token>>> mNewlines;
