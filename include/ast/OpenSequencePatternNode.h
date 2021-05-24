@@ -21,6 +21,9 @@ namespace PythonCoreNative::RunTime::Parser::AST
 
             bool IsGroupPattern();
 
+            std::shared_ptr<std::vector<std::shared_ptr<AST::StatementNode>>> GetNodes();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> GetSeparators();
+
         protected:
             std::shared_ptr<std::vector<std::shared_ptr<AST::StatementNode>>> mNodes;
             std::shared_ptr<std::vector<std::shared_ptr<Token>>> mSeparators;
