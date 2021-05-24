@@ -2,6 +2,7 @@
 #include <ast/MatchStatementNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 MatchStatementNode::MatchStatementNode(  
                             unsigned int start, unsigned int end, 
@@ -21,4 +22,39 @@ MatchStatementNode::MatchStatementNode(
     mOp4 = op4;
     mNodes = nodes;
     mOp3 = op5;
+}
+
+std::shared_ptr<Token> MatchStatementNode::GetOperator1()
+{
+    return mOp1;
+}
+
+std::shared_ptr<Token> MatchStatementNode::GetOperator2()
+{
+    return mOp2;
+}
+
+std::shared_ptr<Token> MatchStatementNode::GetOperator3()
+{
+    return mOp3;
+}
+
+std::shared_ptr<Token> MatchStatementNode::GetOperator4()
+{
+    return mOp4;
+}
+
+std::shared_ptr<Token> MatchStatementNode::GetOperator5()
+{
+    return mOp5;
+}
+
+std::shared_ptr<AST::StatementNode> MatchStatementNode::GetLeft()
+{
+    return mLeft;
+}
+
+std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> MatchStatementNode::GetNodes()
+{
+    return mNodes;
 }
