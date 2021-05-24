@@ -23,6 +23,13 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             std::shared_ptr<Token> closeCurly
                         );
 
+            std::shared_ptr<Token> GetOpenCurly();
+            std::shared_ptr<AST::StatementNode> GetItems();
+            std::shared_ptr<Token> GetFirstComma();
+            std::shared_ptr<AST::StatementNode> GetDoubleStar();
+            std::shared_ptr<Token> GetSecondComma();
+            std::shared_ptr<Token> GetCloseCurly();
+
         protected:
             std::shared_ptr<Token> mOpenCurly;
             std::shared_ptr<AST::StatementNode> mItems;

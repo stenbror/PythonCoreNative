@@ -2,6 +2,7 @@
 #include <ast/MappingPatternNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 MappingPatternNode::MappingPatternNode(  
                             unsigned int start, unsigned int end, 
@@ -21,4 +22,34 @@ MappingPatternNode::MappingPatternNode(
     mSecondComma = secondComma;
     mCloseCurly = closeCurly;
 
+}
+
+std::shared_ptr<Token> MappingPatternNode::GetOpenCurly()
+{
+    return mOpenCurly;
+}
+
+std::shared_ptr<AST::StatementNode> MappingPatternNode::GetItems()
+{
+    return mItems;
+}
+
+std::shared_ptr<Token> MappingPatternNode::GetFirstComma()
+{
+    return mFirstComma;
+}
+
+std::shared_ptr<AST::StatementNode> MappingPatternNode::GetDoubleStar()
+{
+    return mDoubleStar;
+}
+
+std::shared_ptr<Token> MappingPatternNode::GetSecondComma()
+{
+    return mSecondComma;
+}
+
+std::shared_ptr<Token> MappingPatternNode::GetCloseCurly()
+{
+    return mCloseCurly;
 }
