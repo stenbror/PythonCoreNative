@@ -2,6 +2,7 @@
 #include <ast/FuncBodySuiteStatementNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 FuncBodySuiteStatementNode::FuncBodySuiteStatementNode(  
                             unsigned int start, unsigned int end, 
@@ -21,4 +22,39 @@ FuncBodySuiteStatementNode::FuncBodySuiteStatementNode(
     mNodes = nodes;
     mNewlines = newlines;
     mOp5 = op5;
+}
+
+std::shared_ptr<Token> FuncBodySuiteStatementNode::GetOperator1()
+{
+    return mOp1;
+}
+
+std::shared_ptr<Token> FuncBodySuiteStatementNode::GetOperator2()
+{
+    return mOp2;
+}
+
+std::shared_ptr<Token> FuncBodySuiteStatementNode::GetOperator3()
+{
+    return mOp3;
+}
+
+std::shared_ptr<Token> FuncBodySuiteStatementNode::GetOperator4()
+{
+    return mOp4;
+}
+
+std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> FuncBodySuiteStatementNode::GetNodes()
+{
+    return mNodes;
+}
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> FuncBodySuiteStatementNode::GetNewlines()
+{
+    return mNewlines;
+}
+
+std::shared_ptr<Token> FuncBodySuiteStatementNode::GetOperatror5()
+{
+    return mOp5;
 }
