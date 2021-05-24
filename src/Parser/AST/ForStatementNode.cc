@@ -2,6 +2,7 @@
 #include <ast/ForStatementNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 ForStatementNode::ForStatementNode(  
                             unsigned int start, unsigned int end,
@@ -23,4 +24,44 @@ ForStatementNode::ForStatementNode(
     mOp4 = op4;
     mNext = next;
     mExtra = extra;
+}
+
+std::shared_ptr<Token> ForStatementNode::GetOperator1()
+{
+    return mOp1;
+}
+
+std::shared_ptr<ExpressionNode> ForStatementNode::GetLeft()
+{
+    return mLeft;
+}
+
+std::shared_ptr<Token> ForStatementNode::GetOperator2()
+{
+    return mOp2;
+}
+
+std::shared_ptr<ExpressionNode> ForStatementNode::GetRight()
+{
+    return mRight;
+}
+
+std::shared_ptr<Token> ForStatementNode::GetOperator3()
+{
+    return mOp3;
+}
+
+std::shared_ptr<Token> ForStatementNode::GetOperator4()
+{
+    return mOp4;
+}
+
+std::shared_ptr<StatementNode> ForStatementNode::GetNext()
+{
+    return mNext;
+}
+
+std::shared_ptr<StatementNode> ForStatementNode::GetExtra()
+{
+    return mExtra;
 }
