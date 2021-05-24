@@ -20,3 +20,13 @@ TokenKind LiteralExprNode::LiteralExprType()
 {
     return mOp1->GetSymbolKind();
 }
+
+std::shared_ptr<Token> LiteralExprNode::GetOperator()
+{
+    return mOp1;
+}
+
+std::shared_ptr<StatementNode> LiteralExprNode::GetRight()
+{
+    return mRight;
+}

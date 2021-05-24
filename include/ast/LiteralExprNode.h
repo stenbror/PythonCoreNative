@@ -22,6 +22,9 @@ namespace PythonCoreNative::RunTime::Parser::AST
 
             TokenKind LiteralExprType();
 
+            std::shared_ptr<Token> GetOperator();
+            std::shared_ptr<StatementNode> GetRight();
+
         protected:
             std::shared_ptr<Token> mOp1;
             std::shared_ptr<StatementNode> mRight;
