@@ -2,6 +2,7 @@
 #include <ast/FloorDivNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 FloorDivNode::FloorDivNode(  
                             unsigned int start, unsigned int end, 
@@ -13,4 +14,19 @@ FloorDivNode::FloorDivNode(
     mOp1 = op1;
     mLeft = left;
     mRight = right;
+}
+
+std::shared_ptr<ExpressionNode> FloorDivNode::GetLeft()
+{
+    return mLeft;
+}
+
+std::shared_ptr<Token> FloorDivNode::GetOperator()
+{
+    return mOp1;
+}
+
+std::shared_ptr<ExpressionNode> FloorDivNode::GetRight()
+{
+    return mRight;
 }
