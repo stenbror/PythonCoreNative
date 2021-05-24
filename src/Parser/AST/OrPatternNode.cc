@@ -15,3 +15,13 @@ OrPatternNode::OrPatternNode(
     mSeparators = separators;
 
 }
+
+std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> OrPatternNode::GetNodes()
+{
+    return mNodes;
+}
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> OrPatternNode::GetSeparators()
+{
+    return mSeparators;
+}
