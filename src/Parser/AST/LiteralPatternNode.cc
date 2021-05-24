@@ -20,3 +20,13 @@ TokenKind LiteralPatternNode::LiteralPatternType()
 {
     return mOp1->GetSymbolKind();
 }
+
+std::shared_ptr<Token> LiteralPatternNode::GetOperator()
+{
+    return mOp1;
+}
+
+std::shared_ptr<StatementNode> LiteralPatternNode::GetRight()
+{
+    return mRight;
+}
