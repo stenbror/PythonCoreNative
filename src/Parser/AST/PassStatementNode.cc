@@ -2,6 +2,7 @@
 #include <ast/PassStatementNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 PassStatementNode::PassStatementNode(  
                             unsigned int start, unsigned int end, 
@@ -9,4 +10,9 @@ PassStatementNode::PassStatementNode(
                         ) : StatementNode(start, end)
 {
     mOp1 = op1;
+}
+
+std::shared_ptr<Token> PassStatementNode::GetOperator()
+{
+    return mOp1;
 }
