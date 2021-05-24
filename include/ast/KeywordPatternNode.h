@@ -19,6 +19,10 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             std::shared_ptr<AST::StatementNode> right
                         );
 
+            std::shared_ptr<NameToken> GetOperator1();
+            std::shared_ptr<Token> GetOperator2();
+            std::shared_ptr<AST::StatementNode> GetRight();
+
         protected:
             std::shared_ptr<NameToken> mOp1;
             std::shared_ptr<Token> mOp2;
