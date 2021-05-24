@@ -20,6 +20,10 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             std::shared_ptr<AST::StatementNode> value
                         );
 
+            std::shared_ptr<AST::StatementNode> GetKey();
+            std::shared_ptr<Token> GetOperator();
+            std::shared_ptr<AST::StatementNode> GetValue();
+
         protected:
             std::shared_ptr<AST::StatementNode> mKey;
             std::shared_ptr<Token> mOp1;
