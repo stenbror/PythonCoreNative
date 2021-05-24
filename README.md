@@ -11,8 +11,10 @@ cd build
 cmake ..  
 make  
 
-To execute future UnitTests. Only dummy test for now, execute the following:  
+To execute future UnitTests. Only started on UnitTests for now, execute the following:  
 
 tests/TestPythonCore  
 
-This will result in a dynamic library like on Linux => libPythonCoreNative.so and a UnitTest Executable linked against it. TestPythonCore
+This will result in a dynamic library like on Linux => libPythonCoreNative.so and a UnitTest Executable linked against it. TestPythonCore. 
+
+I develope this project on an Apple MacPro M1 13" and ofcource make sure it builds on this system first. But i also check out code and build on Raspberry Pi 4 CM4 machine and a HP Spectre X360 with Ubuntu 21.04 to make sure it builds from checkout of code. For now i havent tested building on a Windows machine. 
