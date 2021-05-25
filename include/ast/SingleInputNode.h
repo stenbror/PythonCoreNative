@@ -16,6 +16,9 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             std::shared_ptr<StatementNode> right
                         );
 
+            std::shared_ptr<Token> GetNewline();
+            std::shared_ptr<StatementNode> GetRight();
+
         protected:
             std::shared_ptr<Token> mNewline;
             std::shared_ptr<StatementNode> mRight;
