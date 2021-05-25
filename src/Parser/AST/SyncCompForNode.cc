@@ -2,6 +2,7 @@
 #include <ast/SyncCompForNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 SyncCompForNode::SyncCompForNode(  
                             unsigned int start, unsigned int end,
@@ -17,4 +18,29 @@ SyncCompForNode::SyncCompForNode(
     mLeft = left;
     mRight = right;
     mNext = next;
+}
+
+std::shared_ptr<ExpressionNode> SyncCompForNode::GetLeft()
+{
+    return mLeft;
+}
+
+std::shared_ptr<Token> SyncCompForNode::GetOperator1()
+{
+    return mOp1;
+}
+
+std::shared_ptr<Token> SyncCompForNode::GetOperator2()
+{
+    return mOp2;
+}
+
+std::shared_ptr<ExpressionNode> SyncCompForNode::GetRight()
+{
+    return mRight;
+}
+
+std::shared_ptr<ExpressionNode> SyncCompForNode::GetNext()
+{
+    return mNext;
 }
