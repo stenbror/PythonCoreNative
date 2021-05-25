@@ -23,6 +23,15 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             std::shared_ptr<std::vector<std::shared_ptr<Token>>> typeComment
                         );
 
+            std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> GetNodes();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> GetSeparators();
+            std::shared_ptr<Token> GetSlash();
+            std::shared_ptr<Token> GetMul();
+            std::shared_ptr<StatementNode> GetMulNode();
+            std::shared_ptr<Token> GetPower();
+            std::shared_ptr<StatementNode> GetPowerNode();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> GetTypeComment();
+
         protected:
             std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> mNodes;
             std::shared_ptr<std::vector<std::shared_ptr<Token>>> mSeparators;
