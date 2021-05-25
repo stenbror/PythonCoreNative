@@ -10,3 +10,8 @@ SubjectExprNode::SubjectExprNode(
 {
     mRight = right;
 }
+
+std::shared_ptr<ExpressionNode> SubjectExprNode::GetRight()
+{
+    return mRight;
+}
