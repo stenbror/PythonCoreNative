@@ -2,6 +2,7 @@
 #include <ast/StarNamedExpressionNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 StarNamedExpressionNode::StarNamedExpressionNode(  
                             unsigned int start, unsigned int end, 
@@ -12,3 +13,14 @@ StarNamedExpressionNode::StarNamedExpressionNode(
     mNodes = nodes;
     mSeparators = separators;
 }
+
+std::shared_ptr<std::vector<std::shared_ptr<ExpressionNode>>> StarNamedExpressionNode::GetNodes()
+{
+    return mNodes;
+}
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> StarNamedExpressionNode::GetSeparators()
+{
+    return mSeparators;
+}
+
