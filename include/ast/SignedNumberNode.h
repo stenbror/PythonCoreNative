@@ -19,6 +19,9 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             std::shared_ptr<NumberToken> number
                         );
 
+            std::shared_ptr<Token> GetSign();
+            std::shared_ptr<NumberToken> GetNumber();
+
         protected:
             std::shared_ptr<Token> mSign;
             std::shared_ptr<NumberToken> mNumber;

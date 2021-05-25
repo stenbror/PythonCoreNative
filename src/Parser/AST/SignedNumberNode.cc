@@ -15,3 +15,13 @@ SignedNumberNode::SignedNumberNode(
     mNumber = number;
 
 }
+
+std::shared_ptr<Token> SignedNumberNode::GetSign()
+{
+    return mSign;
+}
+
+std::shared_ptr<NumberToken> SignedNumberNode::GetNumber()
+{
+    return mNumber;
+}
