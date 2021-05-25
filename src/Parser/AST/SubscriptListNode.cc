@@ -2,6 +2,7 @@
 #include <ast/SubscriptListNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 SubscriptListNode::SubscriptListNode(  
                             unsigned int start, unsigned int end, 
@@ -11,4 +12,14 @@ SubscriptListNode::SubscriptListNode(
 {
     mNodes = nodes;
     mSeparators = separators;
+}
+
+std::shared_ptr<std::vector<std::shared_ptr<ExpressionNode>>> SubscriptListNode::GetNodes()
+{
+    return mNodes;
+}
+
+std::shared_ptr<std::vector<std::shared_ptr<Token>>> SubscriptListNode::GetSeparators()
+{
+    return mSeparators;
 }
