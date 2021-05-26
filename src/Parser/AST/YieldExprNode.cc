@@ -2,6 +2,7 @@
 #include <ast/YieldExprNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 YieldExprNode::YieldExprNode(  
                             unsigned int start, unsigned int end,
@@ -11,4 +12,14 @@ YieldExprNode::YieldExprNode(
 {
     mOp1 = op1;
     mRight = right;
+}
+
+std::shared_ptr<Token> YieldExprNode::GetOperator()
+{
+    return mOp1;
+}
+
+std::shared_ptr<StatementNode> YieldExprNode::GetRight()
+{
+    return mRight;
 }
