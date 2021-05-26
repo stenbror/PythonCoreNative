@@ -360,7 +360,7 @@ TEST_CASE( "Operators and Delimitors", "Tokenizer" )
         lexer->Advance();
 
         REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyNotEqual );
-        REQUIRE( sourceBuffer->BufferPosition() == 3);
+        REQUIRE( sourceBuffer->BufferPosition() == 2);
 
     }
 
@@ -411,7 +411,7 @@ TEST_CASE( "Operators and Delimitors", "Tokenizer" )
 
         lexer->Advance();
 
-        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyModulo );
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMatrice );
         REQUIRE( sourceBuffer->BufferPosition() == 1);
 
     }
