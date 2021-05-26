@@ -22,6 +22,14 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             std::shared_ptr<NameToken> powerNode
                         );
 
+            std::shared_ptr<std::vector<std::shared_ptr<ExpressionNode>>> GetNodes();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> GetSeparators();
+            std::shared_ptr<Token> GetSlash();
+            std::shared_ptr<Token> GetMul();
+            std::shared_ptr<NameToken> GetMulNode();
+            std::shared_ptr<Token> GetPower();
+            std::shared_ptr<NameToken> GetPowerNode();
+
         protected:
             std::shared_ptr<std::vector<std::shared_ptr<ExpressionNode>>> mNodes;
             std::shared_ptr<std::vector<std::shared_ptr<Token>>> mSeparators;
