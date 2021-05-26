@@ -11,7 +11,7 @@ cd build
 cmake ..  
 make  
 
-To execute future UnitTests. Only started on UnitTests for now, execute the following:  
+To execute UnitTests. They are written as we go, execute the following:  
 
 tests/TestPythonCore  
 
