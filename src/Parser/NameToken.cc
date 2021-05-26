@@ -13,22 +13,32 @@ NameToken::NameToken(   unsigned int startPosition,
 
 bool NameToken::IsCaseSoftKeyword()
 {
-    return mText->find_first_of(L"case", 0, sizeof(wchar_t)) && mText->size() == 4;
+
+    return mText->size() == 4 && mText->at(0) == L'c' && mText->at(1) == L'a' && mText->at(2) == L's' && 
+        mText->at(3) == L'e';
+
 }
 
 bool NameToken::IsMatchSoftKeyword()
 {
-    return mText->find_first_of(L"match", 0, sizeof(wchar_t)) && mText->size() == 5;
+
+    return mText->size() == 5 && mText->at(0) == L'm' && mText->at(1) == L'a' && mText->at(2) == L't' && 
+        mText->at(3) == L'c' && mText->at(4) == L'h';
+
 }
 
 bool NameToken::IsWildCardPattern()
 {
-    return mText->find_first_of(L"_", 0, sizeof(wchar_t)) && mText->size() == 1;
+
+    return mText->size() == 1 && mText->at(0) == L'_';
+
 }
 
 bool NameToken::IsNotWildCardPrefixed()
 {
-    return !mText->find_first_of(L"_", 0, sizeof(wchar_t));
+
+    return !IsNotWildCardPrefixed();
+
 }
 
 std::shared_ptr<std::wstring> NameToken::GetText()
