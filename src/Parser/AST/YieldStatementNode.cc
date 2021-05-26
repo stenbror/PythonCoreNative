@@ -10,3 +10,8 @@ YieldStatementNode::YieldStatementNode(
 {
     mRight = right;
 }
+
+std::shared_ptr<ExpressionNode> YieldStatementNode::GetRight()
+{
+    return mRight;
+}
