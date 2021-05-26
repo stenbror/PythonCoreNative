@@ -37,3 +37,4 @@ add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 
 add_subdirectory(tests)
+add_subdirectory(PythonCoreConsole)

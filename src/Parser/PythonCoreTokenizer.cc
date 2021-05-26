@@ -6,7 +6,7 @@ using namespace PythonCoreNative::RunTime::Parser;
 
 PythonCoreTokenizer::PythonCoreTokenizer(unsigned int tabSize, std::shared_ptr<SourceBuffer> sourceBuffer)
 {
-    if (sourceBuffer == nullptr) throw ;
+    if (sourceBuffer == nullptr) throw "No buffer!";
 
     mSourceBuffer = sourceBuffer;
     mPosition = mSourceBuffer->BufferPosition();
