@@ -18,6 +18,8 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             std::shared_ptr<Token> op1
                         );
 
+            std::shared_ptr<Token> GetOperator();
+
         protected:
             std::shared_ptr<Token> mOp1;
             

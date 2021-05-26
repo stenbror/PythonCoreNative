@@ -2,6 +2,7 @@
 #include <ast/WildCardPatternNode.h>
 
 using namespace PythonCoreNative::RunTime::Parser::AST;
+using namespace PythonCoreNative::RunTime::Parser;
 
 WildCardPatternNode::WildCardPatternNode(  
                             unsigned int start, unsigned int end, 
@@ -11,4 +12,9 @@ WildCardPatternNode::WildCardPatternNode(
     
     mOp1 = op1;
     
+}
+
+std::shared_ptr<Token> WildCardPatternNode::GetOperator()
+{
+    return mOp1;
 }
