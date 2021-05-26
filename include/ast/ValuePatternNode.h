@@ -19,6 +19,9 @@ namespace PythonCoreNative::RunTime::Parser::AST
                             std::shared_ptr<std::vector<std::shared_ptr<Token>>> dots
                         );
 
+            std::shared_ptr<std::vector<std::shared_ptr<NameToken>>> GetNodes();
+            std::shared_ptr<std::vector<std::shared_ptr<Token>>> GetDots();
+
         protected:
             std::shared_ptr<std::vector<std::shared_ptr<NameToken>>> mNodes;
             std::shared_ptr<std::vector<std::shared_ptr<Token>>> mDots;
