@@ -37,7 +37,7 @@ bool NameToken::IsWildCardPattern()
 bool NameToken::IsNotWildCardPrefixed()
 {
 
-    return !IsNotWildCardPrefixed();
+    return !IsWildCardPattern();
 
 }
 
