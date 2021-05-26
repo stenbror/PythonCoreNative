@@ -24,7 +24,8 @@ FetchContent_MakeAvailable(Catch2)
 
 
 file(GLOB SOURCES src/Parser/AST/*.cc
-                  src/Parser/*.cc)
+                  src/Parser/*.cc
+                  src/*.cc)
 
 project (PythonCoreNative)
 
