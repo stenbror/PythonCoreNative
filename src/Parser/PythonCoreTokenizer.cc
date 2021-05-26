@@ -13,7 +13,6 @@ PythonCoreTokenizer::PythonCoreTokenizer(unsigned int tabSize, std::shared_ptr<S
     mAtBOL = true;
     mPending = 0;
     
-    
 }
 
 std::shared_ptr<Token> PythonCoreTokenizer::CurSymbol()
@@ -111,12 +110,13 @@ _nextLine:
 
         if (!mIsBlankLine && mLevelStack.empty())
         {
+            auto level = mIndentLevel.empty() ? 0 : mIndentLevel.top();
 
-            if (col == mIndentLevel.top())
+            if (col == level)
             {
                 // No change in indentaation levels.
             }
-            else if (col > mIndentLevel.top())
+            else if (col > level)
             {
 
                 mPending++;
@@ -126,7 +126,7 @@ _nextLine:
             else
             {
 
-                while (mIndentLevel.size() > 0 && col < mIndentLevel.top())
+                while (mIndentLevel.size() > 0 && col < level)
                 {
 
                     mPending--;
