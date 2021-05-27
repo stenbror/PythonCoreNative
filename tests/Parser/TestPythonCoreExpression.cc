@@ -169,4 +169,60 @@ TEST_CASE( "Rule: Atom", "Parser - Expression rules" )
 
     }
 
+    SECTION( "Atom '[]'" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"[] " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomListNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftBracket );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 1 );
+
+        REQUIRE( node->GetRight() == nullptr );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyRightBracket );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 1 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 2 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 3 ) ; 
+
+    }
+
+    SECTION( "Atom '{}'" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"{} " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomDictionaryNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftCurly );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 1 );
+
+        REQUIRE( node->GetRight() == nullptr );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyRightCurly );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 1 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 2 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 3 ) ; 
+
+    }
+
 }
