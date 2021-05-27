@@ -763,9 +763,9 @@ _again:
 
         mCurSymbol = std::make_shared<NumberToken>(
             mPosition,
+            mSourceBuffer->BufferPosition(),
             isImaginary,
             isReal,
-            mSourceBuffer->BufferPosition(),
             std::make_shared<std::wstring>(key),
             triviaList );
 

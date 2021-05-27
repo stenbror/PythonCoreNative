@@ -119,4 +119,26 @@ TEST_CASE( "Rule: Atom", "Parser - Expression rules" )
 
     }
 
+    SECTION( "Atom '34e-8j'" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"34e-8j " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomNumberNode>( root->GetRight() );
+
+        REQUIRE( node->GetNumberText()->GetText()->compare(L"34e-8j") == 0 );
+        REQUIRE( node->GetNumberText()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetNumberText()->GetTokenEndPosition() == 6 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 7 ) ; 
+
+    }
+
 }
