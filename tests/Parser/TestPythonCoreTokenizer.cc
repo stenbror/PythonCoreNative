@@ -1259,4 +1259,60 @@ TEST_CASE( "Literal Number", "Tokenizer" )
 
     }
 
+    SECTION( "Literal '0B_111_011' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0B_111_011 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0B_111_011") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 10);
+
+    }
+
+    SECTION( "Literal '1' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"1 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"1") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 1);
+
+    }
+
+    SECTION( "Literal '10_000' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"10_000 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"10_000") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 6);
+
+    }
+
+    SECTION( "Literal '0B111011' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0B111011 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0B111011") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 8);
+
+    }
+
 }
