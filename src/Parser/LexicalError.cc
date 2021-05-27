@@ -8,3 +8,13 @@ LexicalError::LexicalError(unsigned int position, std::shared_ptr<std::wstring> 
     mPosition = position;
     mMsg = msg;
 }
+
+std::shared_ptr<std::wstring> LexicalError::ExceptionText()
+{
+    return mMsg;
+}
+
+unsigned int LexicalError::ExceptionPosition()
+{
+    return mPosition;
+}

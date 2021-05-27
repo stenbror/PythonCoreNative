@@ -1241,3 +1241,22 @@ TEST_CASE( "Literal Name", "Tokenizer" )
 
     }
 }
+
+TEST_CASE( "Literal Number", "Tokenizer" )
+{
+
+    SECTION( "Literal '0b_111_011' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0b_111_011 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0b_111_011") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 10);
+
+    }
+
+}

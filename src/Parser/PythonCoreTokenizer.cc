@@ -450,7 +450,7 @@ _again:
         {
             buffer << mSourceBuffer->GetChar();
 
-            if (mSourceBuffer->PeekChar() == 'x' || mSourceBuffer->GetChar() == 'X')
+            if (mSourceBuffer->PeekChar() == 'x' || mSourceBuffer->PeekChar() == 'X')
             {
                 
                 buffer << mSourceBuffer->GetChar();
@@ -477,7 +477,7 @@ _again:
                 
             }
 
-            else if (mSourceBuffer->PeekChar() == 'o' || mSourceBuffer->GetChar() == 'O')
+            else if (mSourceBuffer->PeekChar() == 'o' || mSourceBuffer->PeekChar() == 'O')
             {
 
                 buffer << mSourceBuffer->GetChar();
@@ -509,7 +509,7 @@ _again:
 
             }
 
-            else if (mSourceBuffer->PeekChar() == 'b' || mSourceBuffer->GetChar() == 'B')
+            else if (mSourceBuffer->PeekChar() == 'b' || mSourceBuffer->PeekChar() == 'B')
             {
 
                 buffer << mSourceBuffer->GetChar();
@@ -523,7 +523,7 @@ _again:
                         throw std::make_shared<LexicalError>(
                             mSourceBuffer->BufferPosition(),
                             std::make_shared<std::wstring>(L"Expecting binary digits!"));
-
+                    
                     do
                     {
                         
@@ -533,8 +533,8 @@ _again:
                     
 
                 } while (mSourceBuffer->PeekChar() == '_');
-
-                if (!mSourceBuffer->IsDigit()) 
+                
+                if ( mSourceBuffer->IsDigit() ) 
                         throw std::make_shared<LexicalError>(
                             mSourceBuffer->BufferPosition(),
                             std::make_shared<std::wstring>(L"Expecting binary digits!"));

@@ -10,6 +10,8 @@ namespace PythonCoreNative::RunTime::Parser
     {
         public:
             LexicalError(unsigned int position, std::shared_ptr<std::wstring> msg);
+            std::shared_ptr<std::wstring> ExceptionText();
+            unsigned int ExceptionPosition();
 
         protected:
             unsigned int mPosition;
