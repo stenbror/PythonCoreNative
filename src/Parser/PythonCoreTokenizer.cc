@@ -502,7 +502,7 @@ _again:
 
                 } while (mSourceBuffer->PeekChar() == '_');
 
-                if ( mSourceBuffer->IsDigit()) 
+                if ( mSourceBuffer->IsDigit() ) 
                         throw std::make_shared<LexicalError>(
                             mSourceBuffer->BufferPosition(),
                             std::make_shared<std::wstring>(L"Expecting octet digits!"));

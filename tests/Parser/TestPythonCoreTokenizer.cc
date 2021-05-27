@@ -1371,7 +1371,7 @@ TEST_CASE( "Literal Number", "Tokenizer" )
 
     }
 
-     SECTION( "Literal '0o_71_14' in Lexer!" )
+    SECTION( "Literal '0o_71_14' in Lexer!" )
     {
 
         auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0o_71_14 " ) );
@@ -1382,6 +1382,258 @@ TEST_CASE( "Literal Number", "Tokenizer" )
         REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
         REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0o_71_14") == 0 );
         REQUIRE( sourceBuffer->BufferPosition() == 8);
+
+    }
+
+    SECTION( "Literal '0O_71_14' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0O_71_14 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0O_71_14") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 8);
+
+    }
+
+    SECTION( "Literal '0o7114' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0o7114 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0o7114") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 6);
+
+    }
+
+    SECTION( "Literal '0.' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0. " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0.") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 2);
+
+    }
+
+    SECTION( "Literal '0._0' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0._0 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0._0") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 4);
+
+    }
+
+    SECTION( "Literal '0._0e-34j' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0._0e-34j " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0._0e-34j") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 9);
+
+    }
+
+    SECTION( "Literal '0._0E-34J' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0._0E-34J " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0._0E-34J") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 9);
+
+    }
+
+    SECTION( "Literal '0._0E+34J' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0._0E+34J " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0._0E+34J") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 9);
+
+    }
+
+    SECTION( "Literal '0._0E34J' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0._0E34J " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0._0E34J") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 8);
+
+    }
+
+    SECTION( "Literal '0._0E3_4J' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0._0E3_4J " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0._0E3_4J") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 9);
+
+    }
+
+    SECTION( "Literal '0.0J' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0.0J " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0.0J") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 4);
+
+    }
+
+    SECTION( "Literal '0.0' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0.0 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0.0") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 3);
+
+    }
+
+    SECTION( "Literal '.0' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L".0 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L".0") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 2);
+
+    }
+
+    SECTION( "Literal '.0e1j' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L".0e1j " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L".0e1j") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 5);
+
+    }
+
+    SECTION( "Literal '.0e+1j' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L".0e+1j " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L".0e+1j") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 6);
+
+    }
+
+    SECTION( "Literal '.0e-1j' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L".0e-1j " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L".0e-1j") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 6);
+
+    }
+
+    SECTION( "Literal '0j' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0j " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0j") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 2);
+
+    }
+
+    SECTION( "Literal '1234.456' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"1234.456 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"1234.456") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 8);
+
+    }
+
+    SECTION( "Literal '1_2_3_4.4_5_6' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"1_2_3_4.4_5_6 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"1_2_3_4.4_5_6") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 13);
 
     }
 
