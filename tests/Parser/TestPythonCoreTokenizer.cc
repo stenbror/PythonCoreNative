@@ -1212,4 +1212,32 @@ TEST_CASE( "Literal Name", "Tokenizer" )
         REQUIRE( sourceBuffer->BufferPosition() == 4);
 
     }
+
+    SECTION( "Literal '__init__' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"__init__ " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Name );
+        REQUIRE( std::static_pointer_cast<NameToken>( lexer->CurSymbol() )->GetText()->compare(L"__init__") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 8);
+
+    }
+
+    SECTION( "Literal '_x34a' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"_x34a " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Name );
+        REQUIRE( std::static_pointer_cast<NameToken>( lexer->CurSymbol() )->GetText()->compare(L"_x34a") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 5);
+
+    }
 }
