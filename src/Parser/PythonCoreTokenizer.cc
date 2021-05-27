@@ -798,11 +798,15 @@ _letterQuote:
                 buffer << quote;
             
             }
-            else quoteEndSize = 1;
+            else 
+            {
+
+                quoteEndSize = 1;
+            
+            }
 
         }
-        else mSourceBuffer->UngetChar(quote);
-
+        
         while (quoteSize != quoteEndSize)
         {
 

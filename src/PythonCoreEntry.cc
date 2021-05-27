@@ -15,12 +15,11 @@ int PythonCoreEntry(int argc, char *argv[], std::wstring systemName)
     try
     {
         
-        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0b_111_011 " ) );
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"\"Hello, World!\" " ) );
         auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
 
         lexer->Advance();
-
-        auto txt = std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->data();
+        auto txt = std::static_pointer_cast<StringToken>( lexer->CurSymbol() )->GetText()->data();
 
         std::wcout << txt << L"\r\n";
 

@@ -1670,5 +1670,103 @@ TEST_CASE( "Literal String", "Tokenizer" )
 
     }
 
+    SECTION( "Literal '''''' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"'''''' " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::String );
+        REQUIRE( std::static_pointer_cast<StringToken>( lexer->CurSymbol() )->GetText()->compare(L"''''''") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 6);
+
+    }
+
+    SECTION( "Literal \"\"\"\"\"\" in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"\"\"\"\"\"\" " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::String );
+        REQUIRE( std::static_pointer_cast<StringToken>( lexer->CurSymbol() )->GetText()->compare(L"\"\"\"\"\"\"") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 6);
+
+    }
+
+    SECTION( "Literal '''Hello, World!''' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"'''Hello, World!''' " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::String );
+        REQUIRE( std::static_pointer_cast<StringToken>( lexer->CurSymbol() )->GetText()->compare(L"'''Hello, World!'''") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 19);
+
+    }
+
+    SECTION( "Literal \"\"\"Hello, World!\"\"\" in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"\"\"\"Hello, World!\"\"\" " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::String );
+        REQUIRE( std::static_pointer_cast<StringToken>( lexer->CurSymbol() )->GetText()->compare(L"\"\"\"Hello, World!\"\"\"") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 19);
+
+    }
+
+    SECTION( "Literal 'Hello, World!' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"'Hello, World!' " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::String );
+        REQUIRE( std::static_pointer_cast<StringToken>( lexer->CurSymbol() )->GetText()->compare(L"'Hello, World!'") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 15);
+
+    }
+
+    SECTION( "Literal \"Hello, World!\" in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"\"Hello, World!\" " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::String );
+        REQUIRE( std::static_pointer_cast<StringToken>( lexer->CurSymbol() )->GetText()->compare(L"\"Hello, World!\"") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 15);
+
+    }
+
+    SECTION( "Literal \"Hello, 'World!'\" in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"\"Hello, 'World!'\" " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::String );
+        REQUIRE( std::static_pointer_cast<StringToken>( lexer->CurSymbol() )->GetText()->compare(L"\"Hello, 'World!'\"") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 17);
+
+    }
+
 }
 
