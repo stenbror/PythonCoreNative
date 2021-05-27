@@ -3,7 +3,8 @@
         {
             "name": "Linux",
             "includePath": [
-                "${default}"
+                "${default}",
+                "${workspaceFolder}/build/_deps/catch2-src/single_include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

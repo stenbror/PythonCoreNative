@@ -1195,3 +1195,21 @@ TEST_CASE( "Reserved keywords", "Tokenizer" )
     }
 
 }
+
+TEST_CASE( "Literal Name", "Tokenizer" )
+{
+
+    SECTION( "Literal 'Test[' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"Test[" ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Name );
+        REQUIRE( std::static_pointer_cast<NameToken>( lexer->CurSymbol() )->GetText()->compare(L"Test") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 4);
+
+    }
+}
