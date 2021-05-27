@@ -295,7 +295,6 @@ TEST_CASE( "Rule: Atom", "Parser - Expression rules" )
         }
         catch( std::shared_ptr<SyntaxError> err )
         {
-            REQUIRE( true );
             REQUIRE(err->GetPosition() == 0);
             REQUIRE(err->GetFailureSymbol()->GetSymbolKind() == TokenKind::PyMatrice);
             REQUIRE(err->GetExceptionText()->compare(L"Illegal literal found!") == 0);
