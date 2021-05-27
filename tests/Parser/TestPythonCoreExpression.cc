@@ -225,4 +225,82 @@ TEST_CASE( "Rule: Atom", "Parser - Expression rules" )
 
     }
 
+    SECTION( "Atom '\"Test\"'" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"\"Test\" " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomStringNode>( root->GetRight() );
+
+        auto units = node->GetStringNodes();
+        
+        REQUIRE(units->size() == 1);
+        REQUIRE(units->at(0)->GetText()->compare(L"\"Test\"") == 0);
+        REQUIRE(units->at(0)->GetTokenStartPosition() == 0);
+        REQUIRE(units->at(0)->GetTokenEndPosition() == 6);
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 7 ) ; 
+
+    }
+
+    SECTION( "Atom '\"Test\" 'Again''" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"\"Test\" 'Again' " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomStringNode>( root->GetRight() );
+
+        auto units = node->GetStringNodes();
+        
+        REQUIRE(units->size() == 2);
+        REQUIRE(units->at(0)->GetText()->compare(L"\"Test\"") == 0);
+        REQUIRE(units->at(0)->GetTokenStartPosition() == 0);
+        REQUIRE(units->at(0)->GetTokenEndPosition() == 6);
+
+        REQUIRE(units->at(1)->GetText()->compare(L"'Again'") == 0);
+        REQUIRE(units->at(1)->GetTokenStartPosition() == 7);
+        REQUIRE(units->at(1)->GetTokenEndPosition() == 14);
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 15 ) ; 
+
+    }
+
+    SECTION( "Atom failes" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"@" ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        try
+        {
+            auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+            REQUIRE( false );
+
+        }
+        catch( std::shared_ptr<SyntaxError> err )
+        {
+            REQUIRE( true );
+            REQUIRE(err->GetPosition() == 0);
+            REQUIRE(err->GetFailureSymbol()->GetSymbolKind() == TokenKind::PyMatrice);
+            REQUIRE(err->GetExceptionText()->compare(L"Illegal literal found!") == 0);
+        }
+        
+    }
+
 }

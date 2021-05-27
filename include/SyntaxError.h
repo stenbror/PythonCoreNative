@@ -12,6 +12,9 @@ namespace PythonCoreNative::RunTime::Parser
     {
         public:
             SyntaxError(unsigned int position, std::shared_ptr<Token> curSymbol, std::shared_ptr<std::wstring> msg);
+            unsigned int GetPosition();
+            std::shared_ptr<Token> GetFailureSymbol();
+            std::shared_ptr<std::wstring> GetExceptionText();
 
         protected:
             unsigned int mPosition;
