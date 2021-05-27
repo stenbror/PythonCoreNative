@@ -1315,4 +1315,74 @@ TEST_CASE( "Literal Number", "Tokenizer" )
 
     }
 
+    SECTION( "Literal '0x_7f_8e' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0x_7f_8e " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0x_7f_8e") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 8);
+
+    }
+
+    SECTION( "Literal '0X_7F_8e' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0X_7F_8e " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0X_7F_8e") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 8);
+
+    }
+
+    SECTION( "Literal '0x7fbe' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0x7fbe " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0x7fbe") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 6);
+
+    }
+
+    SECTION( "Literal '0' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 1);
+
+    }
+
+     SECTION( "Literal '0o_71_14' in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"0o_71_14 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::Number );
+        REQUIRE( std::static_pointer_cast<NumberToken>( lexer->CurSymbol() )->GetText()->compare(L"0o_71_14") == 0 );
+        REQUIRE( sourceBuffer->BufferPosition() == 8);
+
+    }
+
 }
