@@ -303,3 +303,37 @@ TEST_CASE( "Rule: Atom", "Parser - Expression rules" )
     }
 
 }
+
+
+TEST_CASE( "Rule: AtomExpr", "Parser - Expression rules" )
+{
+
+    SECTION( "Atom 'await test'" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"await test " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomExprNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator()->GetSymbolKind() == TokenKind::PyAwait );
+        REQUIRE( node->GetOperator()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator()->GetTokenEndPosition() == 5 );
+
+        auto left = std::static_pointer_cast<AST::AtomNameNode>( node->GetLeft() );
+        REQUIRE( left->GetNameText()->GetText()->compare(L"test") == 0 );
+
+        REQUIRE( node->GetRight() == nullptr );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 11 ) ; 
+
+    }
+
+}
+
