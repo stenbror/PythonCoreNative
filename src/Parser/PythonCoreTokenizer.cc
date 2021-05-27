@@ -2,6 +2,7 @@
 #include <PythonCoreTokenizer.h>
 
 using namespace PythonCoreNative::RunTime::Parser;
+
 #include <iostream>
 
 PythonCoreTokenizer::PythonCoreTokenizer(unsigned int tabSize, std::shared_ptr<SourceBuffer> sourceBuffer)
@@ -17,12 +18,16 @@ PythonCoreTokenizer::PythonCoreTokenizer(unsigned int tabSize, std::shared_ptr<S
 
 std::shared_ptr<Token> PythonCoreTokenizer::CurSymbol()
 {
+
     return mCurSymbol;
+
 }
             
 unsigned int PythonCoreTokenizer::Position()
 {
-    return mSourceBuffer->BufferPosition();
+    
+    return mCurSymbol != nullptr ? mCurSymbol->GetTokenStartPosition() : -1;
+
 }
 
 void PythonCoreTokenizer::UnWindTokenStream(unsigned int pos)

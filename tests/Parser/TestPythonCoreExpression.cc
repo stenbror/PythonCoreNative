@@ -26,6 +26,9 @@ TEST_CASE( "Rule: Atom", "Parser - Expression rules" )
         REQUIRE( node->GetOperator()->GetTokenStartPosition() == 0 );
         REQUIRE( node->GetOperator()->GetTokenEndPosition() == 5 );
 
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 6 ) ; 
+
     }
 
     SECTION( "Atom 'None'" )
@@ -39,11 +42,14 @@ TEST_CASE( "Rule: Atom", "Parser - Expression rules" )
 
         REQUIRE( root->GetNewlines()->size() == 0 );
 
-        auto node = std::static_pointer_cast<AST::AtomFalseNode>( root->GetRight() );
+        auto node = std::static_pointer_cast<AST::AtomNoneNode>( root->GetRight() );
 
         REQUIRE( node->GetOperator()->GetSymbolKind() == TokenKind::PyNone );
         REQUIRE( node->GetOperator()->GetTokenStartPosition() == 0 );
         REQUIRE( node->GetOperator()->GetTokenEndPosition() == 4 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 5 ) ; 
 
     }
 
@@ -58,11 +64,14 @@ TEST_CASE( "Rule: Atom", "Parser - Expression rules" )
 
         REQUIRE( root->GetNewlines()->size() == 0 );
 
-        auto node = std::static_pointer_cast<AST::AtomFalseNode>( root->GetRight() );
+        auto node = std::static_pointer_cast<AST::AtomTrueNode>( root->GetRight() );
 
         REQUIRE( node->GetOperator()->GetSymbolKind() == TokenKind::PyTrue );
         REQUIRE( node->GetOperator()->GetTokenStartPosition() == 0 );
         REQUIRE( node->GetOperator()->GetTokenEndPosition() == 4 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 5 ) ; 
 
     }
 
@@ -77,11 +86,36 @@ TEST_CASE( "Rule: Atom", "Parser - Expression rules" )
 
         REQUIRE( root->GetNewlines()->size() == 0 );
 
-        auto node = std::static_pointer_cast<AST::AtomFalseNode>( root->GetRight() );
+        auto node = std::static_pointer_cast<AST::AtomElipsisNode>( root->GetRight() );
 
         REQUIRE( node->GetOperator()->GetSymbolKind() == TokenKind::PyElipsis );
         REQUIRE( node->GetOperator()->GetTokenStartPosition() == 0 );
         REQUIRE( node->GetOperator()->GetTokenEndPosition() == 3 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 4 ) ; 
+
+    }
+
+    SECTION( "Atom '__init__'" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"__init__ " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomNameNode>( root->GetRight() );
+
+        REQUIRE( node->GetNameText()->GetText()->compare(L"__init__") == 0 );
+        REQUIRE( node->GetNameText()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetNameText()->GetTokenEndPosition() == 8 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 9 ) ;    
 
     }
 

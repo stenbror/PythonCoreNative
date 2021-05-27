@@ -7,3 +7,13 @@ Node::Node(unsigned int start, unsigned int end)
 {
     mColStart = start; mColEnd = end;
 }
+
+unsigned int Node::GetNodeStartPosition()
+{
+    return mColStart;
+}
+
+unsigned int Node::GetNodeEndPosition()
+{
+    return mColEnd;
+}

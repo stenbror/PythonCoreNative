@@ -9,7 +9,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseAtom()
 {
     auto startPos = mLexer->Position();
     auto curSymbol = mLexer->CurSymbol();
-
+    
     switch (curSymbol->GetSymbolKind())
     {
         case TokenKind::PyFalse:

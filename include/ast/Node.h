@@ -8,6 +8,10 @@ namespace PythonCoreNative::RunTime::Parser::AST
         protected:
             Node(unsigned int start, unsigned int end);
 
+        public:
+            unsigned int GetNodeStartPosition();
+            unsigned int GetNodeEndPosition();
+
         protected:
             unsigned int mColStart;
             unsigned int mColEnd;
