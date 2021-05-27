@@ -1770,3 +1770,32 @@ TEST_CASE( "Literal String", "Tokenizer" )
 
 }
 
+TEST_CASE( "Misc goodies in lexer!", "Tokenizer" )
+{
+
+    SECTION( "Line Continuation in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"\\\r\nFalse " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyFalse );
+        REQUIRE( sourceBuffer->BufferPosition() == 8);
+
+    }
+
+    SECTION( "End of File in Lexer!" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"\0 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+
+        lexer->Advance();
+
+        REQUIRE( lexer->CurSymbol()->GetSymbolKind() == TokenKind::EndOfFile );
+        REQUIRE( sourceBuffer->BufferPosition() == 0);
+
+    }
+}
