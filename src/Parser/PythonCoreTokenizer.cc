@@ -779,6 +779,8 @@ _letterQuote:
         std::wstringstream buffer;
 
         auto quote = mSourceBuffer->GetChar();
+        buffer << quote;
+
         auto quoteSize = 1;
         auto quoteEndSize = 0;
 
@@ -786,12 +788,14 @@ _letterQuote:
         {
 
             mSourceBuffer->Next();
+            buffer << quote;
 
             if (mSourceBuffer->PeekChar() == quote)
             {
 
                 quoteSize = 3;
                 mSourceBuffer->Next();
+                buffer << quote;
             
             }
             else quoteEndSize = 1;
