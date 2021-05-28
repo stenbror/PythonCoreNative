@@ -1543,3 +1543,74 @@ TEST_CASE( "Rule: NotTest", "Parser - Expression rules" )
 
 }
 
+
+TEST_CASE( "Rule: AndTest", "Parser - Expression rules" )
+{
+
+    SECTION( "a and b "  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a and b " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AndTestNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator()->GetSymbolKind() == TokenKind::PyAnd );
+        REQUIRE( node->GetOperator()->GetTokenStartPosition() == 2 );
+        REQUIRE( node->GetOperator()->GetTokenEndPosition() == 5 );
+
+        auto left = std::static_pointer_cast<AST::AtomNameNode>( node->GetLeftNode() );
+        REQUIRE( left->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( node->GetRightNode() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 8 ) ; 
+
+    }
+
+    SECTION( "a and b and c (recursive)"  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a and b and c " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AndTestNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator()->GetSymbolKind() == TokenKind::PyAnd );
+        REQUIRE( node->GetOperator()->GetTokenStartPosition() == 8 );
+        REQUIRE( node->GetOperator()->GetTokenEndPosition() == 11 );
+
+        auto node2 = std::static_pointer_cast<AST::AndTestNode>( node->GetLeftNode() );
+
+        auto leftFirst = std::static_pointer_cast<AST::AtomNameNode>( node2->GetLeftNode() );
+        REQUIRE( leftFirst->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        REQUIRE( node2->GetOperator()->GetSymbolKind() == TokenKind::PyAnd) ;
+        REQUIRE( node2->GetOperator()->GetTokenStartPosition() == 2 ) ;
+        REQUIRE( node2->GetOperator()->GetTokenEndPosition() == 5 ) ;
+
+        auto rightFirst = std::static_pointer_cast<AST::AtomNameNode>( node2->GetRightNode() );
+        REQUIRE( rightFirst->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( node->GetRightNode() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"c") == 0 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 14 ) ; 
+
+    }
+
+}
+
