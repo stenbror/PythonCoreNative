@@ -1481,3 +1481,65 @@ TEST_CASE( "Rule: Compariosn", "Parser - Expression rules" )
 
 }
 
+
+TEST_CASE( "Rule: NotTest", "Parser - Expression rules" )
+{
+
+    SECTION( "not a "  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"not a " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::NotTestNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator()->GetSymbolKind() == TokenKind::PyNot );
+        REQUIRE( node->GetOperator()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator()->GetTokenEndPosition() == 3 );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( node->GetRight() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 6 ) ; 
+
+    }
+
+    SECTION( "not not a "  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"not not a " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::NotTestNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator()->GetSymbolKind() == TokenKind::PyNot );
+        REQUIRE( node->GetOperator()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator()->GetTokenEndPosition() == 3 );
+
+        auto node2 = std::static_pointer_cast<AST::NotTestNode>( node->GetRight() );
+
+        REQUIRE( node2->GetOperator()->GetSymbolKind() == TokenKind::PyNot );
+        REQUIRE( node2->GetOperator()->GetTokenStartPosition() == 4 );
+        REQUIRE( node2->GetOperator()->GetTokenEndPosition() == 7 );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( node2->GetRight() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 10 ) ; 
+
+    }
+
+}
+
