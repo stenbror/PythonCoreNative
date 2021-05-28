@@ -504,4 +504,26 @@ TEST_CASE( "Rule: Factor", "Parser - Expression rules" )
 
     }
 
+    SECTION( " + + a (recursive)"  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"++a " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::UnaryPlusNode>( root->GetRight() );
+        auto node2 = std::static_pointer_cast<AST::UnaryPlusNode>( node->GetRight() );
+
+        REQUIRE( node->GetOperator()->GetSymbolKind() == TokenKind::PyPlus );
+        REQUIRE( node2->GetOperator()->GetSymbolKind() == TokenKind::PyPlus );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 4 ) ; 
+
+    }
+
 }
