@@ -1322,5 +1322,162 @@ TEST_CASE( "Rule: Compariosn", "Parser - Expression rules" )
 
     }
 
+    SECTION( "a in b "  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a in b " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::CompareInNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator()->GetSymbolKind() == TokenKind::PyIn );
+        REQUIRE( node->GetOperator()->GetTokenStartPosition() == 2 );
+        REQUIRE( node->GetOperator()->GetTokenEndPosition() == 4 );
+
+        auto left = std::static_pointer_cast<AST::AtomNameNode>( node->GetLeft() );
+        REQUIRE( left->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( node->GetRight() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 7 ) ; 
+
+    }
+
+    SECTION( "a is b "  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a is b " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::CompareIsNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator()->GetSymbolKind() == TokenKind::PyIs );
+        REQUIRE( node->GetOperator()->GetTokenStartPosition() == 2 );
+        REQUIRE( node->GetOperator()->GetTokenEndPosition() == 4 );
+
+        auto left = std::static_pointer_cast<AST::AtomNameNode>( node->GetLeft() );
+        REQUIRE( left->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( node->GetRight() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 7 ) ; 
+
+    }
+
+    SECTION( "a is not b "  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a is not b " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::CompareIsNotNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyIs );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 2 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 4 );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyNot );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 5 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 8 );
+
+        auto left = std::static_pointer_cast<AST::AtomNameNode>( node->GetLeft() );
+        REQUIRE( left->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( node->GetRight() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 11 ) ; 
+
+    }
+
+    SECTION( "a not in b "  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a not in b " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::CompareIsNotNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyNot );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 2 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 5 );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyIn );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 6 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 8 );
+
+        auto left = std::static_pointer_cast<AST::AtomNameNode>( node->GetLeft() );
+        REQUIRE( left->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( node->GetRight() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 11 ) ; 
+
+    }
+
+    SECTION( "a < b > c (recursive)"  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a < b > c " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::CompareGreaterNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator()->GetSymbolKind() == TokenKind::PyGreater );
+        REQUIRE( node->GetOperator()->GetTokenStartPosition() == 6 );
+        REQUIRE( node->GetOperator()->GetTokenEndPosition() == 7 );
+
+        auto node2 = std::static_pointer_cast<AST::CompareLessNode>( node->GetLeft() );
+
+        auto leftFirst = std::static_pointer_cast<AST::AtomNameNode>( node2->GetLeft() );
+        REQUIRE( leftFirst->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        REQUIRE( node2->GetOperator()->GetSymbolKind() == TokenKind::PyLess) ;
+        REQUIRE( node2->GetOperator()->GetTokenStartPosition() == 2 ) ;
+        REQUIRE( node2->GetOperator()->GetTokenEndPosition() == 3 ) ;
+
+        auto rightFirst = std::static_pointer_cast<AST::AtomNameNode>( node2->GetRight() );
+        REQUIRE( rightFirst->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( node->GetRight() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"c") == 0 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 10 ) ; 
+
+    }
+
 }
 
