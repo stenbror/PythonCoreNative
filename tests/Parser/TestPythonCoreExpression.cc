@@ -425,3 +425,83 @@ TEST_CASE( "Rule: Power", "Parser - Expression rules" )
 
 }
 
+
+TEST_CASE( "Rule: Factor", "Parser - Expression rules" )
+{
+
+    SECTION( " + a "  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"+a " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::UnaryPlusNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator()->GetSymbolKind() == TokenKind::PyPlus );
+        REQUIRE( node->GetOperator()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator()->GetTokenEndPosition() == 1 );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( node->GetRight() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 3 ) ; 
+
+    }
+
+    SECTION( " - a "  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"-a " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::UnaryMinusNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator()->GetSymbolKind() == TokenKind::PyMinus );
+        REQUIRE( node->GetOperator()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator()->GetTokenEndPosition() == 1 );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( node->GetRight() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 3 ) ; 
+
+    }
+
+    SECTION( " ~ a "  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"~a " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::UnaryBitInvertNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator()->GetSymbolKind() == TokenKind::PyBitInvert );
+        REQUIRE( node->GetOperator()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator()->GetTokenEndPosition() == 1 );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( node->GetRight() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 3 ) ; 
+
+    }
+
+}
