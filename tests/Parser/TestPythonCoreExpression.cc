@@ -1930,7 +1930,7 @@ TEST_CASE( "Rule: TestList", "Parser - Expression rules" )
     }
 
 }
-#include <iostream>
+
 
 TEST_CASE( "Rule: Call with arguments", "Parser - Expression rules" )
 {
@@ -2402,6 +2402,29 @@ TEST_CASE( "Rule: Call with arguments", "Parser - Expression rules" )
         REQUIRE( node->GetNodeStartPosition() == 0 ) ;  
         REQUIRE( node->GetNodeEndPosition() == 11 ) ; 
 
+    }
+
+    SECTION( "ArgList failes" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a(b, c " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        try
+        {
+            auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+            REQUIRE( false );
+
+        }
+        catch( std::shared_ptr<SyntaxError> err )
+        {
+            REQUIRE(err->GetPosition() == 7);
+            REQUIRE(err->GetFailureSymbol()->GetSymbolKind() == TokenKind::EndOfFile);
+            REQUIRE(err->GetExceptionText()->compare(L"Expecting ')' in call!") == 0);
+        }
+        
     }
 
 }

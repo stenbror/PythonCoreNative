@@ -664,7 +664,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTrailer()
                 auto right = mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen ? ParseArgList() : nullptr;
 
                 if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen)
-                    throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting ')' in call!"));
+                    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting ')' in call!"));
 
                 auto symbol2 = mLexer->CurSymbol();
                 mLexer->Advance();
@@ -676,7 +676,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTrailer()
                 auto right = mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightBracket ? ParseSubscriptList() : nullptr;
 
                 if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightBracket)
-                    throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting ']' in subscript!"));
+                    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting ']' in subscript!"));
 
                 auto symbol2 = mLexer->CurSymbol();
                 mLexer->Advance();
@@ -686,7 +686,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTrailer()
         default:    // Dot Name
             {
                 if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightBracket)
-                    throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting Name literal after '.'!"));
+                    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting Name literal after '.'!"));
             
                 auto symbol2 = mLexer->CurSymbol();
                 mLexer->Advance();
