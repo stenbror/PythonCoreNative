@@ -1754,5 +1754,28 @@ TEST_CASE( "Rule: Lambda", "Parser - Expression rules" )
 
     }
 
+    SECTION( "Lambda failes" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"lambda a + 1 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        try
+        {
+            auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+            REQUIRE( false );
+
+        }
+        catch( std::shared_ptr<SyntaxError> err )
+        {
+            REQUIRE(err->GetPosition() == 9);
+            REQUIRE(err->GetFailureSymbol()->GetSymbolKind() == TokenKind::PyPlus); // Because 'a' is taken in VarArgs ....
+            REQUIRE(err->GetExceptionText()->compare(L"Missing ':' in 'lambda' expression!") == 0);
+        }
+        
+    }
+
 }
 

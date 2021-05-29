@@ -15,18 +15,26 @@ int PythonCoreEntry(int argc, char *argv[], std::wstring systemName)
     try
     {
         
-        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"\"Hello, World!\" " ) );
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"lambda a + 1 " ) );
         auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        //auto parser = std::make_shared<PythonCoreParser>(lexer);
+        
+        //parser->ParseEvalInput();
 
         lexer->Advance();
-        auto txt = std::static_pointer_cast<StringToken>( lexer->CurSymbol() )->GetText()->data();
-
-        std::wcout << txt << L"\r\n";
+        if (lexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLambda) std::wcout << L" LAMBDA - ";
+        lexer->Advance();
+        if (lexer->CurSymbol()->GetSymbolKind() == TokenKind::Name) std::wcout << L" [NAME] ";
+        else std::wcout << L" + ";
 
     }
     catch (std::shared_ptr<LexicalError> err)
     {
         std::wcout <<  err->ExceptionText()->data() << " : " << err->ExceptionPosition() << L"\r\n";
+    }
+    catch (std::shared_ptr<SyntaxError> err)
+    {
+        std::wcout <<  err->GetExceptionText()->data() << " : " << err->GetPosition() << L"\r\n";
     }
 
     ///////////////////////////////////////////////////////////////////////////

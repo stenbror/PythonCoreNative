@@ -273,7 +273,7 @@ _again:
             buffer << mSourceBuffer->GetChar();
         }
 
-        std::wstring key = buffer.str(); 
+        std::wstring key = buffer.str();
         
         if (mReservedKeywords.find(key) != mReservedKeywords.end() )
         {

@@ -521,17 +521,23 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseLambda(bool isCond)
 {
     auto startPos = mLexer->Position();
     auto symbol = mLexer->CurSymbol();
-    mLexer->Advance();
-    auto left = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColon ? nullptr : ParseVarArgsList();
+    mLexer->Advance(); 
 
-    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
-        throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Missing ':' in 'lambda' expression!"));
+    std::shared_ptr<AST::ExpressionNode> left = nullptr;
 
-    auto symbol2 = mLexer->CurSymbol();
-    mLexer->Advance();
-    auto right = isCond ? ParseTest() : ParseTestNoCond();
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon) left = ParseVarArgsList();
 
-    return std::make_shared<AST::LambdaNode>(startPos, mLexer->Position(), symbol, left, symbol2, right);
+    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColon)
+    {
+        auto symbol2 = mLexer->CurSymbol();
+        mLexer->Advance();
+        auto right = isCond ? ParseTest() : ParseTestNoCond();
+
+        return std::make_shared<AST::LambdaNode>(startPos, mLexer->Position(), symbol, left, symbol2, right);
+    } 
+     
+    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Missing ':' in 'lambda' expression!"));
+
 }
 
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestNoCond()
