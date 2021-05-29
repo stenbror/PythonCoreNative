@@ -764,7 +764,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseExprList()
 
     return std::make_shared<AST::ExprListNode>(startPos, mLexer->Position(), nodes, separators);
 }
-
+#include <iostream>
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestList()
 {
     auto startPos = mLexer->Position();
@@ -777,9 +777,11 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestList()
     {
         separators->push_back(mLexer->CurSymbol());
         mLexer->Advance();
+
         if (    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PySemiColon ||
                 mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Newline ||
-                mLexer->CurSymbol()->GetSymbolKind() == TokenKind::EndOfFile) break;
+                mLexer->CurSymbol()->GetSymbolKind() == TokenKind::EndOfFile) continue;
+
         nodes->push_back(ParseTest());
     }
 

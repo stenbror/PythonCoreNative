@@ -1876,5 +1876,36 @@ TEST_CASE( "Rule: TestList", "Parser - Expression rules" )
 
     }
 
+    SECTION( "a, b, \r\n"  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a, b, \r\n" ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 1 );
+        REQUIRE( root->GetNewlines()->at(0)->GetSymbolKind() == TokenKind::Newline );
+
+        auto node = std::static_pointer_cast<AST::TestListNode>( root->GetRight() );
+
+        REQUIRE( node->GetNodes()->size() == 2 );
+
+        auto node1 = std::static_pointer_cast<AST::AtomNameNode>( node->GetNodes()->at(0) );
+        REQUIRE( node1->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto node2 = std::static_pointer_cast<AST::AtomNameNode>( node->GetNodes()->at(1) );
+        REQUIRE( node2->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        REQUIRE( node->GetSeparators()->size() == 2 );
+        REQUIRE( node->GetSeparators()->at(0)->GetSymbolKind() == TokenKind::PyComma );
+        REQUIRE( node->GetSeparators()->at(1)->GetSymbolKind() == TokenKind::PyComma );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 6 ) ; 
+
+    }
+
 }
 
