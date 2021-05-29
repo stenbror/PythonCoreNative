@@ -1779,3 +1779,44 @@ TEST_CASE( "Rule: Lambda", "Parser - Expression rules" )
 
 }
 
+
+TEST_CASE( "Rule: Test expression", "Parser - Expression rules" )
+{
+
+    SECTION( "a if b else c "  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a if b else c " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::TestNode>( root->GetRight() );
+
+        auto left = std::static_pointer_cast<AST::AtomNameNode>( node->GetLeft() );
+        REQUIRE( left->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyIf );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 2 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 4 );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( node->GetRight() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyElse );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 7 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 11 );
+
+        auto next = std::static_pointer_cast<AST::AtomNameNode>( node->GetNext() );
+        REQUIRE( next->GetNameText()->GetText()->compare(L"c") == 0 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 14 ) ; 
+
+    }
+
+}
+
