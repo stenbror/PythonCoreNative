@@ -661,7 +661,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTrailer()
     {
         case TokenKind::PyLeftParen:
             {
-                auto right = mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen ? ParseVarArgsList() : nullptr;
+                auto right = mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen ? ParseArgList() : nullptr;
 
                 if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen)
                     throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting ')' in call!"));
@@ -764,7 +764,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseExprList()
 
     return std::make_shared<AST::ExprListNode>(startPos, mLexer->Position(), nodes, separators);
 }
-#include <iostream>
+
 std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestList()
 {
     auto startPos = mLexer->Position();
