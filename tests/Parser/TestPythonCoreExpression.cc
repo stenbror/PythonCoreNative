@@ -1685,3 +1685,42 @@ TEST_CASE( "Rule: OrTest", "Parser - Expression rules" )
 
 }
 
+
+TEST_CASE( "Rule: Lambda", "Parser - Expression rules" )
+{
+
+    SECTION( "lambda a: a + 1 "  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"lambda a: a + 1 " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::LambdaNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLambda );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 6 );
+        
+        auto left = std::static_pointer_cast<AST::VarArgsListExpressionNode>( node->GetLeft() );
+        REQUIRE( left->GetNodes()->size() == 1 );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyColon );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 8 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 9 );
+        
+        auto right = std::static_pointer_cast<AST::PlusNode>( node->GetRight() );
+        auto op1 = std::static_pointer_cast<AST::PlusNode>( right );
+        REQUIRE( op1->GetOperator()->GetSymbolKind() == TokenKind::PyPlus );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 16 ) ; 
+
+    }
+
+}
+
