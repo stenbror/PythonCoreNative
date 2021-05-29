@@ -1935,52 +1935,6 @@ TEST_CASE( "Rule: TestList", "Parser - Expression rules" )
 TEST_CASE( "Rule: Call with arguments", "Parser - Expression rules" )
 {
 
-    // SECTION( "a(b) "  )
-    // {
-
-    //     auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a(b) \r\n" ) );
-    //     auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
-    //     auto parser = std::make_shared<PythonCoreParser>(lexer);
-
-    //     auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
-
-    //     REQUIRE( root->GetNewlines()->size() == 1 );
-
-    //     auto node = std::static_pointer_cast<AST::AtomExprNode>( root->GetRight() );
-
-    //     REQUIRE( node->GetOperator() == nullptr );
-
-    //     auto left = std::static_pointer_cast<AST::AtomNameNode>( node->GetLeft() );
-    //     REQUIRE( left->GetNameText()->GetText()->compare(L"a") == 0 );
-
-    //     auto trailers = node->GetRight();
-    //     REQUIRE( trailers->size() == 1 );
-
-    //     auto one = std::static_pointer_cast<AST::CallNode>( trailers->at(0) );
-
-    //     REQUIRE( one->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftParen );
-    //     REQUIRE( one->GetOperator1()->GetTokenStartPosition() == 1 );
-    //     REQUIRE( one->GetOperator1()->GetTokenEndPosition() == 2 );
-
-    //     REQUIRE( one->GetOperator2()->GetSymbolKind() == TokenKind::PyRightParen );
-    //     REQUIRE( one->GetOperator2()->GetTokenStartPosition() == 3 );
-    //     REQUIRE( one->GetOperator2()->GetTokenEndPosition() == 4 );
-
-    //     REQUIRE( one->GetRight()->GetNodeStartPosition() == 2 );
-    //     REQUIRE( one->GetRight()->GetNodeEndPosition() == 3 );
-
-    //     auto elem = std::static_pointer_cast<AST::AtomNameNode>( one->GetRight() );
-    //     REQUIRE( elem != nullptr );
-    //     auto token = std::static_pointer_cast<NameToken>( elem->GetNameText() );
-    //     REQUIRE( token != nullptr );
-
-    //     REQUIRE( token->GetText() != nullptr );
-
-    //     REQUIRE( node->GetNodeStartPosition() == 0 ) ;  
-    //     REQUIRE( node->GetNodeEndPosition() == 5 ) ; 
-
-    // }
-
     SECTION( "a(b) "  )
     {
 
@@ -2106,6 +2060,51 @@ TEST_CASE( "Rule: Call with arguments", "Parser - Expression rules" )
         REQUIRE( node->GetNodeEndPosition() == 7 ) ; 
 
         REQUIRE( elem->GetLeft() == nullptr );
+
+    }
+
+    SECTION( "a(b := c) "  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a(b := c) " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomExprNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator() == nullptr );
+
+        auto left = std::static_pointer_cast<AST::AtomNameNode>( node->GetLeft() );
+        REQUIRE( left->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto trailers = node->GetRight();
+        REQUIRE( trailers->size() == 1 );
+
+        auto one = std::static_pointer_cast<AST::CallNode>( trailers->at(0) );
+
+        REQUIRE( one->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftParen );
+        REQUIRE( one->GetOperator1()->GetTokenStartPosition() == 1 );
+        REQUIRE( one->GetOperator1()->GetTokenEndPosition() == 2 );
+
+        REQUIRE( one->GetOperator2()->GetSymbolKind() == TokenKind::PyRightParen );
+        REQUIRE( one->GetOperator2()->GetTokenStartPosition() == 8 );
+        REQUIRE( one->GetOperator2()->GetTokenEndPosition() == 9 );
+
+        auto elem = std::static_pointer_cast<AST::ArgumentNode>( one->GetRight() );
+        REQUIRE( elem->GetOperator()->GetSymbolKind() == TokenKind::PyColonAssign );
+
+        auto left2 = std::static_pointer_cast<AST::AtomNameNode>( elem->GetLeft() );
+        REQUIRE( left2->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( elem->GetRight() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"c") == 0 );
+       
+        REQUIRE( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE( node->GetNodeEndPosition() == 10 ) ; 
 
     }
 
