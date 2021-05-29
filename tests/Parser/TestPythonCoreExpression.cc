@@ -2198,4 +2198,49 @@ TEST_CASE( "Rule: Call with arguments", "Parser - Expression rules" )
 
     }
 
+    SECTION( "a(b for a in b) "  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a(b for a in b) " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomExprNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator() == nullptr );
+
+        auto left = std::static_pointer_cast<AST::AtomNameNode>( node->GetLeft() );
+        REQUIRE( left->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto trailers = node->GetRight();
+        REQUIRE( trailers->size() == 1 );
+
+        auto one = std::static_pointer_cast<AST::CallNode>( trailers->at(0) );
+
+        REQUIRE( one->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftParen );
+        REQUIRE( one->GetOperator1()->GetTokenStartPosition() == 1 );
+        REQUIRE( one->GetOperator1()->GetTokenEndPosition() == 2 );
+
+        REQUIRE( one->GetOperator2()->GetSymbolKind() == TokenKind::PyRightParen );
+        REQUIRE( one->GetOperator2()->GetTokenStartPosition() == 14 );
+        REQUIRE( one->GetOperator2()->GetTokenEndPosition() == 15 );
+
+        auto elem = std::static_pointer_cast<AST::ArgumentNode>( one->GetRight() );
+        REQUIRE( elem->GetOperator() == nullptr );
+
+        auto left2 = std::static_pointer_cast<AST::AtomNameNode>( elem->GetLeft() );
+        REQUIRE( left2->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        auto right = std::static_pointer_cast<AST::SyncCompForNode>( elem->GetRight() );
+        REQUIRE( right->GetOperator1()->GetSymbolKind() == TokenKind::PyFor );
+       
+        REQUIRE( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE( node->GetNodeEndPosition() == 16 ) ; 
+
+    }
+
 }
