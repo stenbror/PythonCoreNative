@@ -1818,5 +1818,28 @@ TEST_CASE( "Rule: Test expression", "Parser - Expression rules" )
 
     }
 
+    SECTION( "Test expression failes" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a if b c " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        try
+        {
+            auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+            REQUIRE( false );
+
+        }
+        catch( std::shared_ptr<SyntaxError> err )
+        {
+            REQUIRE(err->GetPosition() == 7);
+            REQUIRE(err->GetFailureSymbol()->GetSymbolKind() == TokenKind::Name);
+            REQUIRE(err->GetExceptionText()->compare(L"Missing 'else' in 'test expression!") == 0);
+        }
+        
+    }
+
 }
 
