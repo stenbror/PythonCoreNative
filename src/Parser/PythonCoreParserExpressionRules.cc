@@ -736,7 +736,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseSubscript()
         {
             two = mLexer->CurSymbol();
             mLexer->Advance();
-            if (    mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma ||
+            if (    mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma &&
                     mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightBracket ) third = ParseTest();
         }
     }
