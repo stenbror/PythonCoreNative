@@ -1202,6 +1202,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTestListStarExpr()
             case TokenKind::PyColon:
             case TokenKind::PySemiColon:
             case TokenKind::Newline:
+            case TokenKind::PyRightParen:
                 break;
             default:
                 

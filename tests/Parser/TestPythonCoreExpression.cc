@@ -3232,5 +3232,46 @@ TEST_CASE( "Rule: Tuple", "Parser - Expression rules" )
 
     }
 
+     SECTION( "( yield a, *b, )" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"( yield a, *b, ) " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomTupleNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftParen );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 1 );
+
+        auto right = std::static_pointer_cast<AST::YieldExprNode>( node->GetRight() );
+        REQUIRE( right->GetOperator()->GetSymbolKind() == TokenKind::PyYield );
+
+        auto one = std::static_pointer_cast<AST::TestListStarExprListStatementNode>( right->GetRight() );
+        REQUIRE( one->GetNodes()->size() == 2 );
+        REQUIRE( one->GetSeparators()->size() == 2 );
+
+        auto txt = std::static_pointer_cast<AST::AtomNameNode>( one->GetNodes()->at(0) );
+        REQUIRE( txt->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto two = std::static_pointer_cast<AST::StarExprNode>( one->GetNodes()->at(1) );
+        REQUIRE( two->GetOperator()->GetSymbolKind() == TokenKind::PyMul );
+        auto txt2 = std::static_pointer_cast<AST::AtomNameNode>( two->GetRight() );
+        REQUIRE( txt2->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyRightParen );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 15 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 16 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 17 ) ; 
+
+    }
+
 }
 
