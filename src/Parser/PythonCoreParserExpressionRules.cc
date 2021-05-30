@@ -729,8 +729,8 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseSubscript()
     {
         one = mLexer->CurSymbol();
         mLexer->Advance();
-        if (    mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma ||
-                mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon ||
+        if (    mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma &&
+                mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon &&
                 mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightBracket ) second = ParseTest();
         if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColon)
         {
