@@ -15,29 +15,13 @@ int PythonCoreEntry(int argc, char *argv[], std::wstring systemName)
     try
     {
         
-        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a(b) \r\n" ) );
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"( yield a, *b )\r\n" ) );
         auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
         auto parser = std::make_shared<PythonCoreParser>(lexer);
         
-        //parser->ParseEvalInput();
+        parser->ParseEvalInput();
 
-        lexer->Advance();
-        auto el1 = lexer->CurSymbol();
-        lexer->Advance();
-        auto el2 = lexer->CurSymbol();
-        lexer->Advance();
-        auto el3 = lexer->CurSymbol();
-        lexer->Advance();
-        auto el4 = lexer->CurSymbol();
-        lexer->Advance();
-        auto el5 = lexer->CurSymbol();
-
-        std::wcout << L" DEBUG: " << (int)el1->GetSymbolKind() << L"\r\n";
-        std::wcout << L" DEBUG: " << (int)el2->GetSymbolKind() << L"\r\n";
-        std::wcout << L" DEBUG: " << (int)el3->GetSymbolKind() << L"\r\n";
-        std::wcout << L" DEBUG: " << (int)el4->GetSymbolKind() << L"\r\n";
-        std::wcout << L" DEBUG: " << (int)el5->GetSymbolKind() << L"\r\n";
-
+        
         
 
     }

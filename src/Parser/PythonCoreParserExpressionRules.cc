@@ -368,7 +368,10 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseStarExpr()
         throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Missing '*' in star expression!"));
 
     auto symbol = mLexer->CurSymbol();
+    mLexer->Advance();
+    
     auto right = ParseOrExpr();
+
     return std::make_shared<AST::StarExprNode>(startPos, mLexer->Position(), symbol, right);
 }
 

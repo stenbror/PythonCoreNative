@@ -1204,9 +1204,11 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseTestListStarExpr()
             case TokenKind::Newline:
                 break;
             default:
-            
+                
                 nodes->push_back( mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ? ParseStarExpr() : ParseTest() );
+                
         }
+
     }
 
     return std::make_shared<AST::TestListStarExprListStatementNode>(startPos, mLexer->Position(), nodes, separators);
