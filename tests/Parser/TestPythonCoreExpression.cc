@@ -3057,3 +3057,64 @@ TEST_CASE( "Rule: Dot Name", "Parser - Expression rules" )
 
 }
 
+
+TEST_CASE( "Rule: Tuple", "Parser - Expression rules" )
+{
+
+    SECTION( "Atom '()'" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"( yield from a ) " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomTupleNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftParen );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 1 );
+
+        auto right = std::static_pointer_cast<AST::YieldFromNode>( node->GetRight() );
+        REQUIRE( right->GetOperator1()->GetSymbolKind() == TokenKind::PyYield );
+        REQUIRE( right->GetOperator2()->GetSymbolKind() == TokenKind::PyFrom );
+        auto txt = std::static_pointer_cast<AST::AtomNameNode>( right->GetRight() );
+        REQUIRE( txt->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyRightParen );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 15 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 16 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 17 ) ; 
+
+    }
+
+    SECTION( "() yield from a  failes" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"( yield from a  " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        try
+        {
+            auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+            REQUIRE( false );
+
+        }
+        catch( std::shared_ptr<SyntaxError> err )
+        {
+            REQUIRE(err->GetPosition() == 16);
+            REQUIRE(err->GetFailureSymbol()->GetSymbolKind() == TokenKind::EndOfFile);
+            REQUIRE(err->GetExceptionText()->compare(L"Missing ')' in tuple!") == 0);
+        }
+        
+    }
+
+}
+
