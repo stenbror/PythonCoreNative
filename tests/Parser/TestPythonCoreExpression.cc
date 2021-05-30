@@ -3032,5 +3032,28 @@ TEST_CASE( "Rule: Dot Name", "Parser - Expression rules" )
 
     }
 
+    SECTION( "Dot Name failes" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a. " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        try
+        {
+            auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+            REQUIRE( false );
+
+        }
+        catch( std::shared_ptr<SyntaxError> err )
+        {
+            REQUIRE(err->GetPosition() == 3);
+            REQUIRE(err->GetFailureSymbol()->GetSymbolKind() == TokenKind::EndOfFile);
+            REQUIRE(err->GetExceptionText()->compare(L"Expecting Name literal after '.'!") == 0);
+        }
+        
+    }
+
 }
 
