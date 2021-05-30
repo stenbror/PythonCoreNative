@@ -2428,3 +2428,54 @@ TEST_CASE( "Rule: Call with arguments", "Parser - Expression rules" )
     }
 
 }
+
+
+TEST_CASE( "Rule: SubscriptList and Subscript", "Parser - Expression rules" )
+{
+
+    SECTION( "a[b] "  )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"a[b] " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomExprNode>( root->GetRight() );
+
+        auto left = std::static_pointer_cast<AST::AtomNameNode>( node->GetLeft() );
+        REQUIRE( left->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto trailers = node->GetRight();
+        REQUIRE( trailers->size() == 1 );
+
+        auto one = std::static_pointer_cast<AST::IndexNode>( trailers->at(0) );
+
+        REQUIRE( one->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftBracket );
+        REQUIRE( one->GetOperator1()->GetTokenStartPosition() == 1 );
+        REQUIRE( one->GetOperator1()->GetTokenEndPosition() == 2 );
+
+        REQUIRE( one->GetOperator2()->GetSymbolKind() == TokenKind::PyRightBracket );
+        REQUIRE( one->GetOperator2()->GetTokenStartPosition() == 3 );
+        REQUIRE( one->GetOperator2()->GetTokenEndPosition() == 4 );
+
+        auto right = std::static_pointer_cast<AST::SubscriptNode>( one->GetRight() );
+        auto item1 = std::static_pointer_cast<AST::AtomNameNode>( right->GetLeft() );
+        REQUIRE( item1->GetNameText()->GetText()->compare(L"b") == 0 );
+        
+        REQUIRE( right->GetOperator1() == nullptr );
+        REQUIRE( right->GetRight() == nullptr );
+        REQUIRE( right->GetOperator2() == nullptr );
+        REQUIRE( right->GetNext() == nullptr );
+
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 5 ) ; 
+
+    }
+
+}
+
