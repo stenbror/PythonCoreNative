@@ -685,7 +685,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTrailer()
             }
         default:    // Dot Name
             {
-                if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightBracket)
+                if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
                     throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting Name literal after '.'!"));
             
                 auto symbol2 = mLexer->CurSymbol();
