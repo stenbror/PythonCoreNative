@@ -3375,5 +3375,134 @@ TEST_CASE( "Rule: Tuple", "Parser - Expression rules" )
 
     }
 
+    SECTION( "( a async for i, *j in d if e if g )" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"( a async for i, *j in d if e if g ) " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomTupleNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftParen );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 1 );
+
+        auto right = std::static_pointer_cast<AST::TestListCompNode>( node->GetRight() );
+        REQUIRE( right->GetNodes()->size() == 2 );
+        REQUIRE( right->GetSeparators()->size() == 0 );
+
+        auto txt = std::static_pointer_cast<AST::AtomNameNode>( right->GetNodes()->at(0) );
+        REQUIRE( txt->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto el2 = std::static_pointer_cast<AST::CompForNode>( right->GetNodes()->at(1) ); 
+        REQUIRE( el2->GetOperator()->GetSymbolKind() == TokenKind::PyAsync );
+
+        auto el2a = std::static_pointer_cast<AST::SyncCompForNode>( el2->GetRight() );
+        REQUIRE( el2a->GetOperator1()->GetSymbolKind() == TokenKind::PyFor );
+
+        auto expList = std::static_pointer_cast<AST::ExprListNode>( el2a->GetLeft() );
+        REQUIRE( expList->GetNodes()->size() == 2 );
+        REQUIRE( expList->GetSeparators()->size() == 1 );
+        REQUIRE( expList->GetSeparators()->at(0)->GetSymbolKind() == TokenKind::PyComma );
+
+        auto expListEl1 = std::static_pointer_cast<AST::AtomNameNode>( expList->GetNodes()->at(0) );
+        REQUIRE( expListEl1->GetNameText()->GetText()->compare(L"i") == 0 );
+
+        auto expListEl2 = std::static_pointer_cast<AST::StarExprNode>( expList->GetNodes()->at(1) );
+        REQUIRE( expListEl2->GetOperator()->GetSymbolKind() == TokenKind::PyMul );
+
+        REQUIRE( el2a->GetOperator2()->GetSymbolKind() == TokenKind::PyIn );
+        auto el2al = std::static_pointer_cast<AST::AtomNameNode>( el2a->GetRight() );
+        REQUIRE( el2al->GetNameText()->GetText()->compare(L"d") == 0 );
+
+        auto el2alr = std::static_pointer_cast<AST::CompIfNode>( el2a->GetNext() );
+        REQUIRE( el2alr->GetOperator()->GetSymbolKind() == TokenKind::PyIf );
+        auto el2alrtxt = std::static_pointer_cast<AST::AtomNameNode>( el2alr->GetRight() );
+        REQUIRE( el2alrtxt->GetNameText()->GetText()->compare(L"e") == 0 );
+
+        auto el2alrr = std::static_pointer_cast<AST::CompIfNode>( el2alr->GetNext() );
+        REQUIRE( el2alrr->GetOperator()->GetSymbolKind() == TokenKind::PyIf );
+        auto el2alrrtxt = std::static_pointer_cast<AST::AtomNameNode>( el2alrr->GetRight() );
+        REQUIRE( el2alrrtxt->GetNameText()->GetText()->compare(L"g") == 0 );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyRightParen );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 35 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 36 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 37 ) ; 
+
+    }
+
+    SECTION( "( a async for i, *j, in d if e if g )" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"( a async for i, *j, in d if e if g ) " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomTupleNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftParen );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 1 );
+
+        auto right = std::static_pointer_cast<AST::TestListCompNode>( node->GetRight() );
+        REQUIRE( right->GetNodes()->size() == 2 );
+        REQUIRE( right->GetSeparators()->size() == 0 );
+
+        auto txt = std::static_pointer_cast<AST::AtomNameNode>( right->GetNodes()->at(0) );
+        REQUIRE( txt->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto el2 = std::static_pointer_cast<AST::CompForNode>( right->GetNodes()->at(1) ); 
+        REQUIRE( el2->GetOperator()->GetSymbolKind() == TokenKind::PyAsync );
+
+        auto el2a = std::static_pointer_cast<AST::SyncCompForNode>( el2->GetRight() );
+        REQUIRE( el2a->GetOperator1()->GetSymbolKind() == TokenKind::PyFor );
+
+        auto expList = std::static_pointer_cast<AST::ExprListNode>( el2a->GetLeft() );
+        REQUIRE( expList->GetNodes()->size() == 2 );
+        REQUIRE( expList->GetSeparators()->size() == 2 );
+        REQUIRE( expList->GetSeparators()->at(0)->GetSymbolKind() == TokenKind::PyComma );
+        REQUIRE( expList->GetSeparators()->at(1)->GetSymbolKind() == TokenKind::PyComma );
+
+        auto expListEl1 = std::static_pointer_cast<AST::AtomNameNode>( expList->GetNodes()->at(0) );
+        REQUIRE( expListEl1->GetNameText()->GetText()->compare(L"i") == 0 );
+
+        auto expListEl2 = std::static_pointer_cast<AST::StarExprNode>( expList->GetNodes()->at(1) );
+        REQUIRE( expListEl2->GetOperator()->GetSymbolKind() == TokenKind::PyMul );
+
+        REQUIRE( el2a->GetOperator2()->GetSymbolKind() == TokenKind::PyIn );
+        auto el2al = std::static_pointer_cast<AST::AtomNameNode>( el2a->GetRight() );
+        REQUIRE( el2al->GetNameText()->GetText()->compare(L"d") == 0 );
+
+        auto el2alr = std::static_pointer_cast<AST::CompIfNode>( el2a->GetNext() );
+        REQUIRE( el2alr->GetOperator()->GetSymbolKind() == TokenKind::PyIf );
+        auto el2alrtxt = std::static_pointer_cast<AST::AtomNameNode>( el2alr->GetRight() );
+        REQUIRE( el2alrtxt->GetNameText()->GetText()->compare(L"e") == 0 );
+
+        auto el2alrr = std::static_pointer_cast<AST::CompIfNode>( el2alr->GetNext() );
+        REQUIRE( el2alrr->GetOperator()->GetSymbolKind() == TokenKind::PyIf );
+        auto el2alrrtxt = std::static_pointer_cast<AST::AtomNameNode>( el2alrr->GetRight() );
+        REQUIRE( el2alrrtxt->GetNameText()->GetText()->compare(L"g") == 0 );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyRightParen );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 36 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 37 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 38 ) ; 
+
+    }
+
 }
 
