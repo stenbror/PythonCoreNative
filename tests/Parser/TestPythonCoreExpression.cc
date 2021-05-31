@@ -3335,5 +3335,45 @@ TEST_CASE( "Rule: Tuple", "Parser - Expression rules" )
 
     }
 
+    SECTION( "( a, b := c)" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"( a, b := c) " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomTupleNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftParen );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 1 );
+
+        auto right = std::static_pointer_cast<AST::TestListCompNode>( node->GetRight() );
+        REQUIRE( right->GetNodes()->size() == 2 );
+        REQUIRE( right->GetSeparators()->size() == 1 );
+
+        auto txt = std::static_pointer_cast<AST::AtomNameNode>( right->GetNodes()->at(0) );
+        REQUIRE( txt->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto el2 = std::static_pointer_cast<AST::NamedExprNode>( right->GetNodes()->at(1) );
+        REQUIRE( el2->GetOperator()->GetSymbolKind() == TokenKind::PyColonAssign );
+        auto el2l = std::static_pointer_cast<AST::AtomNameNode>( el2->GetLeft() );
+        auto el2r = std::static_pointer_cast<AST::AtomNameNode>( el2->GetRight() );
+        REQUIRE( el2l->GetNameText()->GetText()->compare(L"b") == 0 );
+        REQUIRE( el2r->GetNameText()->GetText()->compare(L"c") == 0 );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyRightParen );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 11 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 12 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 13 ) ; 
+
+    }
+
 }
 
