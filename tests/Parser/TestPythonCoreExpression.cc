@@ -3302,5 +3302,38 @@ TEST_CASE( "Rule: Tuple", "Parser - Expression rules" )
 
     }
 
+    SECTION( "( a, )" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"( a, ) " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomTupleNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftParen );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 1 );
+
+        auto right = std::static_pointer_cast<AST::TestListCompNode>( node->GetRight() );
+        REQUIRE( right->GetNodes()->size() == 1 );
+        REQUIRE( right->GetSeparators()->size() == 1 );
+
+        auto txt = std::static_pointer_cast<AST::AtomNameNode>( right->GetNodes()->at(0) );
+        REQUIRE( txt->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyRightParen );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 5 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 6 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 7 ) ; 
+
+    }
+
 }
 
