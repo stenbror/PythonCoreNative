@@ -640,6 +640,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseTestListComp()
             separators->push_back( mLexer->CurSymbol() );
             mLexer->Advance();
             if (    mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen &&
+                    mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma &&
                     mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightBracket )
                     {
                         nodes->push_back(mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ? ParseStarExpr() : ParseNamedExpr());

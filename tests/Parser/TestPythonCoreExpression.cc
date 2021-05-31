@@ -3546,5 +3546,51 @@ TEST_CASE( "Rule: Tuple", "Parser - Expression rules" )
 
     }
 
+    SECTION( "Dobbel , failes" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"( a ,, ) " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        try
+        {
+            auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+            REQUIRE( false );
+
+        }
+        catch( std::shared_ptr<SyntaxError> err )
+        {
+            REQUIRE(err->GetPosition() == 5);
+            REQUIRE(err->GetFailureSymbol()->GetSymbolKind() == TokenKind::PyComma);
+            REQUIRE(err->GetExceptionText()->compare(L"Expecting item in testlist!") == 0);
+        }
+        
+    }
+
+    SECTION( "Missing ')' failes" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"( a " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        try
+        {
+            auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+            REQUIRE( false );
+
+        }
+        catch( std::shared_ptr<SyntaxError> err )
+        {
+            REQUIRE(err->GetPosition() == 4);
+            REQUIRE(err->GetFailureSymbol()->GetSymbolKind() == TokenKind::EndOfFile);
+            REQUIRE(err->GetExceptionText()->compare(L"Missing ')' in tuple!") == 0);
+        }
+        
+    }
+
 }
 
