@@ -3732,5 +3732,46 @@ TEST_CASE( "Rule: List", "Parser - Expression rules" )
 
     }
 
+    SECTION( "[ a for a in b for c in d ]" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"[ a for a in b for c in d ] " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomTupleNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftBracket );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 1 );
+
+        auto right = std::static_pointer_cast<AST::TestListCompNode>( node->GetRight() );
+        REQUIRE( right->GetNodes()->size() == 2 );
+        REQUIRE( right->GetSeparators()->size() == 0 );
+
+        auto txt = std::static_pointer_cast<AST::AtomNameNode>( right->GetNodes()->at(0) );
+        REQUIRE( txt->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto el2 = std::static_pointer_cast<AST::SyncCompForNode>( right->GetNodes()->at(1) );
+        REQUIRE( el2->GetOperator1()->GetSymbolKind() == TokenKind::PyFor );
+        REQUIRE( el2->GetOperator2()->GetSymbolKind() == TokenKind::PyIn );
+
+        auto el2r = std::static_pointer_cast<AST::SyncCompForNode>( el2->GetNext() );
+        REQUIRE( el2r->GetOperator1()->GetSymbolKind() == TokenKind::PyFor );
+        REQUIRE( el2r->GetOperator2()->GetSymbolKind() == TokenKind::PyIn );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyRightBracket );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 26 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 27 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 28 ) ; 
+
+    }
+
 }
 
