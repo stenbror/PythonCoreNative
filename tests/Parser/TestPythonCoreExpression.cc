@@ -3684,12 +3684,51 @@ TEST_CASE( "Rule: List", "Parser - Expression rules" )
         auto txt = std::static_pointer_cast<AST::AtomNameNode>( right->GetNodes()->at(0) );
         REQUIRE( txt->GetNameText()->GetText()->compare(L"a") == 0 );
 
+        auto txt2 = std::static_pointer_cast<AST::AtomNameNode>( right->GetNodes()->at(1) );
+        REQUIRE( txt2->GetNameText()->GetText()->compare(L"b") == 0 );
+
         REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyRightBracket );
         REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 7 );
         REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 8 );
 
         REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
         REQUIRE ( node->GetNodeEndPosition() == 9 ) ; 
+
+    }
+
+    SECTION( "[ a async for a in b if c if d ]" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"[ a async for a in b if c if d ] " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomTupleNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftBracket );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 1 );
+
+        auto right = std::static_pointer_cast<AST::TestListCompNode>( node->GetRight() );
+        REQUIRE( right->GetNodes()->size() == 2 );
+        REQUIRE( right->GetSeparators()->size() == 0 );
+
+        auto txt = std::static_pointer_cast<AST::AtomNameNode>( right->GetNodes()->at(0) );
+        REQUIRE( txt->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto el2 = std::static_pointer_cast<AST::CompForNode>( right->GetNodes()->at(1) );
+        REQUIRE( el2->GetOperator()->GetSymbolKind() == TokenKind::PyAsync );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyRightBracket );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 31 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 32 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 33 ) ; 
 
     }
 
