@@ -3911,6 +3911,47 @@ TEST_CASE( "Rule: Set", "Parser - Expression rules" )
 
     }
 
+    SECTION( "{ *a, *b, } " )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"{ *a, *b, } " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomSetNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftCurly );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 1 );
+
+        auto right = std::static_pointer_cast<AST::SetContainerNode>( node->GetRight() );
+        REQUIRE( right->GetSeparators()->size() == 2 );
+        REQUIRE( right->GetSeparators()->at(0)->GetSymbolKind() == TokenKind::PyComma );
+        REQUIRE( right->GetSeparators()->at(1)->GetSymbolKind() == TokenKind::PyComma );
+        REQUIRE( right->GetEntries()->size() == 2 );
+        auto el1 = std::static_pointer_cast<AST::StarExprNode>( right->GetEntries()->at(0) );
+        REQUIRE( el1->GetOperator()->GetSymbolKind() == TokenKind::PyMul );
+        auto el1txt = std::static_pointer_cast<AST::AtomNameNode>( el1->GetRight() );
+        REQUIRE( el1txt->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto el2 = std::static_pointer_cast<AST::StarExprNode>( right->GetEntries()->at(1) );
+        REQUIRE( el2->GetOperator()->GetSymbolKind() == TokenKind::PyMul );
+        auto el2txt = std::static_pointer_cast<AST::AtomNameNode>( el2->GetRight() );
+        REQUIRE( el2txt->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyRightCurly );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 10 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 11 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 12 ) ; 
+
+    }
+
     SECTION( "{ *a for b in c if d } " )
     {
 
