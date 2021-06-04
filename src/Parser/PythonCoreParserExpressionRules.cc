@@ -865,7 +865,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseDictorSetMaker()
                     auto key = ParseTest();
 
                     if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
-                        throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting ':' in dictionary entry!"));
+                        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting ':' in dictionary entry!"));
 
                     auto symbol = mLexer->CurSymbol();
                     mLexer->Advance();

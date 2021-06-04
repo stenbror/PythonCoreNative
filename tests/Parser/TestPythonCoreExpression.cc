@@ -4338,5 +4338,29 @@ TEST_CASE( "Rule: Dictionary", "Parser - Expression rules" )
 
     }
 
+    SECTION( "Missing ':' failes" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"{ a : b, c } " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        try
+        {
+            auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+            REQUIRE( false );
+
+        }
+        catch( std::shared_ptr<SyntaxError> err )
+        {
+            REQUIRE(err->GetPosition() == 11);
+            REQUIRE(err->GetFailureSymbol()->GetSymbolKind() == TokenKind::PyRightCurly);
+            REQUIRE(err->GetExceptionText()->compare(L"Expecting ':' in dictionary entry!") == 0);
+        }
+        
+    }
+
 }
+
 
