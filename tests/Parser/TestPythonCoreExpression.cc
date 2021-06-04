@@ -4095,5 +4095,42 @@ TEST_CASE( "Rule: Dictionary", "Parser - Expression rules" )
 
     }
 
+    SECTION( "{ a : b, } " )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"{ a : b, } " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomSetNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftCurly );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 1 );
+
+        auto right = std::static_pointer_cast<AST::DictionaryContainerNode>( node->GetRight() );
+        REQUIRE( right->GetSeparators()->size() == 1 );
+        REQUIRE( right->GetEntries()->size() == 1 );
+
+        auto el1 = std::static_pointer_cast<AST::DictionaryEntryNode>( right->GetEntries()->at(0) );
+        auto el1key = std::static_pointer_cast<AST::AtomNameNode>( el1->GetKey() );
+        auto el1value = std::static_pointer_cast<AST::AtomNameNode>( el1->GetValue() );
+        REQUIRE( el1key->GetNameText()->GetText()->compare(L"a") == 0 );
+        REQUIRE( el1->GetOperator()->GetSymbolKind() == TokenKind::PyColon );
+        REQUIRE( el1value->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyRightCurly );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 9 );
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 10 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 11 ) ; 
+
+    }
+
 }
 
