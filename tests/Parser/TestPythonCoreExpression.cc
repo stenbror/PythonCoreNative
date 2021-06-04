@@ -4262,5 +4262,43 @@ TEST_CASE( "Rule: Dictionary", "Parser - Expression rules" )
 
     }
 
+    SECTION( "{ **e for a in b if c } " )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"{ **e for a in b if c } " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::AtomSetNode>( root->GetRight() );
+
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLeftCurly );
+        REQUIRE( node->GetOperator1()->GetTokenStartPosition() == 0 );
+        REQUIRE( node->GetOperator1()->GetTokenEndPosition() == 1 );
+
+        auto right = std::static_pointer_cast<AST::DictionaryContainerNode>( node->GetRight() );
+        REQUIRE( right->GetSeparators()->size() == 0 );
+        REQUIRE( right->GetEntries()->size() == 2 );
+
+        auto el1 = std::static_pointer_cast<AST::DictionaryKWEntryNode>( right->GetEntries()->at(0) );
+        REQUIRE( el1->GetOperator()->GetSymbolKind() == TokenKind::PyPower );
+        auto el1right = std::static_pointer_cast<AST::AtomNameNode>( el1->GetValue() );
+        REQUIRE( el1right->GetNameText()->GetText()->compare(L"e") == 0  );
+
+        auto el2 = std::static_pointer_cast<AST::SyncCompForNode>( right->GetEntries()->at(1) );
+        REQUIRE( el2->GetOperator1()->GetSymbolKind() == TokenKind::PyFor );
+
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyRightCurly );
+        REQUIRE( node->GetOperator2()->GetTokenStartPosition() == 22);
+        REQUIRE( node->GetOperator2()->GetTokenEndPosition() == 23 );
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 24 ) ; 
+
+    }
+
 }
 
