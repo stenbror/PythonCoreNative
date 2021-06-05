@@ -5164,4 +5164,50 @@ TEST_CASE( "Rule: VarArgsList", "Parser - Expression rules" )
 
     }
 
+    SECTION( "Missing Name after '*' failes" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"lambda *: x " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        try
+        {
+            auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+            REQUIRE( false );
+
+        }
+        catch( std::shared_ptr<SyntaxError> err )
+        {
+            REQUIRE(err->GetPosition() == 8);
+            REQUIRE(err->GetFailureSymbol()->GetSymbolKind() == TokenKind::PyColon);
+            REQUIRE(err->GetExceptionText()->compare(L"Expected Name literal after '*' argument!") == 0);
+        }
+        
+    }
+
+    SECTION( "Missing Name after '**' failes" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"lambda **: x " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        try
+        {
+            auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+            REQUIRE( false );
+
+        }
+        catch( std::shared_ptr<SyntaxError> err )
+        {
+            REQUIRE(err->GetPosition() == 9);
+            REQUIRE(err->GetFailureSymbol()->GetSymbolKind() == TokenKind::PyColon);
+            REQUIRE(err->GetExceptionText()->compare(L"Expecting Name literal in argument!") == 0);
+        }
+        
+    }
+
 }
