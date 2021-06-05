@@ -1060,7 +1060,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
         mLexer->Advance();
         
         if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
-            throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expected Name literal after '*' argument!"));
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expected Name literal after '*' argument!"));
 
         mulNode = std::static_pointer_cast<NameToken>(mLexer->CurSymbol());
         mLexer->Advance();
@@ -1071,7 +1071,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
             mLexer->Advance();
 
             if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
-                throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting argument between two ','!"));
+                throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting argument between two ','!"));
 
             if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColon) continue;
 
@@ -1081,7 +1081,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
                 mLexer->Advance();
 
                 if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
-                    throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting Name literal in argument!"));
+                    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting Name literal in argument!"));
 
                 powerNode = std::static_pointer_cast<NameToken>(mLexer->CurSymbol());
                 mLexer->Advance();
@@ -1093,7 +1093,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
                 }
 
                 if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
-                    throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected ',' in power argument!"));
+                    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected ',' in power argument!"));
 
                 continue;
             }
@@ -1107,7 +1107,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
         mLexer->Advance();
 
         if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
-            throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting Name literal in argument!"));
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting Name literal in argument!"));
 
         powerNode = std::static_pointer_cast<NameToken>(mLexer->CurSymbol());
         mLexer->Advance();
@@ -1119,7 +1119,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
         }
 
         if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
-            throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected ',' in power argument!"));
+            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected ',' in power argument!"));
     }
     else
     {
@@ -1131,7 +1131,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
             mLexer->Advance();
 
             if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
-                throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected ',' in power argument!"));
+                throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected ',' in power argument!"));
 
             if (    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ||
                     mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyPower ||
@@ -1143,7 +1143,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
 
         if (    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ||
                 mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyPower)
-                    throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected '*' or '**' in list before '/' in argument list!"));
+                    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected '*' or '**' in list before '/' in argument list!"));
 
         else if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyDiv)
         {
@@ -1160,7 +1160,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
                     mLexer->Advance();
 
                     if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
-                        throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected ',' in power argument!"));
+                        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected ',' in power argument!"));
 
                     if (    mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul ||
                             mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyPower ||
@@ -1169,11 +1169,11 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
                     nodes->push_back(ParseVFPAssign());
 
                     if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyComma)
-                        throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expected ',' in argument!"));
+                        goto _VarArgsListReturns;
                 }
 
                 if (lastToken->GetSymbolKind() != TokenKind::PyComma)
-                    throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expected ',' in argument!"));
+                    throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expected ',' in argument!"));
 
                 if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyMul)
                 {
@@ -1181,7 +1181,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
                     mLexer->Advance();
                     
                     if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
-                        throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expected Name literal after '*' argument!"));
+                        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expected Name literal after '*' argument!"));
 
                     mulNode = std::static_pointer_cast<NameToken>(mLexer->CurSymbol());
                     mLexer->Advance();
@@ -1192,7 +1192,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
                         mLexer->Advance();
 
                         if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
-                            throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting argument between two ','!"));
+                            throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting argument between two ','!"));
 
                         if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyColon) continue;
 
@@ -1202,7 +1202,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
                             mLexer->Advance();
 
                             if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
-                                throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting Name literal in argument!"));
+                                throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting Name literal in argument!"));
 
                             powerNode = std::static_pointer_cast<NameToken>(mLexer->CurSymbol());
                             mLexer->Advance();
@@ -1214,7 +1214,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
                             }
 
                             if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
-                                throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected ',' in power argument!"));
+                                throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected ',' in power argument!"));
 
                             continue;
                         }
@@ -1228,7 +1228,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
                     mLexer->Advance();
 
                     if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
-                        throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting Name literal in argument!"));
+                        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting Name literal in argument!"));
 
                     powerNode = std::static_pointer_cast<NameToken>(mLexer->CurSymbol());
                     mLexer->Advance();
@@ -1240,11 +1240,13 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVarArgsList()
                     }
 
                     if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
-                        throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected ',' in power argument!"));
+                        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Unexpected ',' in power argument!"));
                 }
             }
         }
     }
+
+_VarArgsListReturns:
 
     return std::make_shared<AST::VarArgsListExpressionNode>(startPos, mLexer->Position(), nodes, separators, div, mulOp, mulNode, powerOp, powerNode);
 }
@@ -1257,7 +1259,7 @@ std::shared_ptr<AST::ExpressionNode> PythonCoreParser::ParseVFPAssign()
     std::shared_ptr<AST::ExpressionNode> right = nullptr;
 
     if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
-        throw std::make_shared<SyntaxError>(startPos, mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting Name literal in argument!"));
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Expecting Name literal in argument!"));
 
     left = std::static_pointer_cast<NameToken>(mLexer->CurSymbol());
     mLexer->Advance();
