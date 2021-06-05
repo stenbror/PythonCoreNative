@@ -4688,4 +4688,71 @@ TEST_CASE( "Rule: VarArgsList", "Parser - Expression rules" )
 
     }
 
+    SECTION( "lambda a, b, c, /, d, *e, f, g, **h : x " )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"lambda a, b, c, /, d, *e, f, g, **h : x " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::LambdaNode>( root->GetRight() );
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLambda );
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyColon );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( node->GetRight() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"x") == 0 );
+
+        // VarArgsList tests below:
+        
+        auto left = std::static_pointer_cast<AST::VarArgsListExpressionNode>( node->GetLeft() );
+        REQUIRE( left->GetNodes()->size() == 6 );
+        REQUIRE( left->GetSeparators()->size() == 8 );
+        REQUIRE( left->GetSeparators()->at(0)->GetSymbolKind() == TokenKind::PyComma );
+        REQUIRE( left->GetSeparators()->at(1)->GetSymbolKind() == TokenKind::PyComma );
+        REQUIRE( left->GetSeparators()->at(2)->GetSymbolKind() == TokenKind::PyComma );
+        REQUIRE( left->GetSeparators()->at(3)->GetSymbolKind() == TokenKind::PyComma );
+        REQUIRE( left->GetSeparators()->at(4)->GetSymbolKind() == TokenKind::PyComma );
+        REQUIRE( left->GetSeparators()->at(5)->GetSymbolKind() == TokenKind::PyComma );
+        REQUIRE( left->GetSeparators()->at(6)->GetSymbolKind() == TokenKind::PyComma );
+        REQUIRE( left->GetSeparators()->at(7)->GetSymbolKind() == TokenKind::PyComma );
+
+        REQUIRE( left->GetSlash()->GetSymbolKind() == TokenKind::PyDiv );
+
+        auto el1 = std::static_pointer_cast<AST::AtomNameNode>( left->GetNodes()->at(0) );
+        REQUIRE( el1->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto el2 = std::static_pointer_cast<AST::AtomNameNode>( left->GetNodes()->at(1) );
+        REQUIRE( el2->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        auto el3 = std::static_pointer_cast<AST::AtomNameNode>( left->GetNodes()->at(2) );
+        REQUIRE( el3->GetNameText()->GetText()->compare(L"c") == 0 );
+
+        auto el4 = std::static_pointer_cast<AST::AtomNameNode>( left->GetNodes()->at(3) );
+        REQUIRE( el4->GetNameText()->GetText()->compare(L"d") == 0 );
+
+        REQUIRE( left->GetMul()->GetSymbolKind() == TokenKind::PyMul );
+        auto el5txt = std::static_pointer_cast<NameToken>( left->GetMulNode() );
+        REQUIRE( el5txt->GetText()->compare(L"e") == 0 );
+
+        auto el6 = std::static_pointer_cast<AST::AtomNameNode>( left->GetNodes()->at(4) );
+        REQUIRE( el6->GetNameText()->GetText()->compare(L"f") == 0 );
+
+        auto el7 = std::static_pointer_cast<AST::AtomNameNode>( left->GetNodes()->at(5) );
+        REQUIRE( el7->GetNameText()->GetText()->compare(L"g") == 0 );
+
+        REQUIRE( left->GetPower()->GetSymbolKind() == TokenKind::PyPower );
+        auto el8txt = std::static_pointer_cast<NameToken>( left->GetPowerNode() );
+        REQUIRE( el8txt->GetText()->compare(L"h") == 0 );
+
+        // End of VarArgsList tests
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 40 ) ; 
+
+    }
+
 }
