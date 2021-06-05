@@ -47,7 +47,7 @@ std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> IfStatementNode::Ge
     return mNodes;
 }
 
-std::shared_ptr<StatementNode> IfStatementNode::GetGetElseNode()
+std::shared_ptr<StatementNode> IfStatementNode::GetElseNode()
 {
     return mNext;
 }

@@ -27,7 +27,7 @@ namespace PythonCoreNative::RunTime::Parser::AST
             std::shared_ptr<Token> GetOperator2();
             std::shared_ptr<StatementNode> GetRight();
             std::shared_ptr<std::vector<std::shared_ptr<StatementNode>>> GetElifNodes();
-            std::shared_ptr<StatementNode> GetGetElseNode();
+            std::shared_ptr<StatementNode> GetElseNode();
 
         protected:
             std::shared_ptr<Token> mOp1;
