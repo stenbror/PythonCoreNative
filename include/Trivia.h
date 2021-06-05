@@ -47,6 +47,7 @@ namespace PythonCoreNative::RunTime::Parser
     {
         public:
             WhiteSpaceTrivia(unsigned int startPos, unsigned int endPosition, wchar_t ch);
+            wchar_t GetWhiteChar();
 
         protected:
             wchar_t mSpaceChar;

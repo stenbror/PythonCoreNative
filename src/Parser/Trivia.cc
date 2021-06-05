@@ -52,6 +52,11 @@ WhiteSpaceTrivia::WhiteSpaceTrivia(unsigned int startPosition, unsigned int endP
         mSpaceChar = ch;
     }
 
+wchar_t WhiteSpaceTrivia::GetWhiteChar()
+{
+    return mSpaceChar;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 CommentTrivia::CommentTrivia(unsigned int startPosition, unsigned int endPosition, std::shared_ptr<std::wstring> text)
