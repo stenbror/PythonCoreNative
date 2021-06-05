@@ -4364,3 +4364,41 @@ TEST_CASE( "Rule: Dictionary", "Parser - Expression rules" )
 }
 
 
+TEST_CASE( "Rule: VarArgsList", "Parser - Expression rules" )
+{
+
+    SECTION( "lambda a: x " )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"lambda a: x " ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseEvalInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+
+        auto node = std::static_pointer_cast<AST::LambdaNode>( root->GetRight() );
+        REQUIRE( node->GetOperator1()->GetSymbolKind() == TokenKind::PyLambda );
+        REQUIRE( node->GetOperator2()->GetSymbolKind() == TokenKind::PyColon );
+
+        auto right = std::static_pointer_cast<AST::AtomNameNode>( node->GetRight() );
+        REQUIRE( right->GetNameText()->GetText()->compare(L"x") == 0 );
+
+        // VarArgsList tests below:
+        
+        auto left = std::static_pointer_cast<AST::VarArgsListExpressionNode>( node->GetLeft() );
+        REQUIRE( left->GetNodes()->size() == 1 );
+        REQUIRE( left->GetSeparators()->size() == 0 );
+
+        auto el1 = std::static_pointer_cast<AST::AtomNameNode>( left->GetNodes()->at(0) );
+        REQUIRE( el1->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        // End of VarArgsList tests
+
+        REQUIRE ( node->GetNodeStartPosition() == 0 ) ;  
+        REQUIRE ( node->GetNodeEndPosition() == 12 ) ; 
+
+    }
+
+}
