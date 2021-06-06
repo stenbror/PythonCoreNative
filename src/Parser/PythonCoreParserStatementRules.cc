@@ -81,7 +81,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseElse()
     auto symbol = mLexer->CurSymbol();
     mLexer->Advance();
 
-    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyElif)
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
         throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Missing ':' in 'else' statement!"));
 
     auto symbol2 = mLexer->CurSymbol();

@@ -15,11 +15,11 @@ int PythonCoreEntry(int argc, char *argv[], std::wstring systemName)
     try
     {
         
-        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"lambda a, b, c, /, d : x " ) );
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"if a: pass\r\nelse: pass\r\n\r\n" ) );
         auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
         auto parser = std::make_shared<PythonCoreParser>(lexer);
         
-        parser->ParseEvalInput();
+        parser->ParseFileInput();
 
         
         
