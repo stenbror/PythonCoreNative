@@ -396,5 +396,28 @@ TEST_CASE( "Rule: while", "Parser - Statement rules" )
 
     }
 
+    SECTION( "Missing ':' in 'while' failes" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"while a pass\r\n" ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        try
+        {
+            auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseFileInput() );
+
+            REQUIRE( false );
+
+        }
+        catch( std::shared_ptr<SyntaxError> err )
+        {
+            REQUIRE(err->GetPosition() == 8 );
+            REQUIRE(err->GetFailureSymbol()->GetSymbolKind() == TokenKind::PyPass);
+            REQUIRE(err->GetExceptionText()->compare(L"Missing ':' in 'while' statement!") == 0);
+        }
+        
+    }
+
 }
 
