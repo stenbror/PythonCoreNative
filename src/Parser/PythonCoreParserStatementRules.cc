@@ -101,7 +101,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWhile()
 
     auto left = ParseNamedExpr();
 
-    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyElif)
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
         throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Missing ':' in 'while' statement!"));
 
     auto symbol2 = mLexer->CurSymbol();
