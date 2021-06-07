@@ -567,5 +567,28 @@ TEST_CASE( "Rule: for", "Parser - Statement rules" )
         
     }
 
+    SECTION( "Missing 'in' in 'for' failes" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"for a b: pass\r\n" ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        try
+        {
+            auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseFileInput() );
+
+            REQUIRE( false );
+
+        }
+        catch( std::shared_ptr<SyntaxError> err )
+        {
+            REQUIRE(err->GetPosition() == 6 );
+            REQUIRE(err->GetFailureSymbol()->GetSymbolKind() == TokenKind::Name);
+            REQUIRE(err->GetExceptionText()->compare(L"Missing 'in' in 'for' statement!") == 0);
+        }
+        
+    }
+
 }
 
