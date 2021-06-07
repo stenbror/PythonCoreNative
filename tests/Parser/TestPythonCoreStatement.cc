@@ -421,3 +421,48 @@ TEST_CASE( "Rule: while", "Parser - Statement rules" )
 
 }
 
+
+TEST_CASE( "Rule: for", "Parser - Statement rules" )
+{
+
+    SECTION( "for a in b: pass" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"for a in b: pass\r\n" ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::FileInputNode>( parser->ParseFileInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+        REQUIRE( root->GetNodes()->size() == 1 );
+
+        
+        auto elem1 = std::static_pointer_cast<AST::ForStatementNode>( root->GetNodes()->at(0) );
+        REQUIRE( elem1->GetOperator1()->GetSymbolKind() == TokenKind::PyFor );
+        REQUIRE( elem1->GetOperator2()->GetSymbolKind() == TokenKind::PyIn );
+        REQUIRE( elem1->GetOperator3()->GetSymbolKind() == TokenKind::PyColon );
+        REQUIRE( elem1->GetOperator4() == nullptr ); // TypeComment
+
+        auto el1_left = std::static_pointer_cast<AST::AtomNameNode>( elem1->GetLeft() );
+        REQUIRE( el1_left->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        auto el1_right = std::static_pointer_cast<AST::AtomNameNode>( elem1->GetRight() );
+        REQUIRE( el1_right->GetNameText()->GetText()->compare(L"b") == 0 );
+
+        auto el1_next = std::static_pointer_cast<AST::SimpleStatementNode>( elem1->GetNext() );
+        REQUIRE( el1_next->GetNodes()->size() == 1 );        
+        REQUIRE( el1_next->GetSeparators()->size() == 0 );
+
+        auto item1 = std::static_pointer_cast<AST::PassStatementNode>( el1_next->GetNodes()->at(0) );
+        REQUIRE( item1->GetOperator()->GetSymbolKind() == TokenKind::PyPass );
+
+        REQUIRE( elem1->GetExtra() == nullptr );
+
+        REQUIRE( elem1->GetNodeStartPosition() == 0 );
+        REQUIRE( elem1->GetNodeEndPosition() == 18 );
+
+    }
+
+}
+
