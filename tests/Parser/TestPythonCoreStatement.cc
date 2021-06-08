@@ -592,3 +592,51 @@ TEST_CASE( "Rule: for", "Parser - Statement rules" )
 
 }
 
+
+TEST_CASE( "Rule: with", "Parser - Statement rules" )
+{
+
+    SECTION( "with a: pass" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"with a: pass\r\n" ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::FileInputNode>( parser->ParseFileInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+        REQUIRE( root->GetNodes()->size() == 1 );
+ 
+        auto elem1 = std::static_pointer_cast<AST::WithStatementNode>( root->GetNodes()->at(0) );
+        REQUIRE( elem1->GetOperator1()->GetSymbolKind() == TokenKind::PyWith );
+        REQUIRE( elem1->GetOpenParenthesis() == nullptr );
+        REQUIRE( elem1->GetCloseParenthesis() == nullptr );
+        REQUIRE( elem1->GetOperator2()->GetSymbolKind() == TokenKind::PyColon );
+        REQUIRE( elem1->GetOperator3() == nullptr );
+
+        auto nodes = elem1->GetWithItems();
+        auto separators = elem1->GetSeparators();
+        REQUIRE( nodes->size() == 1 );
+        REQUIRE( separators->size() == 0 );
+
+        auto el1 = std::static_pointer_cast<AST::WithItemStatementNode>( nodes->at(0) );
+        auto el1_left = std::static_pointer_cast<AST::AtomNameNode>( el1->GetLeft() );
+        REQUIRE( el1_left->GetNameText()->GetText()->compare(L"a") == 0 );
+        REQUIRE( el1->GetOperator() == nullptr );
+        REQUIRE( el1->GetRight() == nullptr );
+
+        auto right = std::static_pointer_cast<AST::SimpleStatementNode>( elem1->GetRight() );
+        REQUIRE( right->GetNodes()->size() == 1 );        
+        REQUIRE( right->GetSeparators()->size() == 0 );
+
+        auto item1 = std::static_pointer_cast<AST::PassStatementNode>( right->GetNodes()->at(0) );
+        REQUIRE( item1->GetOperator()->GetSymbolKind() == TokenKind::PyPass );
+        
+        REQUIRE( elem1->GetNodeStartPosition() == 0 );
+        REQUIRE( elem1->GetNodeEndPosition() == 14 );
+
+    }
+
+}
+

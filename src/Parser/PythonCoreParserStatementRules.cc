@@ -158,6 +158,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWith()
     mLexer->Advance();
     auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
     auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
+
     nodes->push_back( ParseWithItem() );
 
     auto symbol10 = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLeftParen ?
@@ -178,7 +179,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWith()
     
     }
 
-    if (symbol10->GetSymbolKind() == TokenKind::PyLeftParen && mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen)
+    if (symbol10 != nullptr && mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen)
         throw ;
 
     auto symbol11 = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightParen ?
