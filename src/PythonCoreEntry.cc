@@ -15,7 +15,7 @@ int PythonCoreEntry(int argc, char *argv[], std::wstring systemName)
     try
     {
         
-        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"with a: pass\r\n" ) );
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"with ( a, b, c ) : pass\r\n" ) );
         auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
         auto parser = std::make_shared<PythonCoreParser>(lexer);
         

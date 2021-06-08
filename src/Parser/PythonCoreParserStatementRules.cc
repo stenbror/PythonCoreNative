@@ -159,12 +159,12 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWith()
     auto nodes = std::make_shared<std::vector<std::shared_ptr<AST::StatementNode>>>();
     auto separators = std::make_shared<std::vector<std::shared_ptr<Token>>>();
 
-    nodes->push_back( ParseWithItem() );
-
     auto symbol10 = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLeftParen ?
                         mLexer->CurSymbol() : nullptr;
 
     if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyLeftParen) mLexer->Advance();
+
+    nodes->push_back( ParseWithItem() );
 
     while (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyComma)
     {
