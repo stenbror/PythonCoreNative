@@ -180,7 +180,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseWith()
     }
 
     if (symbol10 != nullptr && mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyRightParen)
-        throw ;
+        throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Missing ')' in 'with' statement!"));
 
     auto symbol11 = mLexer->CurSymbol()->GetSymbolKind() == TokenKind::PyRightParen ?
                         mLexer->CurSymbol() :

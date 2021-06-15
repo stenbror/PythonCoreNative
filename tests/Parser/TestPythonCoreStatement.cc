@@ -1053,5 +1053,28 @@ TEST_CASE( "Rule: with", "Parser - Statement rules" )
         
     }
 
+    SECTION( "Missing ')' in 'with' failes" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"with ( a as b : pass\r\n" ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        try
+        {
+            auto root = std::static_pointer_cast<AST::EvalInputNode>( parser->ParseFileInput() );
+
+            REQUIRE( false );
+
+        }
+        catch( std::shared_ptr<SyntaxError> err )
+        {
+            REQUIRE(err->GetPosition() == 14 );
+            REQUIRE(err->GetFailureSymbol()->GetSymbolKind() == TokenKind::PyColon);
+            REQUIRE(err->GetExceptionText()->compare(L"Missing ')' in 'with' statement!") == 0);
+        }
+        
+    }
+
 }
 
