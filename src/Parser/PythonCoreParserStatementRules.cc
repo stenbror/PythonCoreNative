@@ -284,7 +284,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseExcept()
     auto startPos = mLexer->Position();
     auto left = ParseExceptClause();
 
-    if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Name)
+    if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::PyColon)
             throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Missing ':' in 'except' statement!"));
     
     auto symbol = mLexer->CurSymbol();

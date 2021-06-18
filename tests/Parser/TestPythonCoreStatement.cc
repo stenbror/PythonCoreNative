@@ -1124,5 +1124,70 @@ TEST_CASE( "Rule: try", "Parser - Statement rules" )
 
     }
 
+    SECTION( "try: pass\r\nexcept a: pass\r\nfinally: pass\r\n" )
+    {
+
+        auto sourceBuffer = std::make_shared<SourceBuffer>( std::make_shared<std::wstring>( L"try: pass\r\nexcept a: pass\r\nfinally: pass\r\n" ) );
+        auto lexer = std::make_shared<PythonCoreTokenizer>(4, sourceBuffer);
+        auto parser = std::make_shared<PythonCoreParser>(lexer);
+
+        auto root = std::static_pointer_cast<AST::FileInputNode>( parser->ParseFileInput() );
+
+        REQUIRE( root->GetNewlines()->size() == 0 );
+        REQUIRE( root->GetNodes()->size() == 1 );
+
+        auto elem1 = std::static_pointer_cast<AST::TryStatementNode>( root->GetNodes()->at(0) );
+        REQUIRE( elem1->GetOperator1()->GetSymbolKind() == TokenKind::PyTry );
+        REQUIRE( elem1->GetOperator2()->GetSymbolKind() == TokenKind::PyColon );
+
+        auto left = std::static_pointer_cast<AST::SimpleStatementNode>( elem1->GetLeft() );
+        REQUIRE( left->GetNodes()->size() == 1 );        
+        REQUIRE( left->GetSeparators()->size() == 0 );
+
+        auto item_left = std::static_pointer_cast<AST::PassStatementNode>( left->GetNodes()->at(0) );
+        REQUIRE( item_left->GetOperator()->GetSymbolKind() == TokenKind::PyPass );
+
+
+        REQUIRE( elem1->GetOperator3()->GetSymbolKind() == TokenKind::PyFinally );
+        REQUIRE( elem1->GetOperator4()->GetSymbolKind() == TokenKind::PyColon );
+
+        auto right = std::static_pointer_cast<AST::SimpleStatementNode>( elem1->GetRight() );
+        REQUIRE( right->GetNodes()->size() == 1 );        
+        REQUIRE( right->GetSeparators()->size() == 0 );
+
+        auto item_right = std::static_pointer_cast<AST::PassStatementNode>( right->GetNodes()->at(0) );
+        REQUIRE( item_right->GetOperator()->GetSymbolKind() == TokenKind::PyPass );
+        
+        REQUIRE( elem1->GetExceptNodes()->size() == 1 );
+
+
+        // Start of Except
+
+        auto exp1 = std::static_pointer_cast<AST::ExceptNode>( elem1->GetExceptNodes()->at(0) );
+
+        auto exp1_left = std::static_pointer_cast<AST::ExceptClauseNode>( exp1->GetLeft() );
+        REQUIRE( exp1_left->GetOperator1()->GetSymbolKind() == TokenKind::PyExcept );
+        auto exp1_left_left = std::static_pointer_cast<AST::AtomNameNode>( exp1_left->GetLeft() );
+        REQUIRE( exp1_left_left->GetNameText()->GetText()->compare(L"a") == 0 );
+
+        REQUIRE( exp1_left->GetOperator2() == nullptr );
+        REQUIRE( exp1_left->GetOperator3() == nullptr );
+
+
+        REQUIRE( exp1->GetOperator()->GetSymbolKind() == TokenKind::PyColon );
+
+        auto exp1_right = std::static_pointer_cast<AST::SimpleStatementNode>( exp1->GetRight() );
+        auto exp1_item_right = std::static_pointer_cast<AST::PassStatementNode>( exp1_right->GetNodes()->at(0) );
+        REQUIRE( exp1_item_right->GetOperator()->GetSymbolKind() == TokenKind::PyPass );
+
+        // End of Except
+
+        REQUIRE( elem1->GetElseNode() == nullptr );
+        
+        REQUIRE( elem1->GetNodeStartPosition() == 0 );
+        REQUIRE( elem1->GetNodeEndPosition() == 42 );
+
+    }
+
 }
 
