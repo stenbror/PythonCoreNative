@@ -313,7 +313,7 @@ std::shared_ptr<AST::StatementNode> PythonCoreParser::ParseExceptClause()
         auto symbol2 = mLexer->CurSymbol();
         mLexer->Advance();
 
-        if (mLexer->CurSymbol()->GetSymbolKind() == TokenKind::Name)
+        if (mLexer->CurSymbol()->GetSymbolKind() != TokenKind::Name)
             throw std::make_shared<SyntaxError>(mLexer->Position(), mLexer->CurSymbol(), std::make_shared<std::wstring>(L"Missing Name after 'as' in 'except' statement!"));
         
         auto right = std::static_pointer_cast<NameToken> ( mLexer->CurSymbol() );
